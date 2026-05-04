@@ -14,16 +14,7 @@ Repackage branch changes into clean vertical commits. Each commit should compile
 
 ## Phase 1: Analyze
 
-1. Resolve base branch.
-2. Run noop check:
-   - `git log --oneline <base>..HEAD | wc -l`
-   - If result is `0` or `1`, stop and report: no repackaging needed.
-3. Gather scope:
-   - `git diff --stat <base>..HEAD`
-   - `git diff <base>..HEAD`
-4. Build a commit plan ordered foundational -> feature -> cleanup.
-5. If useful, dispatch one `explorer` subagent to propose grouping/dependency order.
-6. Present the plan to the user and ask for approval before rewriting commits.
+Parse: `<base-branch>`, optional `--test='command'`. If no base-branch arg, resolve at runtime: `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/||' || echo main`.
 
 **Noop check** — `git log --oneline <base>..HEAD | wc -l`. If ≤1 → stop: "Nothing to repackage — use $commit."
 

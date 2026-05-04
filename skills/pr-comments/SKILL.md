@@ -34,4 +34,4 @@ Fix unresolved review comments from a PR.
 
 7. **Commit**: Use `Skill(commit)` to generate message and commit.
 
-8. **Push** (optional): `--auto` → push automatically. Without `--auto` → ask first. Detect stack tool: `gt log --stack 2>/dev/null` succeeds → `Skill(gt:submit)`. Otherwise `git push`.
+8. **Push** (optional): `--auto` → push automatically. Without `--auto` → ask first, then use `git push`.

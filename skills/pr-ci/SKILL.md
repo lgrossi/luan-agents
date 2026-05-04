@@ -38,7 +38,7 @@ Fix failed GitHub Actions checks.
 
 7. **Commit**: Use `Skill(commit)` to generate message and commit. `--auto` → commit directly. Without `--auto` → ask first.
 
-8. **Push** (optional): `--auto` → push automatically. Without `--auto` → ask first. Detect stack tool: `gt log --stack 2>/dev/null` succeeds → `Skill(gt:submit)`. Otherwise `git push`.
+8. **Push** (optional): `--auto` → push automatically. Without `--auto` → ask first, then use `git push`.
 
 ## Common Failures & Remediation
 

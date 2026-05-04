@@ -19,13 +19,7 @@ Adversarial review with enough context to catch real defects, without generating
 
 ## Step 1: Scope
 
-Resolve BASE:
-```bash
-gt parent
-gt trunk
-git symbolic-ref --short refs/remotes/origin/HEAD
-```
-Use the first command that returns a ref. Args override.
+Resolve BASE: `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/||' || echo main`. Args override.
 
 | Input        | Diff source                       |
 | ------------ | --------------------------------- |
