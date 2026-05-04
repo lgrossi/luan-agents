@@ -235,7 +235,10 @@ mod tests {
         let key = LspSessionKey::from_probe(&probe, &cwd).unwrap();
         assert_eq!(key.root, cwd.canonicalize().unwrap());
         assert_eq!(key.server_id, "test");
-        assert_eq!(key.command, PathBuf::from("/bin/echo"));
+        assert_eq!(
+            key.command,
+            PathBuf::from("/bin/echo").canonicalize().unwrap()
+        );
         assert_eq!(key.language_id, "rust");
     }
 
