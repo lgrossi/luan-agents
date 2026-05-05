@@ -16,7 +16,7 @@ describe("start skill git-tool strategy", () => {
 	test("documents configured branch creation commands", () => {
 		const body = startSkill();
 
-		expect(body).toContain("gt create <branch-name>");
+		expect(body).not.toContain("gt create <branch-name>");
 		expect(body).toContain("gs branch create <branch-name>");
 		expect(body).toContain("gs bc <branch-name>");
 	});
