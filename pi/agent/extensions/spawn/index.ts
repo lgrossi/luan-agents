@@ -1151,7 +1151,7 @@ function requireParent(ctx: ExtensionContext, request: SpawnRequest): string | u
 	return parentSession;
 }
 
-async function spawn(
+export async function spawn(
 	pi: ExtensionAPI,
 	input: Partial<SpawnRequest>,
 	ctx: ExtensionContext,
