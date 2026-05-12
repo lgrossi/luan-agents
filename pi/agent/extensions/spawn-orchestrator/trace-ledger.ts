@@ -1,4 +1,14 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import {
+	closeSync,
+	copyFileSync,
+	existsSync,
+	mkdirSync,
+	openSync,
+	readFileSync,
+	renameSync,
+	unlinkSync,
+	writeFileSync,
+} from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import type { RunRecord, TraceEvent } from "./types.ts";
 
@@ -78,10 +88,12 @@ export class SpawnTraceLedger {
 	}
 
 	private update(mutator: (state: SpawnLedgerState) => void): void {
-		const state = this.read();
-		mutator(state);
-		this.state = state;
-		this.save(state);
+		this.withWriteLock(() => {
+			const state = this.read();
+			mutator(state);
+			this.state = state;
+			this.saveUnlocked(state);
+		});
 	}
 
 	private read(): SpawnLedgerState {
@@ -102,12 +114,34 @@ export class SpawnTraceLedger {
 		}
 	}
 
-	private save(state: SpawnLedgerState): void {
+	private saveUnlocked(state: SpawnLedgerState): void {
 		state.updatedAt = Date.now();
 		mkdirSync(dirname(this.path), { recursive: true });
 		const tmp = `${this.path}.${process.pid}.tmp`;
 		writeFileSync(tmp, `${JSON.stringify(state, null, 2)}\n`, "utf8");
 		renameSync(tmp, this.path);
+	}
+
+	private withWriteLock(operation: () => void): void {
+		mkdirSync(dirname(this.path), { recursive: true });
+		const lockPath = `${this.path}.lock`;
+		for (let attempt = 0; attempt < 40; attempt++) {
+			let fd: number | undefined;
+			try {
+				fd = openSync(lockPath, "wx");
+				operation();
+				return;
+			} catch (error) {
+				if (!isFileExistsError(error)) throw error;
+				sleepSync(25);
+			} finally {
+				if (fd !== undefined) {
+					closeSync(fd);
+					unlinkSync(lockPath);
+				}
+			}
+		}
+		throw new Error(`Timed out waiting for Spawn ledger lock: ${lockPath}`);
 	}
 
 	private backupCorruptLedger(): void {
@@ -139,6 +173,14 @@ function upsertRunRecord(state: SpawnLedgerState, run: RunRecord): void {
 	const index = state.runs.findIndex((item) => item.id === run.id);
 	if (index >= 0) state.runs[index] = run;
 	else state.runs.push(run);
+}
+
+function isFileExistsError(error: unknown): boolean {
+	return Boolean(error && typeof error === "object" && (error as { code?: unknown }).code === "EEXIST");
+}
+
+function sleepSync(ms: number): void {
+	Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
 
 function isRunRecord(value: unknown): value is RunRecord {
