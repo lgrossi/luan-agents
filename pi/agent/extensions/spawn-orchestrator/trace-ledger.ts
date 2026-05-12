@@ -46,31 +46,41 @@ export class SpawnTraceLedger {
 	}
 
 	upsertRun(run: RunRecord): void {
-		const state = this.load();
-		const index = state.runs.findIndex((item) => item.id === run.id);
-		if (index >= 0) state.runs[index] = run;
-		else state.runs.push(run);
-		this.save(state);
+		this.update((state) => upsertRunRecord(state, run));
+	}
+
+	upsertRunAndEvents(run: RunRecord, events: TraceEvent[]): void {
+		this.update((state) => {
+			upsertRunRecord(state, run);
+			state.events = dedupeEvents(events).sort((a, b) => a.timestamp - b.timestamp);
+		});
 	}
 
 	replaceEvents(events: TraceEvent[]): void {
-		const state = this.load();
-		state.events = dedupeEvents(events).sort((a, b) => a.timestamp - b.timestamp);
-		this.save(state);
+		this.update((state) => {
+			state.events = dedupeEvents(events).sort((a, b) => a.timestamp - b.timestamp);
+		});
 	}
 
 	upsertPlan(plan: Omit<DurablePlanRecord, "timestamp">): void {
-		const state = this.load();
-		const record = { ...plan, timestamp: Date.now() };
-		const index = state.plans.findIndex((item) => item.originId === plan.originId);
-		if (index >= 0) state.plans[index] = record;
-		else state.plans.push(record);
-		this.save(state);
+		this.update((state) => {
+			const record = { ...plan, timestamp: Date.now() };
+			const index = state.plans.findIndex((item) => item.originId === plan.originId);
+			if (index >= 0) state.plans[index] = record;
+			else state.plans.push(record);
+		});
 	}
 
 	saveWatchers(watchers: DurableWatchSnapshot[]): void {
-		const state = this.load();
-		state.watchers = watchers;
+		this.update((state) => {
+			state.watchers = watchers;
+		});
+	}
+
+	private update(mutator: (state: SpawnLedgerState) => void): void {
+		const state = this.read();
+		mutator(state);
+		this.state = state;
 		this.save(state);
 	}
 
@@ -123,6 +133,12 @@ function dedupeEvents(events: TraceEvent[]): TraceEvent[] {
 		deduped.push(event);
 	}
 	return deduped;
+}
+
+function upsertRunRecord(state: SpawnLedgerState, run: RunRecord): void {
+	const index = state.runs.findIndex((item) => item.id === run.id);
+	if (index >= 0) state.runs[index] = run;
+	else state.runs.push(run);
 }
 
 function isRunRecord(value: unknown): value is RunRecord {

@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
+import type { Model } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import {
 	type AgentSession,
@@ -13,11 +14,13 @@ import {
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
 import type { AgentProfile } from "./types.ts";
+import type { ModelTier } from "./types.ts";
 
 export interface HeadlessRunOptions {
 	pi: ExtensionAPI;
 	ctx: ExtensionContext;
 	profile: AgentProfile;
+	modelTier: ModelTier;
 	prompt: string;
 	maxTurns: number;
 	signal?: AbortSignal;
@@ -43,7 +46,7 @@ export async function runHeadlessProfile(options: HeadlessRunOptions): Promise<H
 	const { session } = await createAgentSession({
 		cwd,
 		modelRegistry: options.ctx.modelRegistry,
-		model: options.ctx.model,
+		model: selectModelForTier(options.ctx.model, options.ctx.modelRegistry, options.modelTier),
 		thinkingLevel: options.pi.getThinkingLevel(),
 		tools: options.profile.tools,
 		resourceLoader: loader,
@@ -86,6 +89,26 @@ export function buildHeadlessResourceLoaderOptions(profile: AgentProfile, cwd: s
 		systemPromptOverride: () => buildSystemPrompt(profile, cwd),
 		appendSystemPromptOverride: () => [],
 	};
+}
+
+export function selectModelForTier(
+	parentModel: Model<any> | undefined,
+	modelRegistry: { getAvailable?: () => Model<any>[] },
+	tier: ModelTier,
+): Model<any> | undefined {
+	if (tier === "premium") return parentModel;
+	const available = (modelRegistry.getAvailable?.() ?? [])
+		.filter((model) => model.input.includes("text"))
+		.sort((a, b) => modelCost(a) - modelCost(b));
+	if (available.length === 0) return parentModel;
+	if (tier === "cheap") return available[0];
+	const ceiling = available[Math.max(0, Math.floor((available.length - 1) * 0.66))]!;
+	if (parentModel && modelCost(parentModel) <= modelCost(ceiling)) return parentModel;
+	return ceiling;
+}
+
+function modelCost(model: Model<any>): number {
+	return model.cost.input + model.cost.output + model.cost.cacheWrite;
 }
 
 function watchSession(session: AgentSession, maxTurns: number) {

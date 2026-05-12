@@ -1,6 +1,6 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { admitRun, getBudgetPolicy } from "./budget.ts";
 import { spawn as spawnLanePrimitive } from "../spawn/index.ts";
-import { getBudgetPolicy } from "./budget.ts";
 import { runHeadlessProfile } from "./headless-runner.ts";
 import { compilePipeline } from "./planner.ts";
 import { getProfile } from "./profiles.ts";
@@ -182,6 +182,7 @@ export class SpawnOrchestratorRuntime {
 			pi: this.pi,
 			ctx,
 			profile,
+			modelTier: record.modelTier,
 			prompt: buildStepPrompt(step, requestText, plan),
 			maxTurns: budgetTurns(record.budgetPreset),
 			signal,
@@ -198,6 +199,7 @@ export class SpawnOrchestratorRuntime {
 					toolUses: result.toolUses,
 					turns: result.turns,
 				});
+				this.enqueueAcceptanceFollowUp(record, step, ctx, requestText, plan);
 			})
 			.catch((error) => {
 				this.registry.failRun(record.id, error instanceof Error ? error.message : String(error));
@@ -252,6 +254,43 @@ export class SpawnOrchestratorRuntime {
 		}
 	}
 
+	private enqueueAcceptanceFollowUp(
+		record: RunRecord,
+		step: PipelineStep,
+		ctx: ExtensionContext,
+		requestText: string,
+		plan: PipelinePlan,
+	): void {
+		const completed = this.registry.getRun(record.id);
+		if (!completed || completed.status !== "needs-follow-up") return;
+		const policy = getBudgetPolicy(plan.budget);
+		const followUpStep = buildFollowUpStep(step, completed.depth + 1);
+		const decision = admitRun(
+			{
+				originId: plan.originId,
+				parentRunId: completed.id,
+				stepId: followUpStep.id,
+				kind: "step",
+				profile: followUpStep.profile,
+				intent: followUpStep.title,
+				depth: completed.depth + 1,
+				laneBackend: followUpStep.laneBackend,
+				editPolicy: followUpStep.editPolicy,
+				estimatedTokens: Math.floor(policy.defaultRunBudget.maxTokens / 2),
+			},
+			policy,
+		);
+		if (decision.action === "ask" || decision.action === "reject") {
+			this.registry.blockRun(completed.id, `Follow-up not admitted: ${decision.reason}`);
+			this.persistRun(completed.id);
+			return;
+		}
+		const followUp = this.registry.createRun(decision.run, laneForStep(followUpStep), followUpStep.acceptance);
+		this.runCwds.set(followUp.id, ctx.cwd);
+		this.persistRun(followUp.id);
+		this.queue.push({ record: followUp, step: followUpStep, ctx, requestText, plan });
+	}
+
 	private dependencyStatus(originId: string, stepId: string): RunRecord["status"] | undefined {
 		return this.registry.listRuns(originId).find((run) => run.stepId === stepId)?.status;
 	}
@@ -293,8 +332,7 @@ export class SpawnOrchestratorRuntime {
 		const run = this.registry.getRun(id);
 		if (!run) return;
 		const ledger = this.useLedger(this.runCwds.get(id));
-		ledger.upsertRun(run);
-		ledger.replaceEvents(this.registry.allTraceEvents());
+		ledger.upsertRunAndEvents(run, this.registry.allTraceEvents());
 		this.persistSessionEntry("run", metadataRun(run));
 	}
 
@@ -360,6 +398,19 @@ export function registerSpawnOrchestrator(pi: ExtensionAPI): SpawnOrchestratorRu
 			});
 		},
 	});
+	pi.registerCommand("lanes-dashboard", {
+		description: "Show compact Spawn orchestrator dashboard. Usage: /lanes-dashboard [origin]",
+		handler: async (args, ctx) => {
+			const origin = args.trim() || undefined;
+			const result = runtime.status({ origin }, ctx);
+			const runs = (result.details as { runs?: RunRecord[] }).runs ?? [];
+			pi.sendMessage({
+				customType: "spawn-orchestrator-dashboard",
+				content: formatDashboard(runs),
+				display: true,
+			});
+		},
+	});
 	return runtime;
 }
 
@@ -382,6 +433,21 @@ function laneForStep(step: PipelineStep): Partial<LaneRef> {
 		backend: step.laneBackend,
 		jumpable: step.laneBackend === "pi-session" || step.laneBackend === "pane",
 		promotable: step.laneBackend === "headless",
+	};
+}
+
+export function buildFollowUpStep(step: PipelineStep, depth: number): PipelineStep {
+	return {
+		id: `${step.id}-follow-up-${depth}`,
+		title: `Follow up unmet acceptance for ${step.title}`,
+		profile: "review",
+		laneBackend: "headless",
+		editPolicy: "none",
+		acceptance: [
+			...step.acceptance,
+			"Return explicit acceptance evidence or a concise blocked reason with next action",
+		],
+		dependsOn: [],
 	};
 }
 
@@ -510,6 +576,26 @@ export function formatStatus(
 		.join("\n");
 }
 
+export function formatDashboard(runs: RunRecord[]): string {
+	if (runs.length === 0) return "Spawn lanes: no runs recorded.";
+	const groups = new Map<string, RunRecord[]>();
+	for (const run of runs) {
+		const group = groups.get(run.originId) ?? [];
+		group.push(run);
+		groups.set(run.originId, group);
+	}
+	return [...groups.entries()]
+		.sort((a, b) => latestUpdated(b[1]) - latestUpdated(a[1]))
+		.map(([originId, items]) => {
+			const counts = countStatuses(items);
+			const active = counts.running + counts.queued;
+			const needsAttention = counts.blocked + counts.failed + counts["needs-follow-up"] + counts.stopped;
+			const latest = items.reduce((best, run) => (run.updatedAt > best.updatedAt ? run : best), items[0]!);
+			return `${originId} total=${items.length} active=${active} done=${counts.completed} attention=${needsAttention} latest=${latest.status}/${latest.profile}`;
+		})
+		.join("\n");
+}
+
 export function formatResult(run: RunRecord, verbosity: "metadata" | "summary" | "full"): string {
 	const metadata = [
 		`Run: ${run.id}`,
@@ -537,6 +623,22 @@ function inspectHint(run: RunRecord): string | undefined {
 	if (run.lane.sessionPath) return `pi --session ${shellQuote(run.lane.sessionPath)}`;
 	if (run.lane.promotable) return "headless run is promotable after it records a session path";
 	return undefined;
+}
+
+function countStatuses(runs: RunRecord[]): Record<RunRecord["status"], number> {
+	return {
+		queued: runs.filter((run) => run.status === "queued").length,
+		running: runs.filter((run) => run.status === "running").length,
+		completed: runs.filter((run) => run.status === "completed").length,
+		blocked: runs.filter((run) => run.status === "blocked").length,
+		failed: runs.filter((run) => run.status === "failed").length,
+		"needs-follow-up": runs.filter((run) => run.status === "needs-follow-up").length,
+		stopped: runs.filter((run) => run.status === "stopped").length,
+	};
+}
+
+function latestUpdated(runs: RunRecord[]): number {
+	return Math.max(...runs.map((run) => run.updatedAt));
 }
 
 function shellQuote(value: string): string {

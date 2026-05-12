@@ -3,8 +3,14 @@ import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { admitRun, applyAdmission, emptySchedulerSnapshot, getBudgetPolicy } from "./budget.ts";
-import { formatResult, formatStatus, SpawnOrchestratorRuntime } from "./extension.ts";
-import { buildHeadlessResourceLoaderOptions } from "./headless-runner.ts";
+import {
+	buildFollowUpStep,
+	formatDashboard,
+	formatResult,
+	formatStatus,
+	SpawnOrchestratorRuntime,
+} from "./extension.ts";
+import { buildHeadlessResourceLoaderOptions, selectModelForTier } from "./headless-runner.ts";
 import { compilePipeline } from "./planner.ts";
 import { getProfile } from "./profiles.ts";
 import { RunRegistry } from "./registry.ts";
@@ -46,6 +52,17 @@ describe("Spawn orchestrator profiles", () => {
 		});
 		expect(options.systemPromptOverride()).toContain("Do not inherit or assume the parent coding prompt");
 		expect(options.systemPromptOverride()).toContain("strictly read-only");
+	});
+
+	test("model tier selection downgrades premium parents for cheap and balanced runs", () => {
+		const cheap = fakeModel("cheap", 1);
+		const balanced = fakeModel("balanced", 10);
+		const premium = fakeModel("premium", 100);
+		const registry = { getAvailable: () => [premium, cheap, balanced] };
+
+		expect(selectModelForTier(premium, registry, "cheap")?.id).toBe("cheap");
+		expect(selectModelForTier(premium, registry, "balanced")?.id).toBe("balanced");
+		expect(selectModelForTier(premium, registry, "premium")?.id).toBe("premium");
 	});
 });
 
@@ -135,6 +152,20 @@ describe("pipeline planning", () => {
 
 		expect(plan.steps).toHaveLength(1);
 		expect(plan.steps[0]).toMatchObject({ laneBackend: "pi-session", profile: "research" });
+	});
+
+	test("acceptance follow-ups are read-only headless review steps", () => {
+		const plan = compilePipeline("Research and verify acceptance", { mode: "orchestrate", originId: "origin-4" });
+		const followUp = buildFollowUpStep(plan.steps[0]!, 1);
+
+		expect(followUp).toMatchObject({
+			id: `${plan.steps[0]!.id}-follow-up-1`,
+			profile: "review",
+			laneBackend: "headless",
+			editPolicy: "none",
+			dependsOn: [],
+		});
+		expect(followUp.acceptance.at(-1)).toContain("explicit acceptance evidence");
 	});
 });
 
@@ -273,6 +304,16 @@ describe("status rendering", () => {
 
 		expect(formatStatus([completed], [])).toContain("tmux select-pane -t '%1; touch /tmp/bad'");
 	});
+
+	test("renders a compact dashboard summary without opening panes", () => {
+		const registry = new RunRegistry(() => 1000);
+		const decision = admitRun(researchRequest("dashboard"), getBudgetPolicy("balanced"));
+		if (decision.action !== "start") throw new Error("expected start");
+		const run = registry.createRun(decision.run, undefined, ["Return evidence"]);
+		const completed = registry.completeRun(run.id, "Evidence returned.");
+
+		expect(formatDashboard([completed])).toContain("origin-test total=1 active=0 done=1 attention=0");
+	});
 });
 
 describe("runtime durable recovery", () => {
@@ -341,5 +382,20 @@ function researchRequest(intent: string): RunRequest {
 function fakePi() {
 	return {
 		appendEntry() {},
+	} as any;
+}
+
+function fakeModel(id: string, cost: number) {
+	return {
+		id,
+		name: id,
+		provider: "test",
+		api: "openai-responses",
+		baseUrl: "",
+		reasoning: false,
+		input: ["text"],
+		cost: { input: cost, output: cost, cacheRead: 0, cacheWrite: 0 },
+		contextWindow: 100_000,
+		maxTokens: 10_000,
 	} as any;
 }
