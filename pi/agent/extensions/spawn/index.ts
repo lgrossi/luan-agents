@@ -239,11 +239,11 @@ function budgetRecentMessages(messages: AgentMessage[]): AgentMessage[] {
 
 function contextTransferMessages(branch: SessionEntry[]): AgentMessage[] {
 	const compactionIndex = branch.findLastIndex((entry) => entry.type === "compaction");
-	const compaction = compactionIndex >= 0 ? entryToMessage(branch[compactionIndex]) : undefined;
+	const compactionEntry =
+		compactionIndex >= 0 && branch[compactionIndex]?.type === "compaction" ? branch[compactionIndex] : undefined;
+	const compaction = compactionEntry ? entryToMessage(compactionEntry) : undefined;
 	const firstKeptIndex =
-		compactionIndex >= 0 && branch[compactionIndex].type === "compaction"
-			? branch.findIndex((entry) => entry.id === branch[compactionIndex].firstKeptEntryId)
-			: -1;
+		compactionEntry !== undefined ? branch.findIndex((entry) => entry.id === compactionEntry.firstKeptEntryId) : -1;
 	const recentEntries =
 		compactionIndex >= 0
 			? [
@@ -1320,10 +1320,8 @@ function isSpawnLaneEntry(value: unknown): value is SpawnLaneEntry {
 function spawnLaneEntries(ctx: ExtensionContext): SpawnLaneEntry[] {
 	return ctx.sessionManager
 		.getEntries()
-		.filter(
-			(entry) => entry.type === "custom" && entry.customType === SPAWN_ENTRY_TYPE && isSpawnLaneEntry(entry.data),
-		)
-		.map((entry) => entry.data as SpawnLaneEntry)
+		.map((entry) => (entry.type === "custom" && entry.customType === SPAWN_ENTRY_TYPE ? entry.data : undefined))
+		.filter(isSpawnLaneEntry)
 		.sort((a, b) => b.createdAt - a.createdAt);
 }
 

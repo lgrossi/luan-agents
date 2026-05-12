@@ -33,7 +33,8 @@
     "extensions/tasks/index.ts",
     "extensions/system-prompt/index.ts",
     "extensions/spawn/index.ts",
-    "extensions/tui/index.ts"
+    "extensions/tui/index.ts",
+    "extensions/spawn-orchestrator/index.ts"
   ],
   "enabledModels": [
     "openai-codex/gpt-5.5",

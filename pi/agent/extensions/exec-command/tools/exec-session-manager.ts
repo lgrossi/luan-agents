@@ -1,8 +1,9 @@
 import { type ChildProcessByStdio, execFileSync, spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import type { Readable } from "node:stream";
-import * as pty from "node-pty";
+import type * as pty from "node-pty";
 import { DEFAULT_EXEC_SHELL, isFishShell, resolveRuntimeShell } from "../adapter/runtime-shell.ts";
 import {
 	approxTokenCount,
@@ -121,6 +122,7 @@ const MIN_EMPTY_WRITE_YIELD_TIME_MS = 30_000;
 const MAX_YIELD_TIME_MS = 120_000;
 const MAX_COMMAND_HISTORY = 256;
 const DEFAULT_MAX_SESSION_BUFFER_CHARS = UNIFIED_EXEC_OUTPUT_MAX_BYTES;
+const require = createRequire(import.meta.url);
 
 function resolveWorkdir(baseCwd: string, workdir?: string): string {
 	if (!workdir) return baseCwd;
@@ -203,6 +205,14 @@ function withUnifiedExecEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
 	delete env.FORCE_COLOR;
 	delete env.CLICOLOR;
 	return env;
+}
+
+function canUseNodePty(): boolean {
+	return process.versions.bun === undefined;
+}
+
+function loadNodePty(): typeof pty {
+	return require("node-pty") as typeof pty;
 }
 
 function clampYieldTime(yieldTimeMs: number | undefined, fallback: number): number {
@@ -796,7 +806,7 @@ export function createExecSessionManager(options: ExecSessionManagerOptions = {}
 		const login = input.login ?? true;
 		const execution = resolveExecution(input.shell, input.cmd);
 		const shellArgs = login ? ["-lc", execution.command] : ["-c", execution.command];
-		const child = pty.spawn(shell, shellArgs, {
+		const child = loadNodePty().spawn(shell, shellArgs, {
 			cwd: workdir,
 			env: execution.env,
 			name: process.env.TERM || "xterm-256color",
@@ -844,15 +854,16 @@ export function createExecSessionManager(options: ExecSessionManagerOptions = {}
 		exec: async (input, cwd, signal, onUpdate) => {
 			const shell = resolveShell(input.shell);
 			const workdir = resolveWorkdir(cwd, input.workdir);
-			const session = input.tty
-				? (() => {
-						try {
-							return createPtySession(input, workdir, shell, signal);
-						} catch {
-							return createPipeSession(input, workdir, shell, signal);
-						}
-					})()
-				: createPipeSession(input, workdir, shell, signal);
+			const session =
+				input.tty && canUseNodePty()
+					? (() => {
+							try {
+								return createPtySession(input, workdir, shell, signal);
+							} catch {
+								return createPipeSession(input, workdir, shell, signal);
+							}
+						})()
+					: createPipeSession(input, workdir, shell, signal);
 			sessions.set(session.id, session);
 			rememberCommand(session.id, session.command);
 			notifySessionUpdate();
