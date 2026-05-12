@@ -131,7 +131,7 @@ function isGitFamilySegment(segment: string[]): boolean {
 	const index = commandIndex(segment);
 	if (index === undefined) return false;
 	const executable = commandName(segment[index] ?? "");
-	return executable === "git" || executable === "gt" || executable === "gh" || isRtkGitSegment(segment);
+	return executable === "git" || executable === "gs" || executable === "gh" || isRtkGitSegment(segment);
 }
 
 function ripgrepCommandIndex(tokens: string[]): number | undefined {

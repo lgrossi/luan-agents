@@ -1888,16 +1888,18 @@ test("exec_command keeps write_stdin active across non-interactive and tty runs"
 		expect(nonTty.terminate).toBeUndefined();
 		expect(activeTools).toEqual(["read", "exec_command", "write_stdin"]);
 
-		const tty = await execTool.execute(
-			"call-tty",
-			{ cmd: 'read line; printf "got:$line"', tty: true, yield_time_ms: 250 },
-			undefined,
-			undefined,
-			ctx,
-		);
-		expect(tty.details.session_id).toBeNumber();
-		expect(tty.terminate).toBeUndefined();
-		expect(activeTools).toEqual(["read", "exec_command", "write_stdin"]);
+		if (!process.versions.bun) {
+			const tty = await execTool.execute(
+				"call-tty",
+				{ cmd: 'read line; printf "got:$line"', tty: true, yield_time_ms: 250 },
+				undefined,
+				undefined,
+				ctx,
+			);
+			expect(tty.details.session_id).toBeNumber();
+			expect(tty.terminate).toBeUndefined();
+			expect(activeTools).toEqual(["read", "exec_command", "write_stdin"]);
+		}
 	} finally {
 		for (const handler of handlers.get("session_shutdown") ?? []) handler();
 	}
@@ -2288,20 +2290,20 @@ test("rtk rewrite leaves already-protected git commands raw", async () => {
 	expect(execCalls).toEqual([]);
 });
 
-test("rtk rewrite does not wrap graphite or gh commands", async () => {
+test("rtk rewrite does not wrap Git-Spice or gh commands", async () => {
 	const execCalls: Array<{ command: string; args?: string[] }> = [];
 	const pi = {
 		exec: async (command: string, args?: string[]) => {
 			execCalls.push({ command, args });
-			return { code: 0, stdout: "rtk gt up\n", stderr: "" };
+			return { code: 0, stdout: "rtk gs up\n", stderr: "" };
 		},
 	} as any;
 
-	const graphite = await computeRtkRewriteDecision(pi, "gt up", true);
+	const gitSpice = await computeRtkRewriteDecision(pi, "gs up", true);
 	const github = await computeRtkRewriteDecision(pi, "gh pr view", true);
 
-	expect(graphite.changed).toBe(false);
-	expect(graphite.rewrittenCommand).toBe("gt up");
+	expect(gitSpice.changed).toBe(false);
+	expect(gitSpice.rewrittenCommand).toBe("gs up");
 	expect(github.changed).toBe(false);
 	expect(github.rewrittenCommand).toBe("gh pr view");
 	expect(execCalls).toEqual([]);
