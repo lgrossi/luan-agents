@@ -24,6 +24,8 @@ type TextResult = { content: { type: "text"; text: string }[]; details: unknown 
 type OrchestrateParams = { request?: string; mode?: string; budget?: string };
 type LaneStatusParams = { runId?: string; origin?: string };
 type LaneResultParams = { runId: string; verbosity?: string };
+type LaneActionParams = { runId: string };
+type HeadlessRunner = typeof runHeadlessProfile;
 
 type QueueItem = {
 	record: RunRecord;
@@ -41,8 +43,12 @@ export class SpawnOrchestratorRuntime {
 	private readonly watcher = new ResultWatcher();
 	private ledger?: SpawnTraceLedger;
 	private readonly runCwds = new Map<string, string>();
+	private readonly abortControllers = new Map<string, AbortController>();
 
-	constructor(private readonly pi: ExtensionAPI) {}
+	constructor(
+		private readonly pi: ExtensionAPI,
+		private readonly options: { runHeadless?: HeadlessRunner } = {},
+	) {}
 
 	async orchestrate(params: OrchestrateParams, ctx: ExtensionContext, signal?: AbortSignal): Promise<TextResult> {
 		this.useLedger(ctx.cwd);
@@ -81,6 +87,40 @@ export class SpawnOrchestratorRuntime {
 		if (!run) return textResult(`Run not found: ${params.runId}`);
 		const verbosity = params.verbosity === "full" || params.verbosity === "summary" ? params.verbosity : "metadata";
 		return textResult(formatResult(run, verbosity), { run });
+	}
+
+	jump(params: LaneActionParams, ctx?: ExtensionContext): TextResult {
+		if (ctx) this.useLedger(ctx.cwd);
+		const run = this.resolveRun(params.runId, ctx?.cwd);
+		if (!run) return textResult(`Run not found: ${params.runId}`);
+		const hint = inspectHint(run);
+		if (!hint) return textResult(`Run ${run.id} has no jump target yet.`, { run });
+		if (run.lane.paneId && ctx) {
+			this.pi.exec("tmux", ["select-pane", "-t", run.lane.paneId], { timeout: 5_000 }).catch(() => undefined);
+		} else if (run.lane.windowId && ctx) {
+			this.pi.exec("tmux", ["select-window", "-t", run.lane.windowId], { timeout: 5_000 }).catch(() => undefined);
+		}
+		return textResult(`Jump target for ${run.id}:\n${hint}`, { run, command: hint });
+	}
+
+	stop(params: LaneActionParams, ctx?: ExtensionContext): TextResult {
+		if (ctx) this.useLedger(ctx.cwd);
+		const run = this.resolveRun(params.runId, ctx?.cwd);
+		if (!run) return textResult(`Run not found: ${params.runId}`);
+		const controller = this.abortControllers.get(run.id);
+		if (controller) controller.abort();
+		this.queue.splice(
+			0,
+			this.queue.length,
+			...this.queue.filter((item) => {
+				if (item.record.id !== run.id) return true;
+				this.registry.stopRun(run.id, "Stopped by user request.");
+				return false;
+			}),
+		);
+		if (!controller && run.status !== "queued") this.registry.stopRun(run.id, "Stopped by user request.");
+		this.persistRun(run.id);
+		return textResult(`Stopped Spawn run ${run.id}.`, { run: this.registry.getRun(run.id) });
 	}
 
 	private async createRuns(
@@ -178,14 +218,18 @@ export class SpawnOrchestratorRuntime {
 		this.registry.startRun(record.id);
 		this.persistRun(record.id);
 		const profile = getProfile(step.profile);
-		const promise = runHeadlessProfile({
+		const abortController = new AbortController();
+		this.abortControllers.set(record.id, abortController);
+		const parentAbort = () => abortController.abort();
+		signal?.addEventListener("abort", parentAbort, { once: true });
+		const promise = (this.options.runHeadless ?? runHeadlessProfile)({
 			pi: this.pi,
 			ctx,
 			profile,
 			modelTier: record.modelTier,
 			prompt: buildStepPrompt(step, requestText, plan),
 			maxTurns: budgetTurns(record.budgetPreset),
-			signal,
+			signal: abortController.signal,
 		})
 			.then((result) => {
 				this.registry.promoteRun(record.id, {
@@ -205,8 +249,10 @@ export class SpawnOrchestratorRuntime {
 				this.registry.failRun(record.id, error instanceof Error ? error.message : String(error));
 			})
 			.finally(() => {
+				signal?.removeEventListener("abort", parentAbort);
 				this.running--;
 				this.background.delete(record.id);
+				this.abortControllers.delete(record.id);
 				this.persistRun(record.id);
 				this.drainQueue().catch((error) => {
 					this.pi.appendEntry(TRACE_ENTRY_TYPE, {
@@ -289,6 +335,14 @@ export class SpawnOrchestratorRuntime {
 		this.runCwds.set(followUp.id, ctx.cwd);
 		this.persistRun(followUp.id);
 		this.queue.push({ record: followUp, step: followUpStep, ctx, requestText, plan });
+	}
+
+	async waitForIdle(): Promise<void> {
+		while (this.background.size > 0 || this.queue.length > 0) {
+			await Promise.allSettled([...this.background.values()]);
+			await this.drainQueue();
+			if (this.background.size === 0) break;
+		}
 	}
 
 	private dependencyStatus(originId: string, stepId: string): RunRecord["status"] | undefined {
@@ -411,6 +465,28 @@ export function registerSpawnOrchestrator(pi: ExtensionAPI): SpawnOrchestratorRu
 			});
 		},
 	});
+	pi.registerCommand("lane-jump", {
+		description: "Jump to a Spawn lane target. Usage: /lane-jump <run-id>",
+		handler: async (args, ctx) => {
+			const result = runtime.jump({ runId: args.trim() }, ctx);
+			pi.sendMessage({
+				customType: "spawn-orchestrator-jump",
+				content: result.content[0]?.text ?? "",
+				display: true,
+			});
+		},
+	});
+	pi.registerCommand("lane-stop", {
+		description: "Stop a Spawn run. Usage: /lane-stop <run-id>",
+		handler: async (args, ctx) => {
+			const result = runtime.stop({ runId: args.trim() }, ctx);
+			pi.sendMessage({
+				customType: "spawn-orchestrator-stop",
+				content: result.content[0]?.text ?? "",
+				display: true,
+			});
+		},
+	});
 	return runtime;
 }
 
@@ -464,7 +540,11 @@ function buildStepPrompt(step: PipelineStep, requestText: string, plan?: Pipelin
 		`Profile: ${step.profile}`,
 		step.acceptance.length ? `Acceptance:\n${step.acceptance.map((item) => `- ${item}`).join("\n")}` : undefined,
 		plan ? `Pipeline mode: ${plan.mode}\nOrigin: ${plan.originId}` : undefined,
-		"Return a concise result with findings, files/artifacts touched or inspected, verification, and blockers.",
+		[
+			"Return concise findings plus a structured acceptance block:",
+			'SPAWN_ACCEPTANCE: {"acceptance":[{"criterion":"...","status":"met|blocked|failed|needs-follow-up","evidence":["..."],"followUps":["..."]}]}',
+			"Use one acceptance entry per criterion; do not mark met without concrete evidence.",
+		].join("\n"),
 	]
 		.filter(Boolean)
 		.join("\n\n");

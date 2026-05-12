@@ -63,7 +63,7 @@ export class RunRegistry {
 				...lane,
 			},
 			metrics: { estimatedTokens: request.estimatedTokens ?? admitted.budget.maxTokens },
-			acceptance: { criteria, status: "pending", evidence: [], followUps: [] },
+			acceptance: { criteria, status: "pending", evidence: [], followUps: [], results: [] },
 			artifacts: [],
 			errors: [],
 			createdAt: timestamp,
@@ -84,7 +84,7 @@ export class RunRegistry {
 	completeRun(id: string, summary: string, metrics: RunMetrics = {}): RunRecord {
 		const run = this.requireRun(id);
 		const acceptance = assessAcceptance(run.acceptance.criteria, summary);
-		const status = acceptance.status === "needs-follow-up" ? "needs-follow-up" : "completed";
+		const status = terminalRunStatusForAcceptance(acceptance.status);
 		return this.finishRun(id, status, summary, metrics, acceptance);
 	}
 
@@ -185,7 +185,7 @@ export class RunRegistry {
 
 	private finishRun(
 		id: string,
-		status: Extract<RunStatus, "completed" | "needs-follow-up">,
+		status: Extract<RunStatus, "completed" | "blocked" | "failed" | "needs-follow-up">,
 		summary: string,
 		metrics: RunMetrics,
 		acceptance: AcceptanceState,
@@ -200,7 +200,7 @@ export class RunRegistry {
 			acceptance,
 			metrics: { ...run.metrics, ...metrics, durationMs },
 		});
-		this.recordEvent(id, status === "needs-follow-up" ? "needs-follow-up" : "completed", summary);
+		this.recordEvent(id, status, summary);
 		return updated;
 	}
 
@@ -238,11 +238,22 @@ function normalizeRun(run: RunRecord): RunRecord {
 			status: run.status === "completed" ? "met" : run.status === "failed" ? "failed" : "pending",
 			evidence: [],
 			followUps: [],
+			results: [],
 		},
 	};
 }
 
+function terminalRunStatusForAcceptance(
+	status: AcceptanceState["status"],
+): Extract<RunStatus, "completed" | "blocked" | "failed" | "needs-follow-up"> {
+	if (status === "met") return "completed";
+	if (status === "blocked" || status === "failed" || status === "needs-follow-up") return status;
+	return "needs-follow-up";
+}
+
 function assessAcceptance(criteria: string[], summary: string): AcceptanceState {
+	const structured = parseStructuredAcceptance(criteria, summary);
+	if (structured) return structured;
 	const followUps = extractFollowUps(summary);
 	if (followUps.length > 0) {
 		return {
@@ -250,6 +261,12 @@ function assessAcceptance(criteria: string[], summary: string): AcceptanceState 
 			status: "needs-follow-up",
 			evidence: evidenceFromSummary(summary),
 			followUps,
+			results: criteria.map((criterion) => ({
+				criterion,
+				status: "needs-follow-up",
+				evidence: evidenceFromSummary(summary),
+				followUps,
+			})),
 		};
 	}
 	if (!hasAcceptanceEvidence(summary)) {
@@ -258,6 +275,12 @@ function assessAcceptance(criteria: string[], summary: string): AcceptanceState 
 			status: "needs-follow-up",
 			evidence: evidenceFromSummary(summary),
 			followUps: ["Completion summary did not include explicit acceptance evidence"],
+			results: criteria.map((criterion) => ({
+				criterion,
+				status: "needs-follow-up",
+				evidence: evidenceFromSummary(summary),
+				followUps: ["Completion summary did not include explicit acceptance evidence"],
+			})),
 		};
 	}
 	return {
@@ -265,7 +288,72 @@ function assessAcceptance(criteria: string[], summary: string): AcceptanceState 
 		status: "met",
 		evidence: evidenceFromSummary(summary),
 		followUps: [],
+		results: criteria.map((criterion) => ({
+			criterion,
+			status: "met",
+			evidence: evidenceFromSummary(summary),
+			followUps: [],
+		})),
 	};
+}
+
+function parseStructuredAcceptance(criteria: string[], summary: string): AcceptanceState | undefined {
+	const parsed = parseAcceptanceJson(summary);
+	if (!parsed || !Array.isArray(parsed.acceptance)) return undefined;
+	const results = parsed.acceptance
+		.map((item: unknown) => {
+			if (!item || typeof item !== "object") return undefined;
+			const typed = item as { criterion?: unknown; status?: unknown; evidence?: unknown; followUps?: unknown };
+			const status = normalizeAcceptanceStatus(typed.status);
+			if (!status || typeof typed.criterion !== "string") return undefined;
+			return {
+				criterion: typed.criterion,
+				status,
+				evidence: stringArray(typed.evidence),
+				followUps: stringArray(typed.followUps),
+			};
+		})
+		.filter((item): item is NonNullable<typeof item> => Boolean(item));
+	if (results.length === 0) return undefined;
+	const status = results.some((item) => item.status === "failed")
+		? "failed"
+		: results.some((item) => item.status === "blocked")
+			? "blocked"
+			: results.some((item) => item.status === "needs-follow-up")
+				? "needs-follow-up"
+				: "met";
+	return {
+		criteria,
+		status,
+		evidence: results.flatMap((item) => item.evidence).slice(0, 8),
+		followUps: results.flatMap((item) => item.followUps).slice(0, 8),
+		results,
+	};
+}
+
+function parseAcceptanceJson(summary: string): { acceptance?: unknown } | undefined {
+	for (const candidate of acceptanceJsonCandidates(summary)) {
+		try {
+			const parsed = JSON.parse(candidate);
+			if (parsed && typeof parsed === "object") return parsed as { acceptance?: unknown };
+		} catch {}
+	}
+	return undefined;
+}
+
+function acceptanceJsonCandidates(summary: string): string[] {
+	const fenced = [...summary.matchAll(/```(?:json)?\s*([\s\S]*?)```/g)].map((match) => match[1]!.trim());
+	const marker = summary.match(/SPAWN_ACCEPTANCE:\s*(\{[\s\S]*\})/);
+	return [...fenced, marker?.[1], summary.trim()].filter((item): item is string => Boolean(item));
+}
+
+function normalizeAcceptanceStatus(value: unknown): "met" | "blocked" | "failed" | "needs-follow-up" | undefined {
+	if (value === "met" || value === "blocked" || value === "failed" || value === "needs-follow-up") return value;
+	return undefined;
+}
+
+function stringArray(value: unknown): string[] {
+	return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
 function hasAcceptanceEvidence(summary: string): boolean {

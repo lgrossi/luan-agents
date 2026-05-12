@@ -211,6 +211,22 @@ describe("run registry", () => {
 		expect(completed.acceptance.followUps[0]).toContain("Unable to verify");
 	});
 
+	test("evaluates structured acceptance per criterion", () => {
+		const registry = new RunRegistry(() => 1000);
+		const decision = admitRun(researchRequest("structured"), getBudgetPolicy("balanced"));
+		if (decision.action !== "start") throw new Error("expected start");
+		const run = registry.createRun(decision.run, undefined, ["criterion one", "criterion two"]);
+
+		const completed = registry.completeRun(
+			run.id,
+			`Done\nSPAWN_ACCEPTANCE: {"acceptance":[{"criterion":"criterion one","status":"met","evidence":["proof"]},{"criterion":"criterion two","status":"blocked","evidence":[],"followUps":["needs data"]}]}`,
+		);
+
+		expect(completed.status).toBe("blocked");
+		expect(completed.acceptance.results).toHaveLength(2);
+		expect(completed.acceptance.followUps).toEqual(["needs data"]);
+	});
+
 	test("does not treat explicit no-blocker summaries as follow-up", () => {
 		const registry = new RunRegistry(() => 1000);
 		const decision = admitRun(researchRequest("no-blockers"), getBudgetPolicy("balanced"));
@@ -259,6 +275,20 @@ describe("run registry", () => {
 
 			expect(ledger.load().runs).toEqual([]);
 			expect(readdirSync(join(dir, ".pi", "spawn")).some((file) => file.includes(".corrupt-"))).toBe(true);
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
+	test("applies retention limits to durable ledger records", () => {
+		const dir = mkdtempSync(join(tmpdir(), "spawn-ledger-retention-"));
+		try {
+			const ledger = new SpawnTraceLedger(dir);
+			for (let index = 0; index < 505; index++) {
+				ledger.upsertRun({ ...runRecordFixture(index), id: `run-${index}`, updatedAt: index });
+			}
+
+			expect(ledger.load().runs).toHaveLength(500);
+			expect(ledger.load().runs.some((run) => run.id === "run-0")).toBe(false);
 		} finally {
 			rmSync(dir, { recursive: true, force: true });
 		}
@@ -341,6 +371,60 @@ describe("runtime durable recovery", () => {
 			rmSync(dir, { recursive: true, force: true });
 		}
 	});
+
+	test("runs injected headless pipeline and spawns acceptance follow-up", async () => {
+		const dir = mkdtempSync(join(tmpdir(), "spawn-runtime-e2e-"));
+		try {
+			let calls = 0;
+			const runtime = new SpawnOrchestratorRuntime(fakePi(), {
+				runHeadless: async () => {
+					calls++;
+					return {
+						responseText:
+							calls === 1
+								? 'SPAWN_ACCEPTANCE: {"acceptance":[{"criterion":"Return concise findings, risks, and source/code references","status":"needs-follow-up","evidence":[],"followUps":["missing evidence"]}]}'
+								: 'SPAWN_ACCEPTANCE: {"acceptance":[{"criterion":"Return concise findings, risks, and source/code references","status":"met","evidence":["verified"],"followUps":[]}]}',
+						sessionPath: `/tmp/session-${calls}.jsonl`,
+						toolUses: 0,
+						turns: 1,
+					};
+				},
+			});
+
+			const result = await runtime.orchestrate(
+				{ request: "Research compare acceptance", mode: "orchestrate", budget: "cheap" },
+				{ cwd: dir } as any,
+			);
+			await runtime.waitForIdle();
+			const origin = /Origin: (spawn-[^\n]+)/.exec(result.content[0]!.text)![1]!;
+			const status = runtime.status({ origin }, { cwd: dir } as any).content[0]!.text;
+
+			expect(calls).toBeGreaterThanOrEqual(2);
+			expect(status).toContain("follow-up");
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
+
+	test("stops runs and reports jump targets", () => {
+		const dir = mkdtempSync(join(tmpdir(), "spawn-runtime-actions-"));
+		try {
+			const registry = new RunRegistry(() => 1000);
+			const decision = admitRun(researchRequest("action"), getBudgetPolicy("balanced"));
+			if (decision.action !== "start") throw new Error("expected start");
+			const run = registry.createRun(decision.run, { backend: "headless", sessionPath: "/tmp/action.jsonl" });
+			const ledger = new SpawnTraceLedger(dir);
+			ledger.upsertRun(run);
+			const runtime = new SpawnOrchestratorRuntime(fakePi());
+
+			expect(runtime.jump({ runId: run.id }, { cwd: dir } as any).content[0]!.text).toContain(
+				"pi --session '/tmp/action.jsonl'",
+			);
+			expect(runtime.stop({ runId: run.id }, { cwd: dir } as any).content[0]!.text).toContain("Stopped");
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
 });
 
 describe("result watcher", () => {
@@ -382,6 +466,7 @@ function researchRequest(intent: string): RunRequest {
 function fakePi() {
 	return {
 		appendEntry() {},
+		exec: async () => ({ code: 0, stdout: "", stderr: "" }),
 	} as any;
 }
 
@@ -397,5 +482,29 @@ function fakeModel(id: string, cost: number) {
 		cost: { input: cost, output: cost, cacheRead: 0, cacheWrite: 0 },
 		contextWindow: 100_000,
 		maxTokens: 10_000,
+	} as any;
+}
+
+function runRecordFixture(index: number) {
+	return {
+		id: `run-${index}`,
+		originId: "origin-test",
+		kind: "agent",
+		profile: "research",
+		intent: "fixture",
+		status: "completed",
+		depth: 0,
+		budgetPreset: "balanced",
+		modelTier: "balanced",
+		editPolicy: "none",
+		contextPolicy: "explicit",
+		promptVisibility: "metadata",
+		lane: { backend: "headless", jumpable: false, promotable: true },
+		metrics: {},
+		acceptance: { criteria: ["done"], status: "met", evidence: [], followUps: [], results: [] },
+		artifacts: [],
+		errors: [],
+		createdAt: index,
+		updatedAt: index,
 	} as any;
 }

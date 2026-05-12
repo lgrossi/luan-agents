@@ -12,6 +12,11 @@ import {
 import { dirname, join, resolve } from "node:path";
 import type { RunRecord, TraceEvent } from "./types.ts";
 
+const MAX_RUNS = 500;
+const MAX_EVENTS = 1_000;
+const MAX_PLANS = 100;
+const MAX_WATCHERS = 200;
+
 export interface DurableWatchSnapshot {
 	runId: string;
 	status: "running" | "settled";
@@ -56,19 +61,24 @@ export class SpawnTraceLedger {
 	}
 
 	upsertRun(run: RunRecord): void {
-		this.update((state) => upsertRunRecord(state, run));
+		this.update((state) => {
+			upsertRunRecord(state, run);
+			applyRetention(state);
+		});
 	}
 
 	upsertRunAndEvents(run: RunRecord, events: TraceEvent[]): void {
 		this.update((state) => {
 			upsertRunRecord(state, run);
 			state.events = dedupeEvents(events).sort((a, b) => a.timestamp - b.timestamp);
+			applyRetention(state);
 		});
 	}
 
 	replaceEvents(events: TraceEvent[]): void {
 		this.update((state) => {
 			state.events = dedupeEvents(events).sort((a, b) => a.timestamp - b.timestamp);
+			applyRetention(state);
 		});
 	}
 
@@ -78,12 +88,14 @@ export class SpawnTraceLedger {
 			const index = state.plans.findIndex((item) => item.originId === plan.originId);
 			if (index >= 0) state.plans[index] = record;
 			else state.plans.push(record);
+			applyRetention(state);
 		});
 	}
 
 	saveWatchers(watchers: DurableWatchSnapshot[]): void {
 		this.update((state) => {
 			state.watchers = watchers;
+			applyRetention(state);
 		});
 	}
 
@@ -173,6 +185,18 @@ function upsertRunRecord(state: SpawnLedgerState, run: RunRecord): void {
 	const index = state.runs.findIndex((item) => item.id === run.id);
 	if (index >= 0) state.runs[index] = run;
 	else state.runs.push(run);
+}
+
+function applyRetention(state: SpawnLedgerState): void {
+	state.runs = trimBy(state.runs, MAX_RUNS, (run) => run.updatedAt);
+	state.events = trimBy(state.events, MAX_EVENTS, (event) => event.timestamp);
+	state.plans = trimBy(state.plans, MAX_PLANS, (plan) => plan.timestamp);
+	state.watchers = trimBy(state.watchers, MAX_WATCHERS, (watcher) => watcher.settledAt ?? watcher.startedAt);
+}
+
+function trimBy<T>(items: T[], max: number, key: (item: T) => number): T[] {
+	if (items.length <= max) return items;
+	return [...items].sort((a, b) => key(b) - key(a)).slice(0, max);
 }
 
 function isFileExistsError(error: unknown): boolean {

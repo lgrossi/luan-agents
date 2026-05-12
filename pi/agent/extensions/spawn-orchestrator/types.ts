@@ -101,11 +101,19 @@ export interface LaneRef {
 
 export type AcceptanceStatus = "pending" | "met" | "blocked" | "failed" | "needs-follow-up";
 
+export interface AcceptanceCriterionResult {
+	criterion: string;
+	status: Exclude<AcceptanceStatus, "pending">;
+	evidence: string[];
+	followUps: string[];
+}
+
 export interface AcceptanceState {
 	criteria: string[];
 	status: AcceptanceStatus;
 	evidence: string[];
 	followUps: string[];
+	results: AcceptanceCriterionResult[];
 }
 
 export interface RunRecord {
