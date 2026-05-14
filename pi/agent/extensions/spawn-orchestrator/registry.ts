@@ -254,6 +254,21 @@ function terminalRunStatusForAcceptance(
 function assessAcceptance(criteria: string[], summary: string): AcceptanceState {
 	const structured = parseStructuredAcceptance(criteria, summary);
 	if (structured) return structured;
+	if (isNoAssistantOutput(summary)) {
+		const followUps = ["Completion summary did not include explicit acceptance evidence"];
+		return {
+			criteria,
+			status: "needs-follow-up",
+			evidence: evidenceFromSummary(summary),
+			followUps,
+			results: criteria.map((criterion) => ({
+				criterion,
+				status: "needs-follow-up",
+				evidence: evidenceFromSummary(summary),
+				followUps,
+			})),
+		};
+	}
 	const followUps = extractFollowUps(summary);
 	if (followUps.length > 0) {
 		return {
@@ -360,6 +375,10 @@ function hasAcceptanceEvidence(summary: string): boolean {
 	return /\b(acceptance verified|verified|verification passed|completed|done|evidence returned|found|satisfies|passes?)\b/i.test(
 		summary,
 	);
+}
+
+function isNoAssistantOutput(summary: string): boolean {
+	return summary.trim() === "Completed with no assistant output.";
 }
 
 function extractFollowUps(summary: string): string[] {

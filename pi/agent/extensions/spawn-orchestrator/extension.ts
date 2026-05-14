@@ -1,6 +1,7 @@
+import { readFileSync } from "node:fs";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { admitRun, getBudgetPolicy } from "./budget.ts";
 import { spawn as spawnLanePrimitive } from "../spawn/index.ts";
+import { admitRun, getBudgetPolicy } from "./budget.ts";
 import { runHeadlessProfile } from "./headless-runner.ts";
 import { compilePipeline } from "./planner.ts";
 import { getProfile } from "./profiles.ts";
@@ -26,6 +27,7 @@ type LaneStatusParams = { runId?: string; origin?: string };
 type LaneResultParams = { runId: string; verbosity?: string };
 type LaneActionParams = { runId: string };
 type HeadlessRunner = typeof runHeadlessProfile;
+type SpawnLaneRunner = typeof spawnLanePrimitive;
 
 type QueueItem = {
 	record: RunRecord;
@@ -47,7 +49,12 @@ export class SpawnOrchestratorRuntime {
 
 	constructor(
 		private readonly pi: ExtensionAPI,
-		private readonly options: { runHeadless?: HeadlessRunner } = {},
+		private readonly options: {
+			runHeadless?: HeadlessRunner;
+			spawnLane?: SpawnLaneRunner;
+			sessionPollIntervalMs?: number;
+			sessionPollTimeoutMs?: number;
+		} = {},
 	) {}
 
 	async orchestrate(params: OrchestrateParams, ctx: ExtensionContext, signal?: AbortSignal): Promise<TextResult> {
@@ -160,7 +167,7 @@ export class SpawnOrchestratorRuntime {
 		signal?: AbortSignal,
 	): Promise<void> {
 		if (step.laneBackend === "pi-session") {
-			await this.launchInspectableLane(record, step, ctx, requestText, signal);
+			await this.launchInspectableLane(record, step, ctx, requestText, plan, signal);
 			await this.drainQueue(signal);
 			return;
 		}
@@ -172,11 +179,12 @@ export class SpawnOrchestratorRuntime {
 		step: PipelineStep,
 		ctx: ExtensionContext,
 		requestText: string,
+		plan: PipelinePlan,
 		signal?: AbortSignal,
 	): Promise<void> {
 		this.registry.startRun(record.id);
 		this.persistRun(record.id);
-		const result = await spawnLanePrimitive(
+		const result = await (this.options.spawnLane ?? spawnLanePrimitive)(
 			this.pi,
 			{
 				runtime: "pi",
@@ -190,19 +198,59 @@ export class SpawnOrchestratorRuntime {
 			ctx,
 			signal,
 		);
+		const sessionPath = result.child.sessionPath;
 		this.registry.promoteRun(record.id, {
 			backend: "pi-session",
 			jumpable: true,
 			promotable: false,
-			sessionPath: result.child.sessionPath,
+			sessionPath,
 			paneId: result.implementation.mux.tmux?.paneId,
 			windowId: result.implementation.mux.tmux?.windowId,
 		});
-		this.registry.completeRun(
-			record.id,
-			"Inspectable lane launched and completed. Continue or inspect it from the spawned Pi session.",
-		);
 		this.persistRun(record.id);
+		const promise = this.watchInspectableLane(record.id, sessionPath, step, ctx, requestText, plan, signal);
+		this.background.set(record.id, promise);
+		this.watcher.watch(record, promise, () => this.persistWatchers(ctx.cwd));
+	}
+
+	private async watchInspectableLane(
+		runId: string,
+		sessionPath: string | undefined,
+		step: PipelineStep,
+		ctx: ExtensionContext,
+		requestText: string,
+		plan: PipelinePlan,
+		signal?: AbortSignal,
+	): Promise<void> {
+		try {
+			const summary = sessionPath
+				? await waitForSessionAssistantText(
+						sessionPath,
+						this.options.sessionPollIntervalMs ?? 1_000,
+						this.options.sessionPollTimeoutMs ?? 15 * 60_000,
+						signal,
+					)
+				: undefined;
+			this.registry.completeRun(
+				runId,
+				summary ??
+					"Inspectable lane launched but the child session did not return assistant output before watcher timeout.",
+			);
+			const updated = this.registry.getRun(runId);
+			if (updated) this.enqueueAcceptanceFollowUp(updated, step, ctx, requestText, plan);
+		} catch (error) {
+			this.registry.failRun(runId, error instanceof Error ? error.message : String(error));
+		} finally {
+			this.background.delete(runId);
+			this.persistRun(runId);
+			this.drainQueue().catch((error) => {
+				this.pi.appendEntry(TRACE_ENTRY_TYPE, {
+					type: "scheduler-error",
+					data: error instanceof Error ? error.message : String(error),
+					timestamp: Date.now(),
+				});
+			});
+		}
 	}
 
 	private launchHeadless(
@@ -504,6 +552,81 @@ function textResult(text: string, details?: unknown): TextResult {
 	return { content: [{ type: "text", text }], details };
 }
 
+async function waitForSessionAssistantText(
+	sessionPath: string,
+	pollIntervalMs: number,
+	timeoutMs: number,
+	signal?: AbortSignal,
+): Promise<string | undefined> {
+	const deadline = Date.now() + timeoutMs;
+	while (Date.now() <= deadline) {
+		const text = latestAssistantTextFromSessionFile(sessionPath);
+		if (text) return text;
+		await sleep(Math.min(pollIntervalMs, Math.max(0, deadline - Date.now())), signal);
+	}
+	return undefined;
+}
+
+function latestAssistantTextFromSessionFile(sessionPath: string): string {
+	let content = "";
+	try {
+		content = readFileSync(sessionPath, "utf8");
+	} catch {
+		return "";
+	}
+	let latest = "";
+	for (const line of content.split("\n")) {
+		const trimmed = line.trim();
+		if (!trimmed) continue;
+		try {
+			const event = JSON.parse(trimmed) as { type?: unknown; message?: unknown };
+			if (event.type !== "message" || !event.message || typeof event.message !== "object") continue;
+			const message = event.message as { role?: unknown; content?: unknown; stopReason?: unknown };
+			if (message.role !== "assistant") continue;
+			const text = messageText(message.content).trim();
+			if (text && isFinalAssistantMessage(message)) latest = text;
+		} catch {}
+	}
+	return latest;
+}
+
+function isFinalAssistantMessage(message: { stopReason?: unknown; content?: unknown }): boolean {
+	return message.stopReason === undefined
+		? messageText(message.content).includes("SPAWN_ACCEPTANCE:")
+		: message.stopReason !== "toolUse";
+}
+
+function messageText(content: unknown): string {
+	if (typeof content === "string") return content;
+	if (!Array.isArray(content)) return "";
+	return content
+		.map((part) => {
+			if (typeof part === "string") return part;
+			if (!part || typeof part !== "object") return "";
+			const typed = part as { type?: unknown; text?: unknown };
+			return typed.type === "text" && typeof typed.text === "string" ? typed.text : "";
+		})
+		.filter(Boolean)
+		.join("\n");
+}
+
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+	if (signal?.aborted) return Promise.reject(new Error("Inspectable lane watcher aborted"));
+	return new Promise((resolve, reject) => {
+		const cleanup = () => signal?.removeEventListener("abort", abort);
+		const timer = setTimeout(() => {
+			cleanup();
+			resolve();
+		}, ms);
+		const abort = () => {
+			clearTimeout(timer);
+			cleanup();
+			reject(new Error("Inspectable lane watcher aborted"));
+		};
+		signal?.addEventListener("abort", abort, { once: true });
+	});
+}
+
 function laneForStep(step: PipelineStep): Partial<LaneRef> {
 	return {
 		backend: step.laneBackend,
@@ -642,6 +765,7 @@ export function formatStatus(
 				run.lane.backend,
 				run.lane.sessionPath ? `session=${run.lane.sessionPath}` : undefined,
 				run.lane.paneId ? `pane=${run.lane.paneId}` : undefined,
+				run.lane.windowId ? `window=${run.lane.windowId}` : undefined,
 			]
 				.filter(Boolean)
 				.join(" ");
@@ -651,7 +775,7 @@ export function formatStatus(
 			const followUp = run.acceptance.followUps.length
 				? `\n  follow-up: ${run.acceptance.followUps.join("; ")}`
 				: "";
-			return `${run.id} ${run.status} acceptance=${run.acceptance.status} ${run.profile}/${run.kind} ${lane}${watchText} origin=${run.originId}${criteria}${followUp}${inspect ? `\n  inspect: ${inspect}` : ""}`;
+			return `${run.id} ${run.status} acceptance=${run.acceptance.status} ${run.profile}/${run.kind} budget=${run.budgetPreset} promotable=${run.lane.promotable} jumpable=${run.lane.jumpable} ${lane}${watchText} origin=${run.originId}${criteria}${followUp}${inspect ? `\n  inspect: ${inspect}` : ""}`;
 		})
 		.join("\n");
 }

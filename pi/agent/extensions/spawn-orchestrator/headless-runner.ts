@@ -13,8 +13,7 @@ import {
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
-import type { AgentProfile } from "./types.ts";
-import type { ModelTier } from "./types.ts";
+import type { AgentProfile, ModelTier } from "./types.ts";
 
 export interface HeadlessRunOptions {
 	pi: ExtensionAPI;

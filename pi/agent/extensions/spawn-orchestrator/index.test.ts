@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { admitRun, applyAdmission, emptySchedulerSnapshot, getBudgetPolicy } from "./budget.ts";
@@ -211,6 +211,20 @@ describe("run registry", () => {
 		expect(completed.acceptance.followUps[0]).toContain("Unable to verify");
 	});
 
+	test("does not accept headless runs that produced no assistant output", () => {
+		const registry = new RunRegistry(() => 1000);
+		const decision = admitRun(researchRequest("empty-output"), getBudgetPolicy("balanced"));
+		if (decision.action !== "start") throw new Error("expected start");
+
+		const run = registry.createRun(decision.run, undefined, ["Return concrete evidence"]);
+		registry.startRun(run.id);
+		const completed = registry.completeRun(run.id, "Completed with no assistant output.");
+
+		expect(completed.status).toBe("needs-follow-up");
+		expect(completed.acceptance.status).toBe("needs-follow-up");
+		expect(completed.acceptance.followUps[0]).toContain("did not include explicit acceptance evidence");
+	});
+
 	test("evaluates structured acceptance per criterion", () => {
 		const registry = new RunRegistry(() => 1000);
 		const decision = admitRun(researchRequest("structured"), getBudgetPolicy("balanced"));
@@ -317,6 +331,8 @@ describe("status rendering", () => {
 		const result = formatResult(completed, "metadata");
 
 		expect(status).toContain("acceptance=met");
+		expect(status).toContain("budget=balanced");
+		expect(status).toContain("promotable=true");
 		expect(status).toContain('criteria="Return evidence"');
 		expect(status).toContain("pi --session '/tmp/spawn session.jsonl'");
 		expect(result).toContain("Acceptance: met");
@@ -401,6 +417,59 @@ describe("runtime durable recovery", () => {
 
 			expect(calls).toBeGreaterThanOrEqual(2);
 			expect(status).toContain("follow-up");
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
+
+	test("side-spawn result surfaces the child session output", async () => {
+		const dir = mkdtempSync(join(tmpdir(), "spawn-runtime-side-"));
+		try {
+			const sessionPath = join(dir, "child-session.jsonl");
+			const childText =
+				'Child lane summary.\nSPAWN_ACCEPTANCE: {"acceptance":[{"criterion":"Pipeline criteria are verified or blocked with reasons","status":"met","evidence":["child evidence"],"followUps":[]}]}';
+			appendFileSync(
+				sessionPath,
+				`${JSON.stringify({
+					type: "message",
+					message: {
+						role: "assistant",
+						content: [{ type: "text", text: "I will inspect first." }],
+						stopReason: "toolUse",
+					},
+				})}\n`,
+			);
+			appendFileSync(
+				sessionPath,
+				`${JSON.stringify({
+					type: "message",
+					message: { role: "assistant", content: [{ type: "text", text: childText }], stopReason: "stop" },
+				})}\n`,
+			);
+			const runtime = new SpawnOrchestratorRuntime(fakePi(), {
+				spawnLane: async () =>
+					({
+						child: { sessionPath, cwd: dir, name: "research-1" },
+						implementation: { mux: { tmux: { paneId: "%9", windowId: "test:1" } } },
+					}) as any,
+			});
+
+			const result = await runtime.orchestrate(
+				{
+					request:
+						"Open an inspectable read-only lane. Acceptance: Pipeline criteria are verified or blocked with reasons.",
+					mode: "side-spawn",
+					budget: "cheap",
+				},
+				{ cwd: dir } as any,
+			);
+			await runtime.waitForIdle();
+			const runId = /- ([0-9a-f-]+) /.exec(result.content[0]!.text)![1]!;
+			const laneResult = runtime.result({ runId, verbosity: "summary" }, { cwd: dir } as any).content[0]!.text;
+
+			expect(laneResult).toContain("Child lane summary.");
+			expect(laneResult).toContain("Acceptance: met");
+			expect(laneResult).not.toContain("Inspectable lane launched and completed");
 		} finally {
 			rmSync(dir, { recursive: true, force: true });
 		}
