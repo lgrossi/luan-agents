@@ -2,6 +2,7 @@
 name: improve-codebase-architecture
 description: 'Find architecture-deepening refactor opportunities grounded in vault docs and code evidence. Use when the user asks to improve codebase architecture, module boundaries, cohesion, or AI navigability.'
 user-invocable: true
+disable-model-invocation: true
 ---
 
 # Improve Codebase Architecture

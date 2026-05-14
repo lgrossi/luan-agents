@@ -1,6 +1,7 @@
 ---
 name: plannotator-setup-goal
 description: Create reviewed Codex goal setup packages for long-running /goal work. Use when the user wants to turn an idea, backlog, project mission, or vague objective into durable goal files under a project goals slug folder, with Plannotator review gates for brief, narrative plan with acceptance criteria, verification, blockers, and the final /goal prompt.
+disable-model-invocation: true
 ---
 
 # Plannotator Setup Goal
