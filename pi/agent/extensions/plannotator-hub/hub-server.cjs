@@ -20,7 +20,38 @@ const {
 } = require("./shared.cjs");
 
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+const LOG_PREFIX = "[plannotator-hub]";
 const SECRET_PATH = process.env.PLANNOTATOR_HUB_SECRET_FILE || join(homedir(), ".pi", "plannotator-hub-secret");
+
+function logLifecycle(message) {
+	try {
+		process.stderr.write(`${new Date().toISOString()} ${LOG_PREFIX} ${message}\n`);
+	} catch {}
+}
+
+process.on("uncaughtException", (error) => {
+	logLifecycle(`uncaughtException: ${error && error.stack ? error.stack : String(error)}`);
+	process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+	logLifecycle(`unhandledRejection: ${reason && reason.stack ? reason.stack : String(reason)}`);
+	process.exit(1);
+});
+
+process.once("SIGTERM", () => {
+	logLifecycle("received SIGTERM");
+	process.exit(143);
+});
+
+process.once("SIGINT", () => {
+	logLifecycle("received SIGINT");
+	process.exit(130);
+});
+
+process.on("exit", (code) => {
+	logLifecycle(`process exit code=${code}`);
+});
 
 function ensureSecret() {
 	if (existsSync(SECRET_PATH)) {
@@ -398,13 +429,19 @@ async function startServer() {
 			text(res, 404, "<h1>Not found</h1>");
 		} catch (error) {
 			const message = error instanceof Error ? error.message : String(error);
+			if (res.headersSent || res.writableEnded) {
+				try {
+					res.end();
+				} catch {}
+				return;
+			}
 			text(res, 500, `<h1>Plannotator hub error</h1><pre>${escapeHtml(message)}</pre>`);
 		}
 	});
 
 	server.listen(hubPort, bindHost, () => {
 		const address = state.publicBaseUrl;
-		process.stdout.write(`[plannotator-hub] listening on ${bindHost}:${hubPort} (public ${address})\n`);
+		process.stdout.write(`${LOG_PREFIX} listening on ${bindHost}:${hubPort} (public ${address})\n`);
 	});
 }
 
