@@ -76,6 +76,11 @@ function textResult(text: string, details?: Record<string, unknown>): TextResult
 	};
 }
 
+function reviewFeedbackText(label: string, feedback?: string): string {
+	const trimmed = feedback?.trim();
+	return trimmed ? `\n\n${label} feedback:\n${trimmed}` : "";
+}
+
 function ensureUiAvailable(ctx: ExtensionContext): void {
 	if (!ctx.hasUI) {
 		throw new Error("Plannotator review requires a Pi UI session.");
@@ -410,9 +415,11 @@ async function handleHtmlReview(pi: ExtensionAPI, ctx: ExtensionContext, target:
 	const screenshotReview = wantsScreenshotReview ? await openHtmlScreenshotReview(pi, ctx, resolvedPath) : null;
 
 	return textResult(
-		screenshotReview
+		(screenshotReview
 			? `HTML review completed for ${resolvedPath}. Screenshot review also completed.`
-			: `HTML review completed for ${resolvedPath}.`,
+			: `HTML review completed for ${resolvedPath}.`) +
+			reviewFeedbackText("HTML review", primaryReview.feedback) +
+			reviewFeedbackText("Screenshot review", screenshotReview?.feedback),
 		{
 			targetPath: resolvedPath,
 			reviewKind: "html",

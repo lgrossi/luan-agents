@@ -122,6 +122,40 @@ describe("review artifact extension registration", () => {
 		expect(calls[0][9]).toBe(true);
 	});
 
+	test("includes html annotation feedback in the visible tool result", async () => {
+		const dir = mkdtempSync(join(tmpdir(), "review-html-feedback-tool-"));
+		createdPaths.push(dir);
+		const htmlPath = join(dir, "mock.html");
+		writeFileSync(htmlPath, "<html><body><h1>Mock</h1></body></html>");
+
+		const tools: any[] = [];
+		setStartAnnotationSessionForTests(async () => {
+			return {
+				waitForDecision: async () => ({
+					approved: false,
+					feedback: "# File Feedback\n\nPlease move this into the AI summary.",
+				}),
+			} as any;
+		});
+		reviewArtifactsExtension({
+			registerCommand() {},
+			registerTool(tool: any) {
+				tools.push(tool);
+			},
+		} as any);
+
+		const tool = tools.find((entry) => entry.name === "review_html");
+		const result = await tool.execute("1", { targetPath: htmlPath }, undefined, undefined, {
+			cwd: dir,
+			hasUI: true,
+			ui: { notify() {}, confirm: async () => false },
+		});
+
+		expect(result.content[0].text).toContain("HTML review feedback:");
+		expect(result.content[0].text).toContain("Please move this into the AI summary.");
+		expect(result.details.feedback).toContain("Please move this into the AI summary.");
+	});
+
 	test("offers optional screenshot review after direct html review", async () => {
 		const dir = mkdtempSync(join(tmpdir(), "review-html-screens-tool-"));
 		createdPaths.push(dir);
