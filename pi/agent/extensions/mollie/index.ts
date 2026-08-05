@@ -1,10 +1,16 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { setEditorBottomLeftProvider } from "../tui/editor";
+import * as editor from "../tui/editor";
 import { fetchMollieStatus, MOLLIE_POLL_INTERVAL, renderMollieQuotaLine, type MollieQuotaState } from "./quota";
 
 const MIN_MOLLIE_WIDTH = 24;
 
+type BottomLeftProvider = (width: number, theme: unknown) => string | undefined;
+type EditorWithSlot = { setEditorBottomLeftProvider?: (provider: BottomLeftProvider | undefined) => void };
+const setEditorBottomLeftProvider = (editor as EditorWithSlot).setEditorBottomLeftProvider;
+
 export default function mollieExtension(pi: ExtensionAPI) {
+	if (typeof setEditorBottomLeftProvider !== "function") return;
+
 	let state: MollieQuotaState = undefined;
 	let timer: ReturnType<typeof setInterval> | null = null;
 	let disposed = false;
@@ -33,7 +39,7 @@ export default function mollieExtension(pi: ExtensionAPI) {
 		state = undefined;
 		setEditorBottomLeftProvider((width, theme) => {
 			if (width < MIN_MOLLIE_WIDTH) return undefined;
-			return renderMollieQuotaLine(state, theme, width);
+			return renderMollieQuotaLine(state, theme as never, width);
 		});
 		startPolling();
 	});
