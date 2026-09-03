@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { convertToLlm, type ToolDefinition } from "@earendil-works/pi-coding-agent";
@@ -12,6 +12,7 @@ import {
 import skillsExtension from "../src/extension.ts";
 import { registerSkillsPromptContribution, renderSkillsCatalog } from "../src/prompt.ts";
 import { createSkillTool } from "../src/tools/skill/definition.ts";
+import { addSkillDisplayNames, discoverSkills, parseSkillDisplayName } from "../src/skills.ts";
 
 interface SentSkillMessage {
 	customType: string;
@@ -37,6 +38,75 @@ function skillTool(filePath: string) {
 	} as never);
 	return { tool, sent };
 }
+
+test("reads the tentative skill label from agents/openai.yaml", async () => {
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-display-name-"));
+	const filePath = join(directory, "SKILL.md");
+	mkdirSync(join(directory, "agents"));
+	writeFileSync(filePath, "# Write\n");
+	writeFileSync(
+		join(directory, "agents", "openai.yaml"),
+		"interface:\n  display_name: 'Writing for agents'\n  short_description: Write.\n",
+	);
+
+	expect(parseSkillDisplayName('interface:\n  display_name: "Writing for agents"\n')).toBe("Writing for agents");
+	expect(await addSkillDisplayNames(new Map([["writing", { name: "writing", filePath }]]))).toEqual(
+		new Map([["writing", { name: "writing", filePath, displayName: "Writing for agents" }]]),
+	);
+});
+
+test("falls back when agents/openai.yaml has no supported display name", async () => {
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-display-name-"));
+	const reference = { name: "writing", filePath: join(directory, "SKILL.md") };
+
+	expect(await addSkillDisplayNames(new Map([[reference.name, reference]]))).toEqual(
+		new Map([[reference.name, reference]]),
+	);
+});
+
+test("discovers trusted project skills from .pi and ancestor .agents directories", () => {
+	const parent = mkdtempSync(join(tmpdir(), "pi-skills-project-parent-"));
+	const root = join(parent, "repo");
+	const cwd = join(root, "packages", "app");
+	mkdirSync(join(root, ".git"), { recursive: true });
+	mkdirSync(cwd, { recursive: true });
+	const writeSkill = (directory: string, name: string): string => {
+		mkdirSync(directory, { recursive: true });
+		const filePath = join(directory, "SKILL.md");
+		writeFileSync(filePath, `---\nname: ${name}\ndescription: ${name}\n---\n# ${name}\n`);
+		return filePath;
+	};
+	const cwdAgents = writeSkill(join(cwd, ".agents", "skills", "cwd-skill"), "cwd-skill");
+	const rootAgents = writeSkill(join(root, ".agents", "skills", "root-skill"), "root-skill");
+	writeSkill(join(root, "shared-skills", "linked-skill"), "linked-skill");
+	const linkedDirectory = join(root, ".agents", "skills", "linked-skill");
+	symlinkSync("../../shared-skills/linked-skill", linkedDirectory, "dir");
+	const linkedSkill = join(linkedDirectory, "SKILL.md");
+	writeFileSync(join(root, ".agents", "skills", ".gitignore"), "/linked-skill\n");
+	const cwdPi = writeSkill(join(cwd, ".pi", "skills", "pi-skill"), "pi-skill");
+	writeSkill(join(parent, ".agents", "skills", "outside-repo"), "outside-repo");
+	writeFileSync(
+		join(root, ".agents", "skills", "ignored.md"),
+		"---\nname: ignored\ndescription: ignored\n---\nignored\n",
+	);
+	const pi = { getCommands: () => [] } as never;
+
+	expect(discoverSkills(pi, { cwd, trusted: false })).toEqual(
+		new Map([
+			["cwd-skill", { name: "cwd-skill", filePath: cwdAgents, description: "cwd-skill" }],
+			["root-skill", { name: "root-skill", filePath: rootAgents, description: "root-skill" }],
+			["linked-skill", { name: "linked-skill", filePath: linkedSkill, description: "linked-skill" }],
+		]),
+	);
+	expect(discoverSkills(pi, { cwd, trusted: true })).toEqual(
+		new Map([
+			["pi-skill", { name: "pi-skill", filePath: cwdPi, description: "pi-skill" }],
+			["cwd-skill", { name: "cwd-skill", filePath: cwdAgents, description: "cwd-skill" }],
+			["root-skill", { name: "root-skill", filePath: rootAgents, description: "root-skill" }],
+			["linked-skill", { name: "linked-skill", filePath: linkedSkill, description: "linked-skill" }],
+		]),
+	);
+});
 
 test("loads a skill without frontmatter", async () => {
 	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
@@ -320,6 +390,7 @@ test("registers the skill execution bridge with Code Mode", () => {
 			registerMessageRenderer(type: string, renderer: () => { render(width: number): string[] }) {
 				messageRenderers.set(type, renderer);
 			},
+			registerMarkdownTransformer() {},
 			getCommands: () => [],
 			sendMessage: async () => {},
 		} as never);

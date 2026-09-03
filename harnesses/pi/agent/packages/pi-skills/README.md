@@ -1,8 +1,10 @@
 # pi-skills
 
 `pi-skills` adds the `skill` tool. It loads a skill's `SKILL.md` into the
-conversation after Pi has discovered that skill. The package does not scan a
-skills directory and does not register resource URIs.
+conversation after Pi has discovered that skill. As a fallback for Pi command
+discovery, it also scans project `.agents/skills/` locations and trusted-project
+`.pi/skills/` locations using Pi's documented rules. It does not register
+resource URIs.
 
 ## Install
 
@@ -105,6 +107,19 @@ message or card.
 Without the xsettings host, the package uses the defaults above. Do not create
 a second settings file.
 
+## Editor autocomplete
+
+Type `$` at a token boundary to autocomplete a loaded skill. Completion works
+anywhere in the prompt and preserves text after the cursor.
+
+When `pi-custom-editor` is installed, known `$skill` references render as
+subdued pills after the cursor moves at least one whitespace cell away. The
+pill omits `$`, uses the transcript's lightbulb icon, and prefers
+`agents/openai.yaml`'s `interface.display_name` as its label.
+
+Submitted user messages render the same pill in the transcript. References in
+inline or fenced Markdown code remain literal `$skill` text.
+
 ## Architecture
 
 | Concern | Owner |
@@ -117,6 +132,9 @@ a second settings file.
 | Code Mode adapter | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
 | Settings declaration | `src/contributions/xsettings.ts` via `pi-xsettings/sdk` |
 | TUI rendering | `src/tools/skill/presentation.ts` using `pi-libtui` |
+| Editor autocomplete | `src/ui/autocomplete.ts` using Pi's public autocomplete provider API |
+| Optional editor highlights | `src/contributions/editor-highlights.ts` via `pi-custom-editor/highlights/v1` |
+| Transcript skill pills | `src/ui/transcript-skills.ts` via Pi Markdown transforms and `pi-libtui/mouse` |
 
 ## Troubleshooting
 

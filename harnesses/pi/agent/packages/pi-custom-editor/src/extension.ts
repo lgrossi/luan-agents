@@ -6,11 +6,14 @@ import {
 	sharedMotionScheduler,
 	subscribeTuiAppearance,
 } from "pi-libtui";
-import { editorCompositionCadenceMs } from "pi-libtui/editor";
+import { editorCompositionCadenceMs, ensureEditorRegistry } from "pi-libtui/editor";
 import { getCustomEditorSettings, registerCustomEditorSettings } from "./config/settings.ts";
+import { defaultHighlightContributions } from "./contributions/default-highlights.ts";
 import { resolveEditorComposition } from "./core/composition.ts";
+import { ensureEditorHighlightRegistry } from "./protocol/highlights.ts";
 import { TuiState } from "./runtime/state.ts";
 import { createFooter } from "./ui/footer.ts";
+import { renderEditorHighlights } from "./ui/highlights.ts";
 import { installCustomEditor } from "./ui/pi-custom-editor.ts";
 
 export default function tuiExtension(pi: ExtensionAPI): void {
@@ -21,6 +24,16 @@ export default function tuiExtension(pi: ExtensionAPI): void {
 	let requestRender = (): void => {};
 	let motionTarget: { requestRender(): void } | undefined;
 	let activeContext: ExtensionContext | undefined;
+	const highlightRegistry = ensureEditorHighlightRegistry();
+	const removeHighlightContributions = defaultHighlightContributions(pi, () => activeContext).map((contribution) =>
+		highlightRegistry.register(contribution),
+	);
+	const removeHighlightDecorator = ensureEditorRegistry().registerRenderDecorator({
+		id: "pi-custom-editor.highlights",
+		priority: 100,
+		decorate: (lines, width) =>
+			activeContext ? renderEditorHighlights(lines, width, activeContext.ui.theme, highlightRegistry) : [...lines],
+	});
 	const isActive = (ctx: ExtensionContext): boolean => ctx.sessionManager === activeSession;
 	const syncWorkingPlacement = (): void => {
 		activeContext?.ui.setWorkingVisible(getCustomEditorSettings().workingPlacement === "transcript");
@@ -127,6 +140,10 @@ export default function tuiExtension(pi: ExtensionAPI): void {
 		ctx.ui.setFooter(undefined);
 	});
 	pi.on("session_shutdown", (event) => {
-		if (event.reason === "reload" || event.reason === "quit") unregisterSettings();
+		if (event.reason === "reload" || event.reason === "quit") {
+			unregisterSettings();
+			removeHighlightDecorator();
+			for (const remove of removeHighlightContributions) remove();
+		}
 	});
 }
