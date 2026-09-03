@@ -4,4 +4,13 @@ export {
 	LOADED_SKILL_CONTEXT_MESSAGE_TYPE,
 	renderLoadedSkillContext,
 } from "./loaded-skill-context.ts";
-export { discoverSkills, loadSkill, stripFrontmatter, type LoadedSkill, type SkillReference } from "./skills.ts";
+export {
+	addSkillDisplayNames,
+	discoverSkills,
+	loadSkill,
+	parseSkillDisplayName,
+	stripFrontmatter,
+	type LoadedSkill,
+	type SkillReference,
+} from "./skills.ts";
+export { findSkillAtCursor, skillAutocompleteItems, skillAutocompleteProvider } from "./ui/autocomplete.ts";

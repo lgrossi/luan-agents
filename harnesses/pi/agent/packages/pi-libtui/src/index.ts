@@ -71,6 +71,7 @@ export {
 	sanitizeTuiText,
 	sanitizeTuiTextPreview,
 } from "./content/terminal-text.ts";
+export { markdownCodeRanges, type TextRange } from "./content/markdown-code.ts";
 export {
 	MarkdownText,
 	type MarkdownTextOptions,

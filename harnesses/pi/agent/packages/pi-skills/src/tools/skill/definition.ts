@@ -1,6 +1,6 @@
 import { estimateTokens, type ExtensionAPI, type ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { LOADED_SKILL_CONTEXT_MESSAGE_TYPE, renderLoadedSkillContext } from "../../loaded-skill-context.ts";
-import { discoverSkills, loadSkill } from "../../skills.ts";
+import { discoverSkills, loadSkill, type SkillReference } from "../../skills.ts";
 import { renderSkillCall, renderSkillResult } from "./presentation.ts";
 
 const SKILL_PARAMETERS = {
@@ -33,6 +33,7 @@ export interface SkillToolDetails {
 
 export function createSkillTool(
 	pi: Pick<ExtensionAPI, "getCommands" | "sendMessage">,
+	getSkills: () => ReadonlyMap<string, SkillReference> = () => discoverSkills(pi),
 ): ToolDefinition<typeof SKILL_PARAMETERS, SkillToolDetails> {
 	return {
 		name: "skill",
@@ -49,7 +50,7 @@ export function createSkillTool(
 			return renderSkillResult(result, theme, context, options.expanded);
 		},
 		async execute(_toolCallId, parameters) {
-			const reference = discoverSkills(pi).get(parameters.name);
+			const reference = getSkills().get(parameters.name);
 			if (!reference) throw new Error(`Unknown skill "${parameters.name}"`);
 			const skill = await loadSkill(reference);
 			const details: SkillToolDetails = {
