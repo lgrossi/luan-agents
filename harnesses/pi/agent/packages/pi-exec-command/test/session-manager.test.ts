@@ -120,6 +120,33 @@ test("drains a closed native backlog before completing the session", async () =>
 	await manager.shutdown();
 });
 
+test("publishes output when a process finishes before the waiter subscribes", async () => {
+	const bridge: ExecBridgeClient = {
+		async request<T>(request: Record<string, unknown>): Promise<T> {
+			if (request["op"] === "exec") return { processId: "test" } as T;
+			if (request["op"] === "reap") return { removed: true } as T;
+			return {
+				chunks: [{ seq: 1, stream: "stdout", chunk: Buffer.from("done").toString("base64") }],
+				nextSeq: 2,
+				exited: true,
+				exitCode: 0,
+				closed: true,
+			} as T;
+		},
+		async shutdown() {},
+	};
+	const manager = createManager({ bridge });
+	const updates: string[] = [];
+
+	const result = await manager.exec({ cmd: "fast", shell: "/bin/sh", login: false }, "/tmp", undefined, (update) =>
+		updates.push(update.output),
+	);
+
+	expect(updates).toEqual(["done"]);
+	expect(result.output).toBe("done");
+	await manager.shutdown();
+});
+
 test("fails a session instead of accepting output after a sequence gap", async () => {
 	const bridge: ExecBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
