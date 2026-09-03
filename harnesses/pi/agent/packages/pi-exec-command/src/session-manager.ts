@@ -535,7 +535,11 @@ export function createExecSessionManager(
 			void pollLoop(session);
 			try {
 				const idleMs = clamp(input.yield_time_ms, defaultExecYieldTimeMs, maxExecYieldTimeMs);
-				const elapsed = await wait(session, idleMs, maxExecYieldTimeMs, signal, session.version, (progressMs) => {
+				let publishedOutputEnd = session.emittedOffset;
+				const publishProgress = (progressMs: number): void => {
+					const currentOutputEnd = outputEnd(session);
+					if (currentOutputEnd === publishedOutputEnd) return;
+					publishedOutputEnd = currentOutputEnd;
 					const output = peekOutput(session, session.emittedOffset, input.max_output_tokens ?? defaultMaxOutputTokens);
 					publishUpdate(onUpdate, {
 						chunk_id: chunkId(),
@@ -543,8 +547,11 @@ export function createExecSessionManager(
 						...output,
 						...(session.exitCode === undefined ? { session_id: session.id } : { exit_code: session.exitCode }),
 					});
-				});
+				};
+				const elapsed = await wait(session, idleMs, maxExecYieldTimeMs, signal, session.version, publishProgress);
 				if (stopped) throw new Error("exec session manager shut down during exec_command");
+				// A fast process can finish before wait() subscribes. Publish its real output once before the final result.
+				publishProgress(elapsed);
 				const result = resultFor(session, elapsed, input.max_output_tokens ?? defaultMaxOutputTokens);
 				if (session.exitCode !== undefined) {
 					rememberCompleted(session, elapsed);

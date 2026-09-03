@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtemp, readFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { resolveExecCommandBinary } from "../src/binary.ts";
@@ -7,9 +7,9 @@ import { createExecSessionManager, type ExecSessionRuntime } from "../src/sessio
 import { createExecCommandTool } from "../src/tools/exec-command/definition.ts";
 import { TEST_EXEC_COMMAND_PREPARATION_RUNTIME } from "./exec-command-preparation-runtime.ts";
 
-function manager() {
+function manager(maxExecYieldTimeMs = 50) {
 	// These tests cover the native bridge protocol; session-manager.test.ts covers wait policy with a manual clock.
-	return createExecSessionManager({ binaryPath: resolveExecCommandBinary, maxExecYieldTimeMs: 50 }, systemRuntime());
+	return createExecSessionManager({ binaryPath: resolveExecCommandBinary, maxExecYieldTimeMs }, systemRuntime());
 }
 
 function systemRuntime(): ExecSessionRuntime {
@@ -51,7 +51,7 @@ async function expectProcessGone(pid: number): Promise<void> {
 }
 
 test("the registered tool runs a real pipe command and reports its presentation transition", async () => {
-	const sessions = manager();
+	const sessions = manager(30_000);
 	try {
 		const tool = createExecCommandTool({ getManager: () => sessions }, TEST_EXEC_COMMAND_PREPARATION_RUNTIME);
 		const updates: unknown[] = [];
@@ -132,7 +132,7 @@ test("a non-TTY session rejects input", async () => {
 });
 
 test("an aborted command terminates its process tree", async () => {
-	const sessions = manager();
+	const sessions = manager(30_000);
 	const directory = await mkdtemp(join(tmpdir(), "pi-exec-tree-"));
 	const pidPath = join(directory, "child.pid");
 	const controller = new AbortController();
@@ -141,7 +141,7 @@ test("an aborted command terminates its process tree", async () => {
 			cmd: `sleep 30 & echo $! > '${pidPath}'; wait`,
 			shell: "/bin/sh",
 			login: false,
-			yield_time_ms: 5_000,
+			yield_time_ms: 30_000,
 		},
 		process.cwd(),
 		controller.signal,
@@ -171,10 +171,12 @@ test("shutdown terminates sessions and prevents further execution", async () => 
 
 test("completed session output remains available to repeated polls", async () => {
 	const sessions = manager();
+	const directory = await mkdtemp(join(tmpdir(), "pi-exec-replay-"));
+	const releasePath = join(directory, "release");
 	try {
 		const running = await sessions.exec(
 			{
-				cmd: "printf first; sleep 0.1; printf second",
+				cmd: `printf first; while [ ! -f '${releasePath}' ]; do sleep 0.01; done; printf second`,
 				shell: "/bin/sh",
 				login: false,
 				yield_time_ms: 250,
@@ -182,7 +184,8 @@ test("completed session output remains available to repeated polls", async () =>
 			process.cwd(),
 		);
 		expect(running.session_id).toBeNumber();
-		const completed = await sessions.write({ session_id: running.session_id! });
+		await writeFile(releasePath, "release");
+		const completed = await sessions.write({ session_id: running.session_id!, yield_time_ms: 5_000 });
 		expect(completed.exit_code).toBe(0);
 		const replay = await sessions.write({ session_id: running.session_id! });
 		expect(replay.exit_code).toBe(0);
