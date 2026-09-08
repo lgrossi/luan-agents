@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import type { ExecResult, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { Component } from "@earendil-works/pi-tui";
+import { toolRegistrarFor } from "../shared/tool-registry";
 import { startMarkdownAnnotationSession } from "@plannotator/pi-extension/plannotator-events.js";
 import { Type } from "typebox";
 
@@ -442,6 +443,7 @@ export function resetStartAnnotationSessionForTests(): void {
 }
 
 export default function reviewArtifactsExtension(pi: ExtensionAPI): void {
+	const registerTool = toolRegistrarFor(pi);
 	pi.registerCommand("review-html", {
 		description: "Open a local HTML file in Plannotator, then optionally review desktop/mobile screenshots",
 		handler: async (args, ctx) => {
@@ -466,7 +468,7 @@ export default function reviewArtifactsExtension(pi: ExtensionAPI): void {
 		},
 	});
 
-	pi.registerTool({
+	registerTool({
 		...commonTool(),
 		name: "review_html",
 		label: "Review HTML",
@@ -479,7 +481,7 @@ export default function reviewArtifactsExtension(pi: ExtensionAPI): void {
 		},
 	});
 
-	pi.registerTool({
+	registerTool({
 		...commonTool(),
 		name: "review_images",
 		label: "Review Images",

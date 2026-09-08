@@ -51,7 +51,7 @@ type FooterDataProvider = Parameters<NonNullable<FooterFactory>>[2];
 type UsageTotals = { input: number; output: number; cost: number };
 
 const WORKING_TIMER_ENTRY_TYPE = "tui:working-timer";
-const MODEL_STATUS_KEYS = new Set(["openai-fast:active", "litellm:env"]);
+const MODEL_STATUS_KEYS = new Set(["openai-fast:active"]);
 const MODEL_ROLE_STATUS_KEY = "model-roles:current";
 
 function cleanIdentityPart(value: string | undefined): string | undefined {
