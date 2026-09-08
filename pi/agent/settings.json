@@ -1,38 +1,28 @@
 {
-  "lastChangelogVersion": "0.83.0",
+  "lastChangelogVersion": "0.84.2",
   "steeringMode": "all",
   "autoUpdate": true,
   "transport": "auto",
   "doubleEscapeAction": "tree",
   "treeFilterMode": "default",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-terra",
-  "defaultThinkingLevel": "high",
-  "plannotatorHub": {
-    "publicUrl": "http://127.0.0.1:19432",
-    "port": 19432,
-    "bind": "127.0.0.1"
-  },
   "skills": [
-    "../.codex/skills"
+    "~/.agents/skills"
   ],
   "packages": [
     "npm:@ifi/oh-pi-themes",
-    "npm:@dreki-gg/pi-context7",
+    {
+      "source": "npm:@dreki-gg/pi-context7",
+      "extensions": [
+        "-extensions/context7/index.ts"
+      ]
+    },
     {
       "source": "npm:@plannotator/pi-extension",
       "skills": []
     },
     "npm:pi-cache-graph",
     "npm:@dietrichgebert/ponytail",
-    {
-      "source": "git:github.com/juliusbrussee/caveman@v1.9.1"
-    }
-  ],
-  "enabledModels": [
-    "openai-codex/gpt-5.6-luna",
-    "openai-codex/gpt-5.6-sol",
-    "openai-codex/gpt-5.6-terra"
+    "npm:@injaneity/pi-computer-use"
   ],
   "theme": "light/tokyo-night",
   "hideThinkingBlock": false,
@@ -51,5 +41,20 @@
     "reserveTokens": 20000
   },
   "showCacheMissNotices": true,
-  "defaultProjectTrust": "always"
+  "defaultProjectTrust": "always",
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "showHardwareCursor": true,
+  "tuiMode": "fullscreen",
+  "enabledModels": [
+    "openai-codex/gpt-5.6-luna",
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "plannotatorHub": {
+    "publicUrl": "http://127.0.0.1:19432",
+    "port": 19432,
+    "bind": "127.0.0.1"
+  }
 }
