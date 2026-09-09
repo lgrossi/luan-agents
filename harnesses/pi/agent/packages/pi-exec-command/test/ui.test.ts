@@ -38,6 +38,38 @@ describe("exec command UI", () => {
 		command.dispose();
 	});
 
+	test("summarizes exploration commands as steps instead of shell source", () => {
+		const command = new CommandTranscript({
+			theme,
+			requestRender() {},
+			view: {
+				command: "cat src/app.rs src/lib.rs && rg -n summarize src && ls crates",
+				status: "running",
+				actions: [
+					{ kind: "read", path: "src/app.rs" },
+					{ kind: "read", path: "src/lib.rs" },
+					{ kind: "search", query: "summarize", path: "src" },
+					{ kind: "list", path: "crates" },
+				],
+			},
+		});
+		const plain = (rows: string[]) => rows.map((row) => stripTerminalSequences(row).trimEnd()).join("\n");
+		expect(plain(command.render(60))).toBe(
+			"⠋ Exploring\n  └ Read app.rs, lib.rs\n    Search summarize in src\n    List crates",
+		);
+
+		command.update({
+			command: "cat a/x.ts b/x.ts",
+			status: "succeeded",
+			actions: [
+				{ kind: "read", path: "a/x.ts" },
+				{ kind: "read", path: "b/x.ts" },
+			],
+		});
+		expect(plain(command.render(60))).toBe("• Explored\n  └ Read a/x.ts, b/x.ts");
+		command.dispose();
+	});
+
 	test("preserves explicit shell newlines as a command block", () => {
 		const command = new CommandTranscript({
 			theme,

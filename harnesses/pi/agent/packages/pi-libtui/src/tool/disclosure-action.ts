@@ -25,6 +25,14 @@ export class ToolDisclosureAction implements Component, TextInteractionTarget {
 		this.requestRender();
 	}
 
+	/** Semantic header only, for enclosing activity sections; never renders the payload. */
+	getActivityLabel(): string {
+		return this.action
+			.render(100)
+			.map((line) => stripTerminalSequences(line).trim())
+			.join(" ");
+	}
+
 	setRegion(region: ToolViewRegion): void {
 		if (region === this.region) return;
 		const focused = this.region.isViewportFocused();

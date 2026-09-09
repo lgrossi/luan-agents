@@ -128,8 +128,6 @@ capability directly.
 
 ## Consumers
 
-- `pi-model-roles` registers the active role's optional context-window
-  preference. A role using `default` contributes nothing.
 - `pi-codex-native` reads the first valid request and applies it to eligible
   Codex models. Its session setting remains the fallback when no source makes
   a request.

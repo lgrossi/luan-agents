@@ -64,10 +64,21 @@ Importing any table entry does not load or invoke that extension.
 Tool presentation has three deliberate layers. `ToolTranscript` is the small
 copy-friendly action-plus-payload wrapper. `ToolActivity` composes streaming,
 diff, terminal, and viewport state for a live tool surface. Feature packages
-compose these generic pieces for their own tool grammar. `ToolOutput` handles text streams, while
+compose these generic pieces for their own tool grammar; `bodyIndent` places
+the payload under a multi-row action such as a `└` connector.
+`ToolOutput` handles text streams, while
 `TerminalOutput` and `TerminalProjection` handle PTY/ANSI state.
 `pi-libtui/tool` is the only tool-presentation API. The package root owns
 general components and does not duplicate the tool surface.
+
+`mountTranscriptProjection` exposes native thinking, tool, and visible-content
+entries to a feature-owned transcript component. It borrows the original tool
+renderers and restores Pi's container on unmount. The guarded Pi 0.84–0.85
+adapter lives in `src/host/transcript-bridge.ts`; unsupported hosts keep their
+native transcript. Regular mode passes through native content because pointer
+disclosure requires fullscreen. Replace this bridge when Pi exposes a public
+transcript API. `ToolDisclosureAction.getActivityLabel()` supplies a semantic
+action summary without reading or rendering its output.
 
 `SyntaxText` and diff rendering use the shared Pierre/Shiki highlighter.
 Feature packages such as `pi-exec-command` compose shell-specific presentation

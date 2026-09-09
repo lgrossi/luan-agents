@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { getCodexModels } from "../src/provider/models.ts";
+import { buildRequestBody } from "../src/provider/request-body.ts";
 import { CodexProviderRuntime, createCodexPrewarmIdentity } from "../src/provider/runtime.ts";
 import type { ResponsesBody } from "../src/provider/types.ts";
 
@@ -46,6 +47,33 @@ test("model metadata carries Codex image-detail capability", () => {
 	expect(
 		models.find((model) => model.id === "gpt-5.3-codex-spark")?.compat?.supportsImageDetailOriginal,
 	).toBeUndefined();
+});
+
+test.each([
+	["minimal", "low"],
+	["low", "low"],
+	["medium", "medium"],
+	["high", "high"],
+	["xhigh", "xhigh"],
+	["max", "max"],
+] as const)("Astra sends %s reasoning as %s", (reasoning, effort) => {
+	const model = getCodexModels().find((candidate) => candidate.id === "gpt-6-astra");
+	if (!model) throw new Error("Astra is not registered");
+	expect(model).toMatchObject({
+		provider: "openai-codex",
+		api: "openai-codex-responses",
+		input: ["text", "image"],
+		contextWindow: 272_000,
+		compat: {
+			supportsOpenAIGrammarTools: true,
+			supportsAdditionalTools: true,
+			supportsToolSearch: true,
+			supportsImageDetailOriginal: true,
+		},
+	});
+	const body = buildRequestBody(model, { messages: [] }, { reasoning });
+	expect(body.model).toBe("gpt-6-astra");
+	expect(body.reasoning?.effort).toBe(effort);
 });
 
 test("prewarm identity covers the full semantic request", () => {

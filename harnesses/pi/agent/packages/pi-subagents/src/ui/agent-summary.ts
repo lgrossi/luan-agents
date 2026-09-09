@@ -7,7 +7,10 @@ import {
 } from "pi-libtui";
 import type { SubagentSnapshot, SubagentStatus, TranscriptPreview } from "../runtime/coordinator.ts";
 
-type AgentRowSummary = Pick<SubagentSnapshot, "status" | "startedAt" | "completedAt" | "cost" | "modelRole">;
+type AgentRowSummary = Pick<
+	SubagentSnapshot,
+	"status" | "startedAt" | "completedAt" | "cost" | "model" | "thinkingLevel"
+>;
 
 export function formatAgentCost(cost: number): string {
 	if (cost <= 0) return "$0.00";
@@ -63,10 +66,11 @@ export function renderAgentIdentity(
 }
 
 export function renderAgentMetadata(colors: TuiTheme, agent: AgentRowSummary, now: number, separator = " · "): string {
-	const role = renderAgentRole(colors, agent.modelRole);
 	const duration = colors.fg("text.muted", formatAgentDuration((agent.completedAt ?? now) - agent.startedAt));
 	const cost = colors.fg("text.muted", formatAgentCost(agent.cost));
-	return [role, duration, cost]
+	const model = agent.model ? colors.fg("text.secondary", `${agent.model.provider}/${agent.model.id}`) : undefined;
+	const thinking = agent.thinkingLevel ? colors.fg("text.muted", agent.thinkingLevel) : undefined;
+	return [model, thinking, duration, cost]
 		.filter((value): value is string => value !== undefined)
 		.join(colors.fg("text.muted", separator));
 }
@@ -75,16 +79,6 @@ export function renderContextUse(colors: TuiTheme, percent: number | undefined):
 	if (percent === undefined || !Number.isFinite(percent)) return undefined;
 	const tone = percent >= 80 ? "negative" : percent >= 60 ? "warning" : "positive";
 	return colors.fg(tone, `${Math.round(percent)}% ctx`);
-}
-
-export function renderAgentRole(
-	colors: TuiTheme,
-	role: { readonly name: string; readonly color: string } | undefined,
-): string | undefined {
-	if (!role) return undefined;
-	const hues = ["blue", "cyan", "green", "magenta", "yellow"] as const;
-	const hash = [...role.name].reduce((total, character) => total + character.codePointAt(0)!, 0);
-	return colors.fg({ hue: hues[hash % hues.length]!, shade: 4 }, role.name);
 }
 
 export function renderTranscriptPreview(colors: TuiTheme, preview: TranscriptPreview | undefined): string {

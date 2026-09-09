@@ -2,9 +2,7 @@ import { expect, test } from "bun:test";
 import { createSpawnAgentTool } from "../src/tools/spawn-agent/definition.ts";
 
 test("keeps immediate and duplicate work out of delegated tasks", () => {
-	const tool = createSpawnAgentTool({
-		modelRoles: () => ({ roles: [], subagentDefaultRole: "" }),
-	} as never);
+	const tool = createSpawnAgentTool({} as never);
 
 	expect(tool.promptGuidelines).toEqual(
 		expect.arrayContaining([

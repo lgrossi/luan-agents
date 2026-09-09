@@ -2,9 +2,10 @@ import { expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { AgentMessage } from "@earendil-works/pi-agent-core";
+import type { AgentMessage, ThinkingLevel } from "@earendil-works/pi-agent-core";
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
+import type { AgentConfig } from "../src/core/types.ts";
 import {
 	findRetryableError,
 	prepareAgentRun,
@@ -42,6 +43,7 @@ function context(
 		parentModel?: Model<Api>;
 		available?: Model<Api>[];
 		scoped?: Model<Api>[];
+		thinkingLevel?: ThinkingLevel;
 		systemPrompt?: string;
 		runtime?: object;
 	} = {},
@@ -50,9 +52,12 @@ function context(
 		cwd: options.cwd ?? "/tmp",
 		getSystemPrompt: () => options.systemPrompt,
 		model: options.parentModel,
+		thinkingLevel: options.thinkingLevel,
 		scopedModels: (options.scoped ?? []).map((scopedModel) => ({ model: scopedModel })),
 		modelRegistry: {
 			getAvailable: () => options.available ?? [],
+			find: (provider: string, id: string) =>
+				(options.available ?? []).find((candidate) => candidate.provider === provider && candidate.id === id),
 			...(options.runtime ? { runtime: options.runtime } : {}),
 		},
 	} as never;
@@ -80,56 +85,83 @@ test("replaces inherited collaboration identity at the runner boundary", async (
 	expect(prepared.systemPrompt).not.toContain("multi-agent delegation");
 });
 
-test("uses scoped models and reports the effective requested role", async () => {
+test("inherits the parent model and thinking level", async () => {
 	const luna = model("gpt-5.6-luna");
 	const sol = model("gpt-5.6-sol");
-	const resolvedRoles: Array<{ name: string; color: string } | undefined> = [];
 	const prepared = await prepareAgentRun(
-		context({ available: [sol], scoped: [luna], parentModel: sol }),
+		context({ available: [sol, luna], parentModel: sol, thinkingLevel: "low" }),
 		{
 			pi: pi(),
-			agentConfig: { role: "tiny" },
-			onRuntimeResolved: (role) => resolvedRoles.push(role),
+			agentConfig: {},
 		},
-		false,
-	);
-
-	expect(prepared.model).toBe(luna);
-	expect(prepared.thinkingLevel).toBe("low");
-	expect(prepared.modelRole).toEqual({ name: "tiny", color: "cyan" });
-	expect(resolvedRoles).toEqual([{ name: "tiny", color: "cyan" }]);
-});
-
-test("reports the effective default role when the requested role is unavailable", async () => {
-	const sol = model("gpt-5.6-sol");
-	const prepared = await prepareAgentRun(
-		context({ available: [sol] }),
-		{ pi: pi(), agentConfig: { role: "tiny" } },
 		false,
 	);
 
 	expect(prepared.model).toBe(sol);
-	expect(prepared.thinkingLevel).toBe("medium");
-	expect(prepared.modelRole).toEqual({ name: "balanced", color: "green" });
+	expect(prepared.thinkingLevel).toBe("low");
 });
 
-test("falls back to the parent runtime without claiming an unavailable role", async () => {
-	const parent = model("parent-model");
-	const resolvedRoles: Array<{ name: string; color: string } | undefined> = [];
+test("resolves direct model and thinking-level overrides through Pi APIs", async () => {
+	const luna = model("gpt-5.6-luna");
+	const sol = model("gpt-5.6-sol");
 	const prepared = await prepareAgentRun(
-		context({ parentModel: parent }),
-		{
-			pi: pi(),
-			agentConfig: { role: "tiny" },
-			onRuntimeResolved: (role) => resolvedRoles.push(role),
-		},
+		context({ available: [sol, luna], parentModel: sol, thinkingLevel: "low" }),
+		{ pi: pi(), agentConfig: { model: { provider: luna.provider, id: luna.id }, thinkingLevel: "high" } },
 		false,
 	);
 
-	expect(prepared.model).toBe(parent);
-	expect(prepared.thinkingLevel).toBe("max");
-	expect(prepared.modelRole).toBeUndefined();
-	expect(resolvedRoles).toEqual([undefined]);
+	expect(prepared.model).toBe(luna);
+	expect(prepared.thinkingLevel).toBe("high");
+});
+
+test("rejects unknown model overrides", async () => {
+	const parent = model("parent-model");
+	await expect(
+		prepareAgentRun(
+			context({ available: [parent], parentModel: parent }),
+			{ pi: pi(), agentConfig: { model: { provider: "missing", id: "model" } } },
+			false,
+		),
+	).rejects.toThrow("Unknown model: missing/model");
+});
+
+test.each([
+	{ reasoning: true, expected: "high" },
+	{ reasoning: false, expected: "off" },
+] as const)("keeps inherited effort restorable for reasoning=$reasoning", async ({ reasoning, expected }) => {
+	const selected = model("selected", reasoning);
+	let selection: AgentConfig = {};
+	const prepared = await prepareAgentRun(
+		context({ available: [selected], thinkingLevel: "max" }),
+		{
+			pi: pi(),
+			agentConfig: { model: { provider: selected.provider, id: selected.id } },
+			onRuntimeResolved: (resolved) => {
+				selection = resolved;
+			},
+		},
+		false,
+	);
+	expect(prepared.thinkingLevel).toBe(expected);
+	expect(selection).toEqual({ model: { provider: selected.provider, id: selected.id }, thinkingLevel: expected });
+	const restored = await prepareAgentRun(
+		context({ available: [selected], thinkingLevel: "low" }),
+		{ pi: pi(), agentConfig: selection },
+		false,
+	);
+	expect(restored.model).toBe(selected);
+	expect(restored.thinkingLevel).toBe(expected);
+});
+
+test("rejects thinking levels unsupported by the selected model", async () => {
+	const plain = model("plain", false);
+	await expect(
+		prepareAgentRun(
+			context({ available: [plain], parentModel: plain }),
+			{ pi: pi(), agentConfig: { thinkingLevel: "high" } },
+			false,
+		),
+	).rejects.toThrow('Thinking level "high" is unavailable');
 });
 
 test("requires Pi 0.84's model runtime compatibility boundary", async () => {

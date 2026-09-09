@@ -124,6 +124,29 @@ beforeAll(async () => {
 });
 
 describe("Code Mode presentation", () => {
+	test("rebuilding a transcript keeps nested rows instead of dumping echoed output", () => {
+		const value = result();
+		value.content = [{ type: "text", text: "raw-output-marker\n".repeat(100) }];
+		const live = renderCodeModeResult(value, { expanded: false, isPartial: false }, theme, context({}));
+		const expected = live.render(80);
+		const replayContext = { ...context({}), executionStarted: false };
+		const restored = renderCodeModeResult(value, { expanded: false, isPartial: false }, theme, replayContext);
+		try {
+			expect(restored.render(80)).toEqual(expected);
+			expect(Bun.stripANSI(restored.render(80).join("\n"))).not.toContain("raw-output-marker");
+			live.dispose();
+			const rebuilt = renderCodeModeResult(value, { expanded: false, isPartial: false }, theme, replayContext);
+			try {
+				expect(rebuilt.render(80)).toEqual(expected);
+			} finally {
+				rebuilt.dispose();
+			}
+		} finally {
+			live.dispose();
+			restored.dispose();
+		}
+	});
+
 	test("does not render a successful result with no transcript content", () => {
 		const empty = result();
 		empty.content = [];
@@ -131,6 +154,22 @@ describe("Code Mode presentation", () => {
 		empty.details.nestedCalls = [];
 		const component = renderCodeModeResult(empty, { expanded: false, isPartial: false }, theme, context({}));
 		expect(component.render(40)).toEqual([]);
+	});
+
+	test("wait updates the owning exec row even when it carries the same nested trace id", () => {
+		const value = result();
+		const owner = renderCodeModeResult(value, { expanded: false, isPartial: false }, theme, context({}));
+		const continuation = result(value.details.nestedCalls[0]!.id);
+		continuation.details.tool = "wait";
+		continuation.details.nestedCalls[0]!.result!.content = [{ type: "text", text: "wait-final-marker" }];
+		const waited = renderCodeModeResult(continuation, { expanded: false, isPartial: false }, theme, context({}));
+		try {
+			expect(waited.render(80)).toEqual([]);
+			expect(Bun.stripANSI(owner.render(80).join("\n"))).toContain("wait-final-marker");
+		} finally {
+			waited.dispose();
+			owner.dispose();
+		}
 	});
 
 	test("hides only the successful Code Mode row until Ctrl+O expands the transcript", () => {
@@ -343,6 +382,21 @@ describe("Code Mode presentation", () => {
 		expect(Bun.stripANSI(restored.render(80).join("\n"))).toContain("historical-final-marker");
 		expect(restoredContinuation.render(80)).toEqual([]);
 
+		const rebuilt = renderCodeModeResult(historical, { expanded: false, isPartial: false }, theme, {
+			...context({}),
+			executionStarted: false,
+		});
+		const rebuiltContinuation = renderCodeModeResult(
+			historicalContinuation,
+			{ expanded: false, isPartial: false },
+			theme,
+			{ ...context({}), executionStarted: false },
+		);
+		expect(Bun.stripANSI(rebuilt.render(80).join("\n"))).toContain("historical-final-marker");
+		expect(rebuiltContinuation.render(80)).toEqual([]);
+		restored.dispose();
+		expect(Bun.stripANSI(rebuilt.render(80).join("\n"))).toContain("historical-final-marker");
+
 		const running = result("live-runtime:1:tool-1");
 		const execDetails = running.details.nestedCalls[0]!.result!.details as {
 			identifiers: { sessionId: number | null };
@@ -388,6 +442,8 @@ describe("Code Mode presentation", () => {
 		expect(completed.render(80)).toEqual([]);
 		restoredContinuation.dispose();
 		restored.dispose();
+		rebuiltContinuation.dispose();
+		rebuilt.dispose();
 		first.dispose();
 		completed.dispose();
 		disposeWrite();

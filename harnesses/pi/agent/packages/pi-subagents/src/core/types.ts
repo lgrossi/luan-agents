@@ -1,9 +1,12 @@
-export interface AgentModelRole {
-	name: string;
-	color: string;
+import type { ThinkingLevel } from "@earendil-works/pi-agent-core";
+
+export interface AgentModelReference {
+	provider: string;
+	id: string;
 }
 
-/** Child-specific model-role choice; installed resources are rediscovered for each child session. */
+/** Child-specific model and thinking-level choices. */
 export interface AgentConfig {
-	role?: string;
+	model?: AgentModelReference;
+	thinkingLevel?: ThinkingLevel;
 }

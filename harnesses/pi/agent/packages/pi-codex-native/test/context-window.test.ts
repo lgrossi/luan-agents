@@ -34,7 +34,7 @@ test("publishes the context preset colors to xsettings", () => {
 	unregister();
 });
 
-function harness(policy: "never" | "mid-turn" | "always" = "never") {
+function harness(policy: "never" | "mid-turn" | "always" = "never", modelId = "gpt-5.6-sol") {
 	const handlers = new Map<string, Handler>();
 	const windows: number[] = [];
 	const statuses: Array<string | undefined> = [];
@@ -43,7 +43,7 @@ function harness(policy: "never" | "mid-turn" | "always" = "never") {
 		model: {
 			provider: "openai-codex",
 			api: "openai-codex-responses",
-			id: "gpt-5.6-sol",
+			id: modelId,
 			contextWindow: 272_000,
 		},
 		sessionManager: {},
@@ -84,36 +84,49 @@ function harness(policy: "never" | "mid-turn" | "always" = "never") {
 	};
 }
 
-test("applies the balanced default and cycles session context presets", async () => {
-	const { ctx, handlers, windows, statuses } = harness();
-	await handlers.get("session_start")?.({}, ctx);
-	await ensureActionsRegistry().find("codex.context.cycle")!.run(ctx);
-	expect(windows).toEqual([400_000]);
-	expect(stripTerminalSequences(statuses.at(-1) ?? "")).toBe("Enhanced (400k)");
-});
+test.each(["gpt-5.6-sol", "gpt-6-astra"])(
+	"%s applies the balanced default and cycles session context presets",
+	async (modelId) => {
+		const { ctx, handlers, windows, statuses } = harness("never", modelId);
+		await handlers.get("session_start")?.({}, ctx);
+		await ensureActionsRegistry().find("codex.context.cycle")!.run(ctx);
+		expect(windows).toEqual([400_000]);
+		expect(stripTerminalSequences(statuses.at(-1) ?? "")).toBe("Enhanced (400k)");
+	},
+);
 
-test("applies a context preset contributed by the active model role", async () => {
-	ensureContextWindowSourceRegistry().register({ id: "roles", preset: () => "large" });
-	const { ctx, handlers, windows } = harness();
-	await handlers.get("session_start")?.({}, ctx);
-	expect(windows).toEqual([600_000]);
-});
+test.each(["gpt-5.6-sol", "gpt-6-astra"])(
+	"%s applies a context preset contributed by the active model role",
+	async (modelId) => {
+		ensureContextWindowSourceRegistry().register({ id: "roles", preset: () => "large" });
+		const { ctx, handlers, windows } = harness("never", modelId);
+		await handlers.get("session_start")?.({}, ctx);
+		expect(windows).toEqual([600_000]);
+	},
+);
 
-test("mid-turn upgrades between tool turns and allows run-end compaction", async () => {
-	const { ctx, handlers, windows, setTokens } = harness("mid-turn");
-	await handlers.get("session_start")?.({}, ctx);
-	setTokens(260_000);
-	await handlers.get("turn_end")?.({ toolResults: [{}] }, ctx);
-	expect(windows).toEqual([400_000]);
-	const compact = handlers.get("session_before_compact")!;
-	expect(await compact({ reason: "threshold" }, ctx)).toBeUndefined();
-});
+test.each(["gpt-5.6-sol", "gpt-6-astra"])(
+	"%s upgrades between tool turns and allows run-end compaction",
+	async (modelId) => {
+		const { ctx, handlers, windows, setTokens } = harness("mid-turn", modelId);
+		await handlers.get("session_start")?.({}, ctx);
+		setTokens(260_000);
+		await handlers.get("turn_end")?.({ toolResults: [{}] }, ctx);
+		expect(windows).toEqual([400_000]);
+		const compact = handlers.get("session_before_compact")!;
+		expect(await compact({ reason: "threshold" }, ctx)).toBeUndefined();
+	},
+);
 
-test("always disables threshold compaction at Max but preserves manual compaction", async () => {
-	const { ctx, handlers } = harness("always");
-	await handlers.get("session_start")?.({}, ctx);
-	const compact = handlers.get("session_before_compact")!;
-	for (let index = 0; index < 3; index++) expect(await compact({ reason: "threshold" }, ctx)).toEqual({ cancel: true });
-	expect(await compact({ reason: "threshold" }, ctx)).toBeUndefined();
-	expect(await compact({ reason: "manual" }, ctx)).toBeUndefined();
-});
+test.each(["gpt-5.6-sol", "gpt-6-astra"])(
+	"%s upgrades through Max then allows threshold and manual compaction",
+	async (modelId) => {
+		const { ctx, handlers } = harness("always", modelId);
+		await handlers.get("session_start")?.({}, ctx);
+		const compact = handlers.get("session_before_compact")!;
+		for (let index = 0; index < 3; index++)
+			expect(await compact({ reason: "threshold" }, ctx)).toEqual({ cancel: true });
+		expect(await compact({ reason: "threshold" }, ctx)).toBeUndefined();
+		expect(await compact({ reason: "manual" }, ctx)).toBeUndefined();
+	},
+);

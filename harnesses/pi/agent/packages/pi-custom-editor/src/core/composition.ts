@@ -22,7 +22,6 @@ export const CUSTOM_EDITOR_PRESETS = [
 export type CustomEditorPreset = (typeof CUSTOM_EDITOR_PRESETS)[number];
 
 export const STATUS_SEGMENTS = [
-	"role",
 	"provider",
 	"model",
 	"thinking",
@@ -125,7 +124,7 @@ const base: PresetDefinition = {
 	statusBand: "transparent",
 	inactiveRailTone: "accent",
 	topLeftSegments: [],
-	topRightSegments: ["path", "git", "role", "model", "thinking", "fast"],
+	topRightSegments: ["path", "git", "model", "thinking", "fast"],
 	bottomLeftSegments: [],
 	bottomRightSegments: ["context"],
 };
@@ -157,7 +156,7 @@ export const EDITOR_PRESETS: Readonly<Record<CustomEditorPreset, PresetDefinitio
 		statusSeparator: "dot",
 		topLeftSegments: [],
 		topRightSegments: [],
-		bottomLeftSegments: ["role", "provider", "model", "path", "git", "session"],
+		bottomLeftSegments: ["provider", "model", "path", "git", "session"],
 		bottomRightSegments: ["context"],
 	},
 	borderless: {
@@ -172,7 +171,7 @@ export const EDITOR_PRESETS: Readonly<Record<CustomEditorPreset, PresetDefinitio
 		statusSeparator: "dot",
 		topLeftSegments: [],
 		topRightSegments: [],
-		bottomLeftSegments: ["role", "provider", "model", "path", "git", "session"],
+		bottomLeftSegments: ["provider", "model", "path", "git", "session"],
 	},
 	"top-rule": {
 		...base,
@@ -201,7 +200,7 @@ export const EDITOR_PRESETS: Readonly<Record<CustomEditorPreset, PresetDefinitio
 		promptMarker: ["╰─"],
 		promptMarkerMotion: "static",
 		bottomStatus: false,
-		topLeftSegments: ["role", "provider", "model", "path", "git", "session"],
+		topLeftSegments: ["provider", "model", "path", "git", "session"],
 		topRightSegments: ["context", "context-window"],
 		bottomLeftSegments: [],
 		bottomRightSegments: [],
@@ -279,7 +278,6 @@ export function candidatePreview(
 					? " > "
 					: "  ";
 	const previewSegment: Readonly<Record<StatusSegmentId, string>> = {
-		role: "tiny",
 		provider: "forge",
 		model: "GPT-5.6 Sol",
 		thinking: "xhigh",

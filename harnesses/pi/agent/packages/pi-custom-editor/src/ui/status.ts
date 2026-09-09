@@ -130,8 +130,6 @@ export function renderStatusGroups(options: StatusRenderOptions): EditorComposit
 	const thinking = options.getThinkingLabel?.();
 	const segment = (id: StatusSegmentId): string => {
 		switch (id) {
-			case "role":
-				return state.roleStatus ?? "";
 			case "provider":
 				return provider ? colors.fg("text.secondary", provider) : "";
 			case "model":

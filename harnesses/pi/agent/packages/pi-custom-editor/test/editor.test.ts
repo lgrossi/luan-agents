@@ -89,15 +89,14 @@ describe("PiCustomEditor", () => {
 		expect(plain).toContain("second line");
 	});
 
-	test("renders role, thinking level, and fast mode in the responsive model status", () => {
+	test("renders the native model, thinking level, and fast mode in the responsive model status", () => {
 		const { render } = editor(120, (state) => {
-			state.roleStatus = "builder";
 			state.contextStatus = "Enhanced (400k)";
 			state.fastMode = true;
 		});
 		const plain = render().map(stripTerminalSequences).join("\n");
 
-		expect(plain).toContain("builder > GPT-5.6 Sol > xhigh > fast");
+		expect(plain).toContain("GPT-5.6 Sol > xhigh > fast");
 		expect(plain).not.toContain("Enhanced (400k)");
 	});
 

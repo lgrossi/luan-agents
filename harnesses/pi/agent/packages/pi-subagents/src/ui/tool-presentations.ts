@@ -14,7 +14,8 @@ type HostTheme = Parameters<typeof tuiTheme>[0];
 interface SpawnParams {
 	task_name?: string;
 	fork_turns?: string;
-	model_role?: string;
+	model?: string;
+	thinking_level?: string;
 }
 
 interface ActionContext<Args, State extends object = object> {
@@ -91,15 +92,18 @@ export const spawnToolPresentation = {
 				marker: icon("developer"),
 			});
 		}
-		const role = details.input.modelRole ?? context.args.model_role;
+		const model = details.input.model ?? context.args.model;
+		const thinkingLevel = details.input.thinkingLevel ?? context.args.thinking_level;
 		return transcript(theme, {
 			verb: "Spawned agent",
 			detail: name,
 			status: "succeeded",
 			marker: icon("developer"),
-			meta: [role ? `role ${role}` : undefined, forkDescription(String(details.input.forkTurns))].filter(
-				(value): value is string => value !== undefined,
-			),
+			meta: [
+				model ? `model ${model}` : undefined,
+				thinkingLevel ? `thinking ${thinkingLevel}` : undefined,
+				forkDescription(String(details.input.forkTurns)),
+			].filter((value): value is string => value !== undefined),
 		});
 	},
 };

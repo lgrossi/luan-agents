@@ -40,10 +40,10 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 | [`pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
 | [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. |
 | [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Keyboard-driven character, line, and column selection in Pi's fullscreen transcript. |
+| [`pi-transcript`](harnesses/pi/agent/packages/pi-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. |
 | [`pi-developer-prompt`](harnesses/pi/agent/packages/pi-developer-prompt/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
 | [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. |
 | [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. |
-| [`pi-model-roles`](harnesses/pi/agent/packages/pi-model-roles/README.md) | Named model and thinking profiles with ordered fallbacks. |
 | [`pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. |
 | [`pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. |
 | [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. |
@@ -83,6 +83,10 @@ The checked-in Pi setup uses three files:
 - `harnesses/pi/agent/xsettings.toml` stores settings contributed by extensions. Open it interactively with `/xsettings` or `Ctrl-,`.
 - `harnesses/pi/agent/keybindings.json` owns Pi bindings and every custom extension action.
 
+Use `Alt+P` for Pi's model picker and `Alt+,` / `Alt+.` to decrease or increase
+reasoning effort. Subagents inherit the parent's model and effort unless a
+spawn supplies direct overrides.
+
 Tool visibility has three separate controls:
 
 - `pi.defaultTools` selects direct tools.
@@ -103,11 +107,14 @@ On a warm checkout this builds the release binaries once, then runs the checks i
 
 - Biome formatting and Pi policy lint;
 - cached TypeScript checks for every package;
-- every Bun test in every package;
+- every package's test command in a separate process, run in parallel with
+  package-labelled output (no shared cross-package test state);
 - Rust formatting, Clippy, and the complete workspace through Nextest;
 - managed harness validation.
 
 No Rust test is ignored. `cargo nextest run --locked` runs the whole virtual Rust workspace.
+Each check prints its command; `All checks passed.` appears only after every
+phase succeeds. The test runner does not retry failures.
 
 Useful narrower commands:
 

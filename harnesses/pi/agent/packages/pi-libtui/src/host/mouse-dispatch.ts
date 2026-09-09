@@ -233,6 +233,8 @@ export function installMouseDispatch(tui: TUI, prototype: object, registry: Mous
 							requestRender(this);
 							return { consume: true, data: viewportInput.data };
 						}
+						// Once input returns to the editor, Enter must submit there rather than toggle the old target.
+						setKeyboardTarget(state, undefined);
 					} catch {
 						setKeyboardTarget(state, undefined);
 					}

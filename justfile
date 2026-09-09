@@ -20,16 +20,16 @@ format-check:
     @bun run --cwd "{{ repo }}" check:format
 
 lint:
-    @bun run --cwd "{{ repo }}" lint:pi
+    bun run --cwd "{{ repo }}" lint:pi
 
 typecheck:
-    @bun run --cwd "{{ repo }}" typecheck
+    bun run --cwd "{{ repo }}" typecheck
 
 test:
     @bun run --cwd "{{ repo }}" test
 
 pi-test:
-    @bun run --cwd "{{ repo }}" test:pi
+    bun run --cwd "{{ repo }}" test:pi
 
 pi-install-check package:
     @check_root="$(mktemp -d)"; \
@@ -77,21 +77,22 @@ pi-install-check package:
     if test "$live_settings_state" != "$current_settings_state"; then echo "pi-install-check modified live settings: $live_settings" >&2; exit 1; fi
 
 rust-fmt:
-    @cargo fmt --all -- --check
+    cargo fmt --all -- --check
 
 rust-lint:
-    @cargo clippy --locked --all-targets -- -D warnings
+    cargo clippy --locked --all-targets -- -D warnings
 
 rust-test:
-    @cargo nextest run --locked
+    cargo nextest run --locked
 
 _build:
-    @cargo build --locked --release
+    cargo build --locked --release
 
 _harness-check:
-    @cargo xtask harness check --home "{{ home }}"
+    cargo xtask harness check --home "{{ home }}"
 
 check: _build lint typecheck pi-test rust-fmt rust-lint rust-test _harness-check
+    @echo "All checks passed."
 
 unlink:
     @cargo xtask harness unlink --home "{{ home }}"

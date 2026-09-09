@@ -18,6 +18,7 @@ import { XSettingsStore } from "./config/store.ts";
 import { registerTuiSettings, tuiSettings } from "./config/tui-settings.ts";
 import { ensureXSettingsRegistry } from "./protocol/settings.ts";
 import { attachActionShortcuts } from "./runtime/actions.ts";
+import { registerEffortActions } from "./runtime/effort.ts";
 import { publishAllSettings, resolveRegistrationValues } from "./runtime/settings.ts";
 import { XSettingsEditorSession } from "./ui/editor-session.ts";
 import type { XSettingsScreen } from "./ui/xsettings-screen.ts";
@@ -159,6 +160,7 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 	}
 
 	let unregisterAction: (() => void) | undefined;
+	let unregisterEffort: (() => void) | undefined;
 	let unregisterCursorAction: (() => void) | undefined;
 	pi.registerCommand("xsettings", {
 		description: "Open extension settings",
@@ -168,6 +170,8 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 		if (ctx.mode !== "tui" || !ctx.hasUI) return;
 		panelContext = ctx;
 		activeSession = ctx.sessionManager;
+		unregisterEffort?.();
+		unregisterEffort = registerEffortActions(pi);
 		unregisterAction?.();
 		unregisterAction = registerAction({
 			id: "xsettings.toggle",
@@ -229,6 +233,8 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 		configureTuiAppearance(tuiSettings.defaults);
 		unregisterAction?.();
 		unregisterAction = undefined;
+		unregisterEffort?.();
+		unregisterEffort = undefined;
 		unregisterCursorAction?.();
 		unregisterCursorAction = undefined;
 	});

@@ -370,7 +370,7 @@ test("Code Mode fallback keeps the nested command when persisted details are mal
 		{ theme, requestRender() {}, executionStarted: true, cwd: "/code-mode", state: {}, lastComponent: undefined },
 	);
 	const rendered = Bun.stripANSI(presentation?.render(80).join("\n") ?? "");
-	expect(rendered).toContain("$ rg -n setEditorComponent");
+	expect(rendered).toContain("Explored ›\n  └ Search setEditorComponent");
 	expect(rendered).not.toContain("$ command");
 	dispose();
 });

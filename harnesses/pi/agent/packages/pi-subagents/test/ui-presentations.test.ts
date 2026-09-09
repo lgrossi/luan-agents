@@ -59,7 +59,8 @@ describe("agent presentation formatting", () => {
 						taskName: "ui-port",
 						message: "Port the UI",
 						forkTurns: "all",
-						modelRole: "worker",
+						model: "openai/gpt-5",
+						thinkingLevel: "high",
 					},
 					agent: {
 						id: "/root/ui-port",
@@ -85,7 +86,8 @@ describe("agent presentation formatting", () => {
 		);
 		const text = stripTerminalSequences(component.render(100).join("\n"));
 		expect(text).toContain("Spawned agent · ui-port");
-		expect(text).toContain("role worker");
+		expect(text).toContain("model openai/gpt-5");
+		expect(text).toContain("thinking high");
 		expect(text).toContain("full history");
 	});
 

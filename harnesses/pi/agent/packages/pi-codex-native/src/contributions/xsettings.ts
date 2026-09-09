@@ -51,7 +51,7 @@ const definitions = {
 	},
 	contextWindowPreset: {
 		label: "Context window",
-		description: "Default context window for GPT-5.6 Codex models.",
+		description: "Default context window for GPT-5.6 and GPT-6 Astra Codex models.",
 		category: "behavior",
 		type: "enum",
 		default: "balanced",

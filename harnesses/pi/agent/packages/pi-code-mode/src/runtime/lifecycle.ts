@@ -77,7 +77,8 @@ export function registerCodeModeLifecycle(
 		return details?.codeMode && details.isError ? { isError: true } : undefined;
 	});
 
-	pi.on("session_tree", async () => runtime.shutdown());
+	// Tree navigation resets cells, not the current session's tool hierarchy.
+	pi.on("session_tree", async () => runtime.resetExecution());
 	pi.on("session_shutdown", async (event) => {
 		for (const adapter of runtime.scopedAdapters()) adapter.onScopeChange?.(undefined);
 		dispose?.(event.reason);

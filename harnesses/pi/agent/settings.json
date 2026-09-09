@@ -1,24 +1,19 @@
 {
   "enableInstallTelemetry": false,
   "defaultProjectTrust": "always",
-  "enabledModels": [
-    "openai-codex/gpt-5.6-luna",
-    "openai-codex/gpt-5.6-terra",
-    "openai-codex/gpt-5.6-sol"
-  ],
-  "lastChangelogVersion": "0.84.4",
+  "lastChangelogVersion": "0.85.1",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
+  "defaultModel": "gpt-6-astra",
   "defaultThinkingLevel": "medium",
   "packages": [
     "packages/pi-libtui",
+    "packages/pi-transcript",
     "packages/pi-side-panel",
     "packages/pi-side-chat",
     "packages/pi-tuicr",
     "packages/pi-copy-mode",
     "packages/pi-annotations",
     "packages/pi-xsettings",
-    "packages/pi-model-roles",
     "packages/pi-subagents",
     "packages/pi-developer-prompt",
     "packages/pi-codex-native",
@@ -60,5 +55,15 @@
     "skipPrompt": false
   },
   "editorPaddingX": 0,
-  "outputPad": 1
+  "outputPad": 1,
+  "warnings": {
+    "anthropicExtraUsage": false
+  },
+  "enabledModels": [
+    "anthropic/claude-fable-5-1",
+    "openai/gpt-6-astra",
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-luna",
+    "openai-codex/gpt-5.6-terra"
+  ]
 }

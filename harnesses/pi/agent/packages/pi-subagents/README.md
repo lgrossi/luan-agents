@@ -24,8 +24,7 @@ pi install ./harnesses/pi/agent/packages/pi-subagents
 
 The package bundles its workspace dependencies so the installed copy remains
 independently loadable. `pi-libtui` supplies its generic TUI host bridge;
-`pi-model-roles` resolves the selected subagent role, and its `pi-libcontext`
-dependency is bundled at the package root for standalone installation.
+child sessions inherit the parent model and thinking level by default.
 Collaboration tools stay direct Pi tools because their session-tree state must
 not be hidden inside a Code Mode cell.
 
@@ -96,11 +95,16 @@ The Agent Hub defaults to a side-panel tab. Set `agentHubPresentation` to
 `"fullscreen"` for the original overlay. If `pi-side-panel` is not installed,
 the side-panel choice falls back to that fullscreen overlay.
 
-Model choice comes from `pi-model-roles`. A spawn can select a role explicitly;
-otherwise it uses that package's configured subagent default role. Forking can
-copy all parent conversational history, no history, or a positive number of
-recent turns. Historical tool calls, tool results, and collaboration messages
-are not copied into the child context.
+Child sessions inherit the parent's model and thinking level. To override them,
+pass `model` as an exact `provider/model-id` reference and/or
+`thinking_level` (`off`, `minimal`, `low`, `medium`, `high`, `xhigh`, or `max`)
+to `spawn_agent`. Unsupported explicit thinking levels are rejected; inherited
+effort is clamped to the chosen model's supported levels. The resolved choices
+are retained when a child is retried or restored from a root-session checkpoint.
+Forking can copy all parent
+conversational history, no history, or a positive number of recent turns.
+Historical tool calls, tool results, and collaboration messages are not copied
+into the child context.
 
 The Agent Widget, Agent Hub, and running collaboration-tool rows use the shared
 `pi-libtui.activityIndicator` and `pi-libtui.textEffect` Appearance settings.
@@ -120,7 +124,7 @@ inherits the global activity indicator by default and can be overridden live.
 | Execution owner | Named tool `definition.ts` modules delegate stateful work to `src/runtime/coordinator.ts` |
 | State and mailbox owner | `src/runtime/coordinator.ts`; each child Pi session owns its transcript |
 | Agent execution and prompt assembly | `src/runtime/agent-runner.ts`, `src/core/prompts.ts`, and `src/core/types.ts` |
-| Codex-compatible role and delegation instructions | `src/core/instructions.ts` contributed as developer messages by `src/contributions/developer-prompt.ts` |
+| Codex-compatible delegation instructions | `src/core/instructions.ts` contributed as developer messages by `src/contributions/developer-prompt.ts` |
 | History forking and nested activity | `src/core/fork-history.ts` and `src/runtime/nested-tool-activity.ts` |
 | Native boundary | Pi's session, model, and tool APIs |
 | Typed settings | `src/config/settings.ts` via `pi-xsettings/sdk` |
@@ -160,8 +164,7 @@ follow-up delivery, interruption, waiting, retry, reload, and session resume.
   spawn from a shallower ancestor.
 - **`alt+a` does nothing:** verify `subagents.open` in
   `~/.pi/agent/keybindings.json` and reload Pi. `/subagents` remains available.
-- **A requested role is unavailable:** check `/xsettings` under Model Roles and
-  verify that its model and thinking level are available in the current Pi
-  session.
+- **A requested model is unavailable:** verify the exact `provider/model-id`
+  reference and that the provider is configured in Pi.
 - **A collaboration tool is missing inside `exec`:** call it directly. The
   package deliberately does not lift session-tree coordination into Code Mode.

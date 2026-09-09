@@ -3,13 +3,16 @@ import type { Component } from "@earendil-works/pi-tui";
 import type { ActivityAnimationOverrides } from "pi-libtui";
 import type { TuiMouseEvent } from "pi-libtui/mouse";
 import { type TerminalOutputUpdate, ToolActivity, type ToolTranscriptStatus } from "pi-libtui/tool";
-import { ShellCommandAction } from "./shell-command-action.ts";
+import type { ShellAction } from "../core/shell-summary.ts";
+import { SHELL_COMMAND_BODY_INDENT, ShellCommandAction } from "./shell-command-action.ts";
 
 export interface CommandTranscriptView {
 	command: string;
 	shell?: string;
 	status: ToolTranscriptStatus;
 	running?: boolean;
+	/** Exploration steps shown in place of the command source. */
+	actions?: readonly ShellAction[];
 	output?: string;
 	outputRevision?: number;
 	tty?: boolean;
@@ -48,6 +51,7 @@ export class CommandTranscript implements Component {
 		this.activity = new ToolActivity({
 			...options,
 			textSelection: "tail",
+			bodyIndent: view.actions ? SHELL_COMMAND_BODY_INDENT : 0,
 			action: this.action,
 			view: activityView(view),
 		});
@@ -89,7 +93,7 @@ export class CommandTranscript implements Component {
 
 function activityView(view: CommandTranscriptView) {
 	return {
-		action: { verb: view.command, status: view.status, marker: "$", meta: view.meta },
+		action: { verb: view.command, status: view.status, meta: view.meta },
 		running: view.running ?? view.status === "running",
 		payload:
 			view.output === undefined
@@ -113,5 +117,12 @@ function activityView(view: CommandTranscriptView) {
 }
 
 function shellView(view: CommandTranscriptView) {
-	return { command: view.command, shell: view.shell, status: view.status, running: view.running, meta: view.meta };
+	return {
+		command: view.command,
+		shell: view.shell,
+		status: view.status,
+		running: view.running,
+		meta: view.meta,
+		actions: view.actions,
+	};
 }
