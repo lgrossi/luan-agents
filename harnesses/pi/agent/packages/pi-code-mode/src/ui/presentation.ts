@@ -129,6 +129,7 @@ export class CodeModeResultComponent implements PresentationComponent {
 					this.expanded,
 					this.cwd,
 					this.executionStarted,
+					details?.tool === "wait",
 					() => this.disclosure.invalidate(),
 					localOwner,
 				);
@@ -142,7 +143,7 @@ export class CodeModeResultComponent implements PresentationComponent {
 			return;
 		}
 		if (!this.expanded && !hasCodeModeFailure(this.result, this.hostError)) {
-			const output = nested.length === 0 ? scriptOutput(this.result) : "";
+			const output = traces.length === 0 ? scriptOutput(this.result) : "";
 			if (output) {
 				if (this.compactResult) this.compactResult.update(output);
 				else this.compactResult = new LazyCodeModeResult(this.theme, output, this.requestRender);
@@ -606,6 +607,7 @@ function prettify(text: string): string {
 }
 
 class NestedCallView {
+	readonly originId: string;
 	private custom: NestedToolPresentationComponent | undefined;
 	private fallback: ToolActivity | undefined;
 	private hidden = false;
@@ -619,9 +621,11 @@ class NestedCallView {
 		private expanded: boolean,
 		private readonly cwd: string,
 		private readonly executionStarted: boolean,
+		private readonly continuation: boolean,
 		private readonly invalidateOwner: () => void,
 		localOwner?: NestedCallView,
 	) {
+		this.originId = trace.id;
 		this.presentationKey = tracePresentationKey(trace);
 		this.route(localOwner);
 	}
@@ -711,7 +715,7 @@ class NestedCallView {
 			localOwner.acceptContinuation(this.trace);
 			return;
 		}
-		this.hidden = !claimTracePresentation(this, isTranscriptTrace(this.trace));
+		this.hidden = !claimTracePresentation(this, isTranscriptTrace(this.trace), !this.continuation);
 		if (!this.hidden) this.rebuild();
 	}
 
@@ -757,13 +761,17 @@ class NestedCallView {
 const MAX_TRACKED_TRACE_PRESENTATIONS = 1_000;
 const tracePresentationOwner = new Map<string, NestedCallView>();
 
-function claimTracePresentation(view: NestedCallView, present: boolean): boolean {
+function claimTracePresentation(view: NestedCallView, present: boolean, replaceOwner: boolean): boolean {
 	const owner = tracePresentationOwner.get(view.ownerKey);
-	if (owner && owner !== view) {
+	// Pi can rebuild the same transcript without disposing its old components.
+	// A new instance of the owning call replaces that stale owner; only distinct
+	// calls are continuations. originId stays stable when a wait updates the trace.
+	if (owner && owner !== view && (!replaceOwner || owner.originId !== view.originId)) {
 		owner.acceptContinuation(view.currentTrace);
 		return false;
 	}
 	if (!present) return false;
+	if (owner && owner !== view) owner.dispose();
 	tracePresentationOwner.set(view.ownerKey, view);
 	while (tracePresentationOwner.size > MAX_TRACKED_TRACE_PRESENTATIONS) {
 		const oldest = tracePresentationOwner.keys().next().value;

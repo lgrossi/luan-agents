@@ -27,6 +27,12 @@ default `~/.pi/agent/keybindings.json` binds it to `ctrl+,`; the command still
 works when the action has no key. Keybindings are read when extensions load, so
 reload Pi after changing that file.
 
+The repository binds Pi's native model picker to `alt+p`. The
+`xsettings.effort.decrease` and `xsettings.effort.increase` actions bind to
+`alt+,` and `alt+.`. They step through the current model's supported thinking
+levels, stopping at either end instead of wrapping. Model and effort choices
+use Pi's normal persistence; no named profiles are involved.
+
 `/xsettings` requires the interactive TUI. Its left sidebar contains eight
 pages: UI, Editor, UX, Animations, Terminal, Behavior, Interaction, and Tools, with
 each page's sections listed underneath in a dimmer color. Extension settings
@@ -273,6 +279,7 @@ when this host is absent.
 | Value resolution and publication | `src/runtime/settings.ts` |
 | Live application and reload decision | `src/runtime/apply.ts` |
 | Keybinding bridge | `src/runtime/actions.ts` and `pi-libactions/sdk` |
+| Reasoning effort actions | `src/runtime/effort.ts` using Pi's thinking-level APIs |
 | Settings fields and editors | `src/ui/fields.ts`, `src/ui/settings-editor.ts`, `src/ui/string-list-editor.ts`, and `src/ui/structured-list-editor.ts` |
 | TUI screen | `src/ui/xsettings-screen.ts` |
 

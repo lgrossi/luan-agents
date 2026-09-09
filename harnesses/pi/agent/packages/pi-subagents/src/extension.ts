@@ -1,6 +1,5 @@
 import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { registerSidePanelProvider, type ActivityAnimationOverrides } from "pi-libtui";
-import { getModelRoleCatalog } from "pi-model-roles/sdk";
 import { getSubagentConfig, registerSubagentSettings } from "./config/settings.ts";
 import { registerSubagentActions } from "./contributions/actions.ts";
 import {
@@ -75,7 +74,6 @@ export default function subagentsExtension(pi: ExtensionAPI): void {
 		pi,
 		coordinator: requireCoordinator,
 		callerPath: () => callerPath,
-		modelRoles: getModelRoleCatalog,
 		otherLiveAgents: liveAgents,
 	};
 	const resolveAgentPath = (sessionId: string): string => {

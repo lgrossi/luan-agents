@@ -10,7 +10,8 @@ export interface AgentRecord {
 	cwd: string;
 	status: SubagentSnapshot["status"];
 	description: string;
-	modelRole?: string;
+	model?: string;
+	thinkingLevel?: string;
 	startedAt: number;
 	completedAt?: number;
 	durationMs: number;
@@ -58,7 +59,8 @@ export function agentRecord(
 			cwd: agent.cwd,
 			status: agent.status,
 			description: agent.description,
-			modelRole: agent.modelRole?.name,
+			model: agent.model ? `${agent.model.provider}/${agent.model.id}` : undefined,
+			thinkingLevel: agent.thinkingLevel,
 			startedAt: agent.startedAt,
 			completedAt: agent.completedAt,
 			durationMs: Math.max(0, (agent.completedAt ?? now) - agent.startedAt),

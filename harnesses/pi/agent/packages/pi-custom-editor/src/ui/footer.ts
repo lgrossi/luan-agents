@@ -9,7 +9,6 @@ import { renderStatusGroups } from "./status.ts";
 type FooterFactory = Parameters<ExtensionContext["ui"]["setFooter"]>[0];
 type FooterData = Parameters<NonNullable<FooterFactory>>[2];
 
-const MODEL_ROLE_STATUS = "model-roles.current";
 const CONTEXT_WINDOW_STATUS = "codex-native-context";
 const FAST_MODE_STATUS = "codex-native-fast";
 
@@ -33,11 +32,7 @@ class PiFooter implements Component {
 
 	render(width: number): string[] {
 		const statuses = this.data.getExtensionStatuses();
-		this.state.setModelStatus(
-			statuses.get(MODEL_ROLE_STATUS),
-			statuses.get(CONTEXT_WINDOW_STATUS),
-			statuses.get(FAST_MODE_STATUS) === "fast",
-		);
+		this.state.setModelStatus(statuses.get(CONTEXT_WINDOW_STATUS), statuses.get(FAST_MODE_STATUS) === "fast");
 		const composition = resolveEditorComposition(getCustomEditorSettings());
 		const status = renderStatusGroups({
 			ctx: this.ctx,

@@ -27,7 +27,7 @@ function execDescription(defaultYieldTimeMs: number, defaultOutputTokens: number
 - \`notify(value: string | number | boolean | undefined | null)\`: immediately injects an extra \`custom_tool_call_output\` for the current \`exec\` call. Values are stringified like \`text(...)\`.
 - \`setTimeout(callback: () => void, delayMs?: number)\`: schedules a callback to run later and returns a timeout id. Pending timeouts do not keep \`exec\` alive by themselves; await an explicit promise if you need to wait for one.
 - \`clearTimeout(timeoutId?: number)\`: cancels a timeout created by \`setTimeout\`.
-- \`ALL_TOOLS\`: metadata for the enabled nested tools as \`{ name, description }\` entries.
+- \`ALL_TOOLS\`: metadata for the enabled nested tools as \`{ name, description }\` entries. Use the declarations below directly; do not print the full catalog. For discovery, filter by name or description and print only matching names; inspect a matching tool's description only when needed.
 - \`yield_control()\`: yields the accumulated output to the model immediately while the script keeps running.`;
 }
 

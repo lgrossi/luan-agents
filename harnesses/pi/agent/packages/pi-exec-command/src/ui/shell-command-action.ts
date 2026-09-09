@@ -3,6 +3,8 @@ import type { Component } from "@earendil-works/pi-tui";
 import { sliceByColumn, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import {
 	highlightSyntaxBlock,
+	icon,
+	type TuiTheme,
 	type ActivityAnimationOverrides,
 	activityAnimatesText,
 	activityFrame,
@@ -19,6 +21,7 @@ import {
 	whenSyntaxReady,
 } from "pi-libtui";
 import type { ToolTranscriptStatus } from "pi-libtui/tool";
+import type { ShellAction } from "../core/shell-summary.ts";
 
 export interface ShellCommandActionView {
 	command: string;
@@ -26,6 +29,8 @@ export interface ShellCommandActionView {
 	status: ToolTranscriptStatus;
 	running?: boolean;
 	meta?: readonly string[];
+	/** Read/list/search steps use the exploration layout instead of the shell prompt. */
+	actions?: readonly ShellAction[];
 }
 
 export interface ShellCommandActionOptions {
@@ -36,6 +41,8 @@ export interface ShellCommandActionOptions {
 	reducedMotion?: boolean;
 	animation?: Readonly<ActivityAnimationOverrides>;
 }
+
+export const SHELL_COMMAND_BODY_INDENT = 4;
 
 interface ShellPiece {
 	text: string;
@@ -87,7 +94,7 @@ export class ShellCommandAction implements Component {
 	render(width: number): string[] {
 		const boundedWidth = Math.max(0, Math.floor(width));
 		if (boundedWidth === 0) return [];
-		this.requestSyntaxReady();
+		if (!this.view.actions) this.requestSyntaxReady();
 		const appearance = getTuiAppearance();
 		const indicatorStyle = this.options.animation?.indicatorStyle ?? appearance.activityIndicator;
 		const textEffectStyle = this.options.animation?.textEffectStyle ?? appearance.textEffect;
@@ -108,7 +115,7 @@ export class ShellCommandAction implements Component {
 				this.view,
 				boundedWidth,
 				activity,
-				this.commandPieces(boundedWidth),
+				this.view.actions ? [] : this.commandPieces(boundedWidth),
 				this.options.maxRows,
 			),
 		);
@@ -180,6 +187,7 @@ function renderShellCommand(
 	pieces: readonly ShellPiece[],
 	maxRows = 6,
 ): string[] {
+	if (view.actions) return renderExploration(theme, view, view.actions, width, activity, maxRows);
 	const colors = tuiTheme(theme);
 	const promptTone = view.status === "failed" ? "negative" : view.status === "queued" ? "text.muted" : "positive";
 	if (width <= 2) return [colors.fg(promptTone, truncateToWidth("$ ", width, ""))];
@@ -230,6 +238,80 @@ function renderShellCommand(
 		}
 	}
 	return rendered;
+}
+
+function renderExploration(
+	theme: Theme,
+	view: ShellCommandActionView,
+	actions: readonly ShellAction[],
+	width: number,
+	activity: ShellActivity | undefined,
+	maxRows: number,
+): string[] {
+	const colors = tuiTheme(theme);
+	const verb = activity || view.status === "queued" ? "Exploring" : "Explored";
+	const frame = activity ? activityFrame(colors, verb, activity.elapsedMs, activity) : undefined;
+	const tone = view.status === "failed" ? "negative" : view.status === "queued" ? "text.muted" : "positive";
+	const glyph = view.status === "failed" ? icon("error") : view.status === "queued" ? "○" : "•";
+	const marker = frame?.marker || colors.fg(tone, glyph);
+	let header = `${marker} ${theme.bold(frame?.text ?? colors.fg("text.secondary", verb))}`;
+	if (view.meta?.length) header += colors.fg("text.muted", ` · ${view.meta.map(sanitizeTuiField).join(" · ")}`);
+	const rendered = [truncateToWidth(header, width, "…")];
+	const inner = width - SHELL_COMMAND_BODY_INDENT;
+	if (inner < 1) return rendered;
+	const rows = actionRows(actions, inner, colors);
+	const limit = Math.max(1, Math.floor(maxRows));
+	const visible = rows.slice(0, limit);
+	if (rows.length > limit) {
+		const last = visible.length - 1;
+		visible[last] = `${truncateToWidth(visible[last]!, inner - 1, "")}${colors.fg("text.muted", "…")}`;
+	}
+	return [
+		...rendered,
+		...visible.map((row, index) => `${colors.fg("text.muted", index === 0 ? "  └ " : "    ")}${row}`),
+	];
+}
+
+function actionRows(actions: readonly ShellAction[], width: number, colors: TuiTheme): string[] {
+	return actionLines(actions).map(({ title, body }) =>
+		truncateToWidth(`${colors.fg("accent", title)} ${colors.fg("text.secondary", sanitizeTuiField(body))}`, width, "…"),
+	);
+}
+
+interface ActionLine {
+	title: string;
+	body: string;
+}
+
+/** One row per step; consecutive reads merge into a single `Read a, b` row. */
+export function actionLines(actions: readonly ShellAction[]): ActionLine[] {
+	const lines: ActionLine[] = [];
+	let reads: string[] = [];
+	const flushReads = () => {
+		if (reads.length > 0) lines.push({ title: "Read", body: readLabels(reads).join(", ") });
+		reads = [];
+	};
+	for (const action of actions) {
+		if (action.kind === "read") {
+			if (!reads.includes(action.path)) reads.push(action.path);
+			continue;
+		}
+		flushReads();
+		if (action.kind === "list") lines.push({ title: "List", body: action.path ?? "." });
+		else if (action.kind === "search")
+			lines.push({ title: "Search", body: action.path ? `${action.query} in ${action.path}` : (action.query ?? "") });
+		else lines.push({ title: "Run", body: action.command });
+	}
+	flushReads();
+	return lines;
+}
+
+/** Basenames, falling back to the full path when two files share one name. */
+function readLabels(paths: readonly string[]): string[] {
+	const basenames = paths.map((path) => path.replace(/\/+$/u, "").split("/").at(-1) || path);
+	return basenames.map((name, index) =>
+		basenames.indexOf(name) !== basenames.lastIndexOf(name) ? paths[index]! : name,
+	);
 }
 
 function trimPieces(pieces: readonly ShellPiece[], width: number): ShellPiece[] {

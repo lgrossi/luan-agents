@@ -29,7 +29,6 @@ test("wait_agent reports mailbox status without exposing its payload", async () 
 	const tool = createWaitAgentTool({
 		pi: {},
 		callerPath: () => undefined,
-		modelRoles: () => ({ roles: [] }),
 		otherLiveAgents: () => [snapshot(1, "")],
 		coordinator: () =>
 			({

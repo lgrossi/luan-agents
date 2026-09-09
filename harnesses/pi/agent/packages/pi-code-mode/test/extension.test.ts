@@ -101,6 +101,8 @@ describe("Code Mode extension", () => {
 		]);
 		expect(description).toContain("All nested tools are available on the global `tools` object");
 		expect(description).toContain("Tool names are exposed as normalized JavaScript identifiers");
+		expect(description).toContain("do not print the full catalog");
+		expect(description).toContain("print only matching names");
 		expect(description).toContain("### `exec_command`\nRun a command.");
 		expect(description).toContain(
 			"declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: string; }>; };",
@@ -268,9 +270,19 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 			expect(active).toEqual(["exec", "wait"]);
 			expect(scope?.tools()).toEqual([{ name: "exec_command", description: "Run a command.", parameters: {} }]);
 			expect(scope?.active()).toEqual(["exec_command"]);
+			for (const handler of handlers.get("session_tree") ?? []) await handler({}, {});
+			expect(active).toEqual(["exec", "wait"]);
+			expect(scope?.active()).toEqual(["exec_command"]);
 			scope?.setActive([]);
+			for (const handler of handlers.get("session_tree") ?? []) await handler({}, {});
+			expect(scope?.active()).toEqual([]);
 			expect(execTool?.description).toContain("### `tool_search`");
 			expect(execTool?.description).not.toContain("### `exec_command`");
+			scope?.setActive(["exec_command"]);
+			expect(scope?.active()).toEqual(["exec_command"]);
+			expect(execTool?.description).toContain("### `exec_command`");
+			for (const handler of handlers.get("session_shutdown") ?? []) await handler({ reason: "quit" }, {});
+			expect(scope).toBeUndefined();
 		} finally {
 			restoreGlobal(settingsKey, previousSettings);
 			restoreGlobal(adaptersKey, previousAdapters);
@@ -353,10 +365,10 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		expect(onToolResult?.({ toolName: "exec", details: { codeMode: true, isError: false } })).toBeUndefined();
 	});
 
-	test("shuts down on tree changes and shutdown", async () => {
+	test("resets execution on tree changes and shutdown", async () => {
 		let shutdowns = 0;
-		const original = CodeModeRuntime.prototype.shutdown;
-		CodeModeRuntime.prototype.shutdown = async () => {
+		const original = CodeModeRuntime.prototype.resetExecution;
+		CodeModeRuntime.prototype.resetExecution = async () => {
 			shutdowns++;
 		};
 		try {
@@ -372,7 +384,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 			await handlers.get("session_shutdown")?.({ reason: "switch" } as never);
 			expect(shutdowns).toBe(2);
 		} finally {
-			CodeModeRuntime.prototype.shutdown = original;
+			CodeModeRuntime.prototype.resetExecution = original;
 		}
 	});
 
@@ -385,9 +397,14 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 			runtime.setLiftedTools(["exec_command", "apply_patch"]);
 			expect(listCodeModeToolNames()).toEqual(expect.arrayContaining(["exec_command", "apply_patch"]));
 			const first = runtime.getClient();
+			await runtime.resetExecution();
+			expect(runtime.liftedTools()).toEqual(["exec_command", "apply_patch"]);
+			expect(listCodeModeToolNames()).toEqual(expect.arrayContaining(["exec_command", "apply_patch"]));
+			const second = runtime.getClient();
+			expect(second).not.toBe(first);
 			await runtime.shutdown();
 			expect(listCodeModeToolNames().filter((name) => !before.has(name))).toEqual([]);
-			expect(runtime.getClient()).not.toBe(first);
+			expect(runtime.getClient()).not.toBe(second);
 		} finally {
 			if (previous === undefined) delete process.env[CODE_MODE_HOST_ENV];
 			else process.env[CODE_MODE_HOST_ENV] = previous;

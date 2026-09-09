@@ -11,7 +11,8 @@ export interface SpawnAgentDetails {
 		taskName: string;
 		message: string;
 		forkTurns: ForkTurns;
-		modelRole?: string;
+		model?: string;
+		thinkingLevel?: string;
 	};
 	agent: AgentRecord;
 	truncation: TruncationDetails;

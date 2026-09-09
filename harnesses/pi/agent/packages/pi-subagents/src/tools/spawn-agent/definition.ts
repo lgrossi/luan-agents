@@ -1,7 +1,9 @@
-import type { ToolDefinition } from "@earendil-works/pi-coding-agent";
+import type { Api, Model } from "@earendil-works/pi-ai";
+import type { ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { parseForkTurns } from "../../core/fork-history.ts";
 import type { AgentConfig } from "../../core/types.ts";
+import { resolveThinkingLevel } from "../../runtime/agent-runner.ts";
 import { MAX_AGENT_MESSAGE_LENGTH, MAX_TASK_NAME_LENGTH } from "../limits.ts";
 import { AGENT_TOOLS } from "../names.ts";
 import type { CollaborationToolScope } from "../scope.ts";
@@ -24,11 +26,19 @@ const PARAMETERS = Type.Object(
 					"Optional number of turns to fork. Defaults to all. Use none, all, or a positive integer string such as 3.",
 			}),
 		),
-		model_role: Type.Optional(
+		model: Type.Optional(
 			Type.String({
-				maxLength: MAX_TASK_NAME_LENGTH,
-				description: "Model role override. Omit to use the configured subagent default role.",
+				maxLength: 512,
+				description: "Optional model override in provider/model-id format. Omit to inherit the parent model.",
 			}),
+		),
+		thinking_level: Type.Optional(
+			Type.Union(
+				(["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const).map((level) => Type.Literal(level)),
+				{
+					description: "Optional thinking level override. Omit to inherit the parent's thinking level.",
+				},
+			),
 		),
 	},
 	{ additionalProperties: false },
@@ -44,16 +54,26 @@ export function normalizeTaskName(value: string): string {
 	return name;
 }
 
+function resolveModelOverride(value: string, registry: Pick<ExtensionContext["modelRegistry"], "find">): Model<Api> {
+	const reference = value.trim();
+	const separator = reference.indexOf("/");
+	if (separator <= 0 || separator === reference.length - 1 || /\s/u.test(reference)) {
+		throw new Error("model must use provider/model-id format");
+	}
+	const provider = reference.slice(0, separator);
+	const id = reference.slice(separator + 1);
+	const model = registry.find(provider, id);
+	if (!model) throw new Error(`Unknown model: ${reference}`);
+	return model;
+}
+
 export function createSpawnAgentTool(
 	scope: CollaborationToolScope,
 ): ToolDefinition<typeof PARAMETERS, SpawnAgentDetails> {
-	const catalog = scope.modelRoles();
-	const roles = catalog.roles.map((role) => `${role.name}: ${role.description}`).join("; ");
 	return {
 		name: AGENT_TOOLS.spawnAgent,
 		label: "Spawn Agent",
 		description:
-			`${roles ? `Available model roles: ${roles}.\n` : ""}` +
 			"Spawn an agent for one concrete, bounded task that can run independently. The returned canonical task path remains addressable for messages and follow-up turns. Successful completion is delivered automatically to the direct parent as a hidden FINAL_ANSWER mailbox message.",
 		promptSnippet: "Spawn a concurrent child agent for independent work",
 		promptGuidelines: [
@@ -78,13 +98,19 @@ export function createSpawnAgentTool(
 			const taskName = normalizeTaskName(parameters.task_name);
 			const message = parameters.message.trim();
 			if (!message) throw new Error("spawn_agent requires message");
-			const currentCatalog = scope.modelRoles();
-			const modelRole = parameters.model_role?.trim() || currentCatalog.subagentDefaultRole;
-			if (modelRole && !currentCatalog.roles.some((role) => role.name === modelRole)) {
-				throw new Error(`Unknown model role: ${modelRole}`);
-			}
+			const model = parameters.model?.trim()
+				? resolveModelOverride(parameters.model, context.modelRegistry)
+				: context.model;
+			const thinkingLevel = resolveThinkingLevel(
+				model,
+				parameters.thinking_level,
+				context.thinkingLevel ?? scope.pi.getThinkingLevel(),
+			);
 			const forkTurns = parseForkTurns(parameters.fork_turns);
-			const agentConfig: AgentConfig = modelRole ? { role: modelRole } : {};
+			const agentConfig: AgentConfig = {
+				model: model ? { provider: model.provider, id: model.id } : undefined,
+				thinkingLevel,
+			};
 			const coordinator = scope.coordinator();
 			const id = coordinator.spawn(scope.callerPath(), {
 				taskName,
@@ -97,7 +123,13 @@ export function createSpawnAgentTool(
 			});
 			const agent = coordinator.snapshot().find((candidate) => candidate.id === id);
 			if (!agent) throw new Error(`Agent ${id} was not registered`);
-			return spawnAgentResult(agent, { taskName, message, forkTurns, modelRole: modelRole || undefined });
+			return spawnAgentResult(agent, {
+				taskName,
+				message,
+				forkTurns,
+				model: model ? `${model.provider}/${model.id}` : undefined,
+				thinkingLevel,
+			});
 		},
 	};
 }

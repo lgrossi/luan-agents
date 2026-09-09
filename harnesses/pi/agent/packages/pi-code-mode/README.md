@@ -45,6 +45,10 @@ If Code Mode is disabled, it removes `exec` and `wait` from the active set and
 does not activate configured tools. If `exec` is not active, it removes the
 unusable `wait` tool and leaves the other tools alone.
 
+Tree navigation stops live cells and clears execution state without changing
+the tool hierarchy or deferred-tool selection. Session shutdown also releases
+the hierarchy.
+
 ## Configure
 
 `pi-xsettings` stores these values in `~/.pi/agent/xsettings.toml`:
@@ -100,7 +104,9 @@ shapes; do not invent a namespace such as `functions.exec`.
 
 The host also provides `text`, `image`, `generatedImage`, `store`, `load`,
 `notify`, `exit`, `setTimeout`, `clearTimeout`, `yield_control`, and
-`ALL_TOOLS`. For `openai-codex`, it also advertises Codex's `audio(...)`
+`ALL_TOOLS`. Use the supplied tool declarations directly. For discovery, filter
+the catalog and print only matching names, not the full descriptions and schemas.
+For `openai-codex`, it also advertises Codex's `audio(...)`
 helper and the Codex Responses adapter serializes its result as `input_audio`.
 Other providers do not receive that helper description because Pi's shared
 provider contract does not yet carry audio tool results. A first-line pragma
@@ -195,8 +201,9 @@ open one section with explicit `Code` and `Result` tabs. The first shows
 syntax-highlighted orchestration source; the second shows the parsed,
 pretty-printed result. Compact mode never emits a separate `Code output` row or
 raw argument/result JSON dump. Restored transcript rows use the same semantic
-components, but only live executions claim continuation ownership because Pi
-can reuse terminal session IDs and nested trace IDs after a restart.
+components. Rebuilding a call replaces its stale presentation owner; later
+continuations update the rebuilt row. Ownership is scoped by the persisted
+runtime ID so reused terminal session IDs cannot cross sessions.
 
 Register nested policy checks with `registerNestedToolPreflight` from the
 package root. The preflight receives the tool name, input, cwd, call ID, Pi

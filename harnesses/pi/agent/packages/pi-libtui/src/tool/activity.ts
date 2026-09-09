@@ -54,6 +54,8 @@ export interface ToolActivityOptions {
 	textSelection?: ToolOutputViewport["selection"];
 	/** Optional deliberate override for the shared multiline tool surface. */
 	surface?: TuiBackgroundToken;
+	/** Columns of leading whitespace under the action for every payload row. */
+	bodyIndent?: number;
 	/** Tool-specific action grammar; payload rendering remains generic. */
 	action?: ToolActivityAction;
 }
@@ -178,7 +180,7 @@ export class ToolActivity implements Component {
 	render(width: number): string[] {
 		this.refreshForRenderEpoch();
 		const renderedWidth = Math.max(0, Math.floor(width));
-		const payloadWidth = renderedWidth;
+		const payloadWidth = Math.max(0, renderedWidth - this.bodyIndent());
 		this.renderedPayloadWidth = payloadWidth;
 		this.ensureWrappedTextDisclosure(payloadWidth);
 		this.ensureDiffDisclosure(payloadWidth);
@@ -389,7 +391,12 @@ export class ToolActivity implements Component {
 			action: this.disclosureAction,
 			body: this.bodyComponents(),
 			maxRows: this.options.maxHeight ?? (this.options.fullRows ?? 500) + 20,
+			bodyIndent: this.bodyIndent(),
 		});
+	}
+
+	private bodyIndent(): number {
+		return Math.max(0, Math.floor(this.options.bodyIndent ?? 0));
 	}
 
 	private bodyComponents(): Component[] {
@@ -414,6 +421,7 @@ export class ToolActivity implements Component {
 			this.options.maxHeight === options.maxHeight &&
 			this.options.maxCharacters === options.maxCharacters &&
 			(this.options.textSelection ?? "head-tail") === (options.textSelection ?? "head-tail") &&
+			(this.options.bodyIndent ?? 0) === (options.bodyIndent ?? 0) &&
 			(this.options.surface ?? TOOL_SURFACE_BACKGROUND) === (options.surface ?? TOOL_SURFACE_BACKGROUND)
 		);
 	}

@@ -10,6 +10,7 @@ import {
 	type ToolTranscriptStatus,
 	toolCallPreview,
 } from "pi-libtui/tool";
+import { type ShellAction, summarizeShellCommand } from "../core/shell-summary.ts";
 import type { ExecProcessSnapshot, ExecSessionManager } from "../session-manager.ts";
 import type { ExecToolPresentationDetails } from "../tools/presentation.ts";
 import { CommandTranscript, type CommandTranscriptView } from "./command-transcript.ts";
@@ -40,7 +41,7 @@ export function renderExecCommandCall(
 			theme,
 			requestRender: context.invalidate,
 			animation,
-			view: { command: args.cmd, shell: args.shell, status: "queued" },
+			view: { command: args.cmd, shell: args.shell, status: "queued", actions: explorationActions(args.cmd) },
 		}),
 	);
 }
@@ -100,6 +101,7 @@ export function renderExecResult(
 				command: fallbackCommand,
 				shell: context.args?.shell,
 				status: "failed",
+				actions: explorationActions(fallbackCommand),
 				failure: textContent(result) || "Command failed",
 			},
 		});
@@ -132,6 +134,12 @@ export function renderExecResult(
 		animation,
 		processSource,
 	);
+}
+
+function explorationActions(command: string | undefined): readonly ShellAction[] | undefined {
+	if (!command) return undefined;
+	const summary = summarizeShellCommand(command);
+	return summary.explored ? summary.actions : undefined;
 }
 
 function isExecDetails(details: ExecToolPresentationDetails | undefined): details is ExecToolPresentationDetails {
@@ -446,11 +454,13 @@ function commandView(
 ): CommandTranscriptView {
 	const status = toolStatus(details, hostError);
 	const output = details.progress.output || undefined;
+	const shellCommand = command(details);
 	return {
-		command: command(details),
+		command: shellCommand,
 		shell: details.arguments.kind === "exec_command" ? details.arguments.shell : undefined,
 		status,
 		running: live && status === "running",
+		actions: explorationActions(shellCommand),
 		output,
 		outputRevision,
 		tty: details.arguments.tty,

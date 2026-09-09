@@ -59,12 +59,25 @@ terminal control sequences are removed. PTY output is kept as received so
 interactive programs can work.
 
 While a call is waiting, new bridge output is published as bounded partial
-tool results. Compact `exec_command` and `write_stdin` output keeps the newest
-rows, with older rows available through the disclosure control. Pipe output
-uses the shared streamed-output surface. `tty: true` uses `pi-libtui`'s
-terminal projection, so carriage-return progress, cursor motion, erases,
-colors, and wide glyphs render as terminal state instead of raw control bytes.
-The authoritative final result replaces the partial preview.
+tool results. General commands keep the syntax-colored `$ command` header,
+live indicator, right-aligned metadata, and full-width output.
+Compact output keeps the newest rows, with older rows
+available through the disclosure control. Pipe output uses the shared
+streamed-output surface. `tty: true` uses `pi-libtui`'s terminal projection,
+so carriage-return progress, cursor motion, erases, colors, and wide glyphs
+render as terminal state instead of raw control bytes. The authoritative final
+result replaces the partial preview.
+
+Commands that only read, list, or search (`cat`, `sed -n`, `head`, `ls`,
+`tree`, `rg`, `grep`, `fd`, `find`, `git grep`, and similar, including
+`cd`/`bash -c` prefixes and pipelines through formatting stages) render as
+`Exploring`/`Explored` with a `└` connector and indented output.
+Their steps use one row each: `Read app.rs, lib.rs`,
+`Search query in path`, `List path`. Each command remains independently
+renderable; `pi-transcript` groups calls and thinking into expandable activity
+sections without hiding earlier calls permanently. Commands with
+output redirection, in-place edits, `-exec`/`-delete`, control flow, or
+substitutions always render as a plain command.
 
 POSIX shells run as `shell -lc command` when `login` is true and `shell -c
 command` otherwise. `cmd.exe` uses `/d /s /c`; PowerShell and `pwsh` use
@@ -203,7 +216,8 @@ default and updates live when changed.
 | Process snapshots and explicit controls | `src/session-manager.ts` over the native bridge protocol |
 | Bridge process and wire protocol | `src/bridge-client.ts` and `crates/exec-command` |
 | Result/details model | `src/tools/result.ts` and `src/tools/presentation.ts` |
-| TUI rendering | `src/ui/presentation.ts`, `src/ui/command-transcript.ts`, and `src/ui/shell-command-action.ts` map exec semantics onto `pi-libtui`'s generic streaming activity |
+| Exploration summary | `src/core/shell-summary.ts` classifies a command into read/list/search steps or one opaque run |
+| TUI rendering | `src/ui/presentation.ts`, `src/ui/command-transcript.ts`, and `src/ui/shell-command-action.ts` map exec semantics onto `pi-libtui`'s generic streaming activity with an indented payload |
 | Process Hub presentation | `src/ui/process-hub.ts`, `src/ui/process-hub-presentation.ts`, and `src/ui/process-store.ts` compose `pi-libtui` side-panel, fullscreen, selection, scrollbar, and terminal primitives |
 | Process Hub action | `src/contributions/actions.ts` via `pi-libactions/sdk`; managed keybindings own shortcuts |
 | Code Mode adapter | `src/code-mode-adapters.ts` via `pi-code-mode/sdk` |

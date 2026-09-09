@@ -19,7 +19,9 @@ type State = { preset: ContextWindowPreset; upgradedPreset?: ContextWindowPreset
 
 function eligible(model: Model<Api> | undefined): model is Model<Api> {
 	return (
-		model?.provider === "openai-codex" && model.api === "openai-codex-responses" && model.id.startsWith("gpt-5.6-")
+		model?.provider === "openai-codex" &&
+		model.api === "openai-codex-responses" &&
+		(model.id.startsWith("gpt-5.6-") || model.id === "gpt-6-astra")
 	);
 }
 
@@ -144,7 +146,7 @@ export default function registerContextWindow(
 	});
 	const unregisterAction = registerAction({
 		id: "codex.context.cycle",
-		description: "Cycle the GPT-5.6 Codex context window",
+		description: "Cycle the Codex context window",
 		run: cycle,
 	});
 	return {

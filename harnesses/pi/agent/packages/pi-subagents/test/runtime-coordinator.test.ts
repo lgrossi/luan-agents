@@ -334,37 +334,69 @@ test("restores persisted fields without spreading live-only keys into agent stat
 	expect(coordinator.transcript("/root/worker")?.getMessages()).toEqual([]);
 });
 
-test("persists a requested role separately from its effective fallback and requests it after restore", async () => {
+test("persists model and thinking-level overrides and requests them after restore", async () => {
 	const session = fakeSession([], []);
 	const runtime = { session, dispose: async () => {} } as never;
 	const firstRun: CoordinatorOptions["run"] = ((_ctx: object, _message: string, options: object) => {
 		const callbacks = options as {
-			onRuntimeResolved(role: { name: string; color: string }): void;
 			onRuntimeCreated(runtime: never): void;
 			onSessionCreated(session: never): void;
 		};
-		callbacks.onRuntimeResolved({ name: "fallback", color: "blue" });
 		callbacks.onRuntimeCreated(runtime);
 		callbacks.onSessionCreated(session);
 		return Promise.resolve({ responseText: "done", session, runtime });
 	}) as never;
-	const rootId = "requested-role-root";
+	const rootId = "requested-model-root";
 	const coordinator = createRootCoordinator(rootId, { run: firstRun });
-	coordinator.spawn(undefined, { ...request("worker"), agentConfig: { role: "requested" } });
+	coordinator.spawn(undefined, {
+		...request("worker"),
+		agentConfig: {
+			model: { provider: "openai", id: "gpt-5" },
+			thinkingLevel: "high",
+		},
+	});
 	await flushPromises();
 	const saved = coordinator.persistedAgent("/root/worker");
-	expect(saved?.requestedRole).toBe("requested");
-	expect(saved?.modelRole?.name).toBe("fallback");
+	expect(saved?.model).toEqual({ provider: "openai", id: "gpt-5" });
+	expect(saved?.thinkingLevel).toBe("high");
 
-	let restoredRole: string | undefined;
+	let restoredConfig: object | undefined;
 	const restoredRun: CoordinatorOptions["run"] = ((_ctx: object, _message: string, options: object) => {
-		restoredRole = (options as { agentConfig: { role?: string } }).agentConfig.role;
+		restoredConfig = (options as { agentConfig: object }).agentConfig;
 		return new Promise(() => undefined);
 	}) as never;
-	const restored = new SubagentCoordinator("restored", { run: restoredRun });
+	const restored = new SubagentCoordinator("restored-model", { run: restoredRun });
 	restored.restore({ version: 1, agents: [saved!] }, { ctx: request("worker").ctx, pi: {} as never });
 	await restored.followUp(undefined, "/root/worker", "try again");
-	expect(restoredRole).toBe("requested");
+	expect(restoredConfig).toEqual({
+		model: { provider: "openai", id: "gpt-5" },
+		thinkingLevel: "high",
+	});
 	restored.dispose();
 	removeRootCoordinator(rootId);
+});
+
+test("ignores obsolete role fields when restoring old checkpoints", () => {
+	const saved = {
+		id: "/root/worker",
+		parentId: "/root",
+		cwd: "/tmp/work",
+		description: "worker",
+		status: "idle",
+		message: "work",
+		startedAt: 1,
+		completedAt: 2,
+		toolUses: 0,
+		cost: 0,
+		tokenCount: 0,
+		compactions: 0,
+		requestedRole: "tiny",
+		modelRole: { name: "tiny", color: "cyan" },
+		transcriptGeneration: 0,
+	};
+	const coordinator = new SubagentCoordinator("old-checkpoint");
+	coordinator.restore({ version: 1, agents: [saved] } as never);
+	expect(coordinator.persistedAgent("/root/worker")).not.toHaveProperty("requestedRole");
+	expect(coordinator.persistedAgent("/root/worker")).not.toHaveProperty("modelRole");
+	coordinator.dispose();
 });

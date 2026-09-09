@@ -54,7 +54,7 @@ describe("custom editor compositions", () => {
 			segmentSource: "custom",
 			topLeftSegments: ["model", "git"],
 			topRightSegments: ["context-window"],
-			bottomLeftSegments: ["role"],
+			bottomLeftSegments: ["model"],
 			bottomRightSegments: ["context"],
 			workingPlacement: "top-left-start",
 		});
@@ -68,7 +68,7 @@ describe("custom editor compositions", () => {
 		});
 		expect(resolved.topLeftSegments).toEqual(["working", "model", "git"]);
 		expect(resolved.topRightSegments).toEqual(["context-window"]);
-		expect(resolved.bottomLeftSegments).toEqual(["role"]);
+		expect(resolved.bottomLeftSegments).toEqual(["model"]);
 		expect(resolved.bottomRightSegments).toEqual(["context"]);
 	});
 

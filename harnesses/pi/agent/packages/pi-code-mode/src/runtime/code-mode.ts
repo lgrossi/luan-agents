@@ -75,6 +75,10 @@ export class CodeModeRuntime {
 
 	async shutdown(): Promise<void> {
 		this.setLiftedTools([]);
+		await this.resetExecution();
+	}
+
+	async resetExecution(): Promise<void> {
 		const client = this.client;
 		this.client = undefined;
 		await client?.shutdown();

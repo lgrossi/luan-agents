@@ -465,6 +465,26 @@ describe("mouse bridge", () => {
 		dispose();
 	});
 
+	test("typing after clicking a disclosure returns Enter to the editor", () => {
+		const region = viewRegion();
+		const action = new ToolDisclosureAction(theme, new LinesComponent(["activity"]), region, () => {});
+		const tui = createTui(disclosureLayout(action, region));
+		const dispose = installMouseBridge(asTui(tui), registry());
+		input(tui, "\x1b[<0;2;1M");
+		input(tui, "\x1b[<0;2;1m");
+		expect(region.getMode()).toBe("full");
+		tui.currentLayout = { root: disclosureLayout(action, region) };
+		expect(input(tui, "\r")).toEqual({ consume: true, data: "\r" });
+		expect(region.getMode()).toBe("preview");
+		tui.currentLayout = { root: disclosureLayout(action, region) };
+		expect(input(tui, "/reload")).toEqual({ data: "native:/reload" });
+		expect(region.isViewportFocused()).toBe(false);
+		expect(input(tui, "\r")).toEqual({ data: "native:\r" });
+		expect(region.getMode()).toBe("preview");
+		action.dispose();
+		dispose();
+	});
+
 	test("clears transcript keyboard focus for overlays, Escape, and clipped targets", () => {
 		const disclosure = viewRegion();
 		disclosure.render(20);

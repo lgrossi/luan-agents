@@ -11,7 +11,6 @@ export class TuiState {
 	lastTurnMs: number | undefined;
 	cumulativeMs = 0;
 	branch: string | undefined;
-	roleStatus: string | undefined;
 	contextStatus: string | undefined;
 	fastMode = false;
 	revision = 0;
@@ -22,15 +21,13 @@ export class TuiState {
 		this.lastTurnMs = undefined;
 		this.cumulativeMs = 0;
 		this.branch = undefined;
-		this.roleStatus = undefined;
 		this.contextStatus = undefined;
 		this.fastMode = false;
 		this.revision++;
 	}
 
-	setModelStatus(roleStatus: string | undefined, contextStatus: string | undefined, fastMode: boolean): void {
-		if (this.roleStatus === roleStatus && this.contextStatus === contextStatus && this.fastMode === fastMode) return;
-		this.roleStatus = roleStatus;
+	setModelStatus(contextStatus: string | undefined, fastMode: boolean): void {
+		if (this.contextStatus === contextStatus && this.fastMode === fastMode) return;
 		this.contextStatus = contextStatus;
 		this.fastMode = fastMode;
 		this.revision++;

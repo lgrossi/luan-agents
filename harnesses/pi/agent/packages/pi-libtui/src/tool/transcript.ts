@@ -11,23 +11,27 @@ export interface ToolTranscriptOptions {
 	action?: Component;
 	body?: readonly Component[];
 	maxRows?: number;
+	/** Columns of leading whitespace added to every payload row. */
+	bodyIndent?: number;
 }
 
 /**
  * A copy-friendly tool transcript: one action sentence followed by its payload.
- * Payload components render at the caller's width; the transcript does not add
- * a continuation gutter or impose a background.
+ * Payload components render at the caller's width minus `bodyIndent`; the
+ * transcript does not impose a background.
  */
 export class ToolTranscript implements Component {
 	private readonly stack: ComponentStack;
 	private readonly maxRows: number | undefined;
+	private readonly bodyIndent: number;
 	private bodies: TranscriptBody[];
 
 	constructor(options: ToolTranscriptOptions) {
 		const action =
 			options.action ?? (options.view ? new ToolAction({ theme: options.theme, view: options.view }) : undefined);
 		if (!action) throw new Error("ToolTranscript requires an action or view");
-		this.bodies = (options.body ?? []).map((component) => new TranscriptBody(component));
+		this.bodyIndent = Math.max(0, Math.floor(options.bodyIndent ?? 0));
+		this.bodies = (options.body ?? []).map((component) => new TranscriptBody(component, this.bodyIndent));
 		this.maxRows = normalizedRows(options.maxRows);
 		this.stack = new ComponentStack([action, ...this.bodies], { maxHeight: this.maxRows });
 	}
@@ -37,7 +41,9 @@ export class ToolTranscript implements Component {
 		const available = [...this.bodies];
 		this.bodies = components.map((component) => {
 			const existingIndex = available.findIndex((body) => body.wraps(component));
-			return existingIndex < 0 ? new TranscriptBody(component) : available.splice(existingIndex, 1)[0]!;
+			return existingIndex < 0
+				? new TranscriptBody(component, this.bodyIndent)
+				: available.splice(existingIndex, 1)[0]!;
 		});
 		for (const body of available) body.dispose();
 		this.stack.setChildren([this.stack.getChildren()[0]!, ...this.bodies]);
@@ -77,18 +83,27 @@ export class ToolTranscript implements Component {
 	}
 }
 
-/** Structural payload wrapper that preserves nested viewport and fold contracts. */
+/** Structural payload wrapper that indents rows and preserves nested viewport and fold contracts. */
 class TranscriptBody implements Component, TextInteractionTarget, FoldTargetAtRow {
 	readonly [TEXT_INTERACTION_TARGET] = true as const;
+	private readonly gutter: string;
 
-	constructor(private component: Component) {}
+	constructor(
+		private component: Component,
+		private readonly indent: number,
+	) {
+		this.gutter = " ".repeat(indent);
+	}
 
 	wraps(component: Component): boolean {
 		return this.component === component;
 	}
 
 	render(width: number): string[] {
-		return this.component.render(width);
+		const inner = Math.max(0, Math.floor(width) - this.indent);
+		if (this.indent === 0) return this.component.render(inner);
+		if (inner === 0) return [];
+		return this.component.render(inner).map((line) => `${this.gutter}${line}`);
 	}
 
 	invalidate(): void {
@@ -112,7 +127,7 @@ class TranscriptBody implements Component, TextInteractionTarget, FoldTargetAtRo
 	}
 
 	onMouse(event: TuiMouseEvent): boolean {
-		return this.interactive()?.onMouse?.(event) ?? false;
+		return this.interactive()?.onMouse?.({ ...event, col: event.col - this.indent }) ?? false;
 	}
 
 	[FOLD_TARGET_AT_ROW](row: number): FoldTarget | undefined {

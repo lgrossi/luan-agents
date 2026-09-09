@@ -1,5 +1,5 @@
 import type { AgentMessage, ThinkingLevel } from "@earendil-works/pi-agent-core";
-import type { Api, Model } from "@earendil-works/pi-ai";
+import { clampThinkingLevel, getSupportedThinkingLevels, type Api, type Model } from "@earendil-works/pi-ai";
 import {
 	type AgentSession,
 	type AgentSessionEvent,
@@ -18,11 +18,10 @@ import {
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
 import { listCodeModeToolNames } from "pi-code-mode/sdk";
-import { getModelRoleCatalog, resolveModelRole, seedChildModelRole } from "pi-model-roles/sdk";
 import { SUBAGENT_TASK_MESSAGE_TYPE } from "../core/fork-history.ts";
 import { primePromptEnvelope } from "../protocol/prompt-envelope.ts";
 import { buildAgentPrompt } from "../core/prompts.ts";
-import type { AgentConfig, AgentModelRole } from "../core/types.ts";
+import type { AgentConfig, AgentModelReference } from "../core/types.ts";
 import { createNestedToolActivityReader } from "./nested-tool-activity.ts";
 
 type AssistantContent = Extract<AgentMessage, { role: "assistant" }>["content"];
@@ -57,7 +56,7 @@ export interface RunOptions {
 	onUserMessage?: (message: AgentMessage) => void;
 	onSessionCreated?: (session: AgentSession) => void;
 	onRuntimeCreated?: (runtime: AgentSessionRuntime) => void;
-	onRuntimeResolved?: (modelRole: AgentModelRole | undefined) => void;
+	onRuntimeResolved?: (selection: { model?: AgentModelReference; thinkingLevel?: ThinkingLevel }) => void;
 }
 
 export interface RunResult {
@@ -186,7 +185,6 @@ export interface PreparedAgentRun {
 	toolNames: string[];
 	model: Model<Api> | undefined;
 	thinkingLevel: ThinkingLevel | undefined;
-	modelRole: AgentModelRole | undefined;
 	loader: DefaultResourceLoader;
 }
 
@@ -215,16 +213,43 @@ export async function prepareAgentRun(
 	});
 	if (loadResources) await loader.reload();
 
-	const catalog = getModelRoleCatalog();
-	const models =
-		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
-	const resolved = options.agentConfig.role ? resolveModelRole(options.agentConfig.role, catalog, models) : undefined;
-	const model = resolved?.model ?? ctx.model;
-	const thinkingLevel = resolved?.candidate.thinking ?? (model?.reasoning ? options.pi.getThinkingLevel() : undefined);
-	const modelRole = resolved ? { name: resolved.role.name, color: resolved.role.color } : undefined;
-	options.onRuntimeResolved?.(modelRole);
+	const model = resolveModel(ctx, options.agentConfig.model);
+	const thinkingLevel = resolveThinkingLevel(
+		model,
+		options.agentConfig.thinkingLevel,
+		ctx.thinkingLevel ?? options.pi.getThinkingLevel(),
+	);
+	options.onRuntimeResolved?.({
+		model: model ? { provider: model.provider, id: model.id } : undefined,
+		thinkingLevel,
+	});
 
-	return { effectiveCwd, agentDir, systemPrompt, toolNames, model, thinkingLevel, modelRole, loader };
+	return { effectiveCwd, agentDir, systemPrompt, toolNames, model, thinkingLevel, loader };
+}
+
+function resolveModel(
+	ctx: Pick<ExtensionContext, "model" | "modelRegistry">,
+	reference: AgentModelReference | undefined,
+): Model<Api> | undefined {
+	if (!reference) return ctx.model;
+	const model = ctx.modelRegistry.find(reference.provider, reference.id);
+	if (!model) throw new Error(`Unknown model: ${reference.provider}/${reference.id}`);
+	return model;
+}
+
+export function resolveThinkingLevel(
+	model: Model<Api> | undefined,
+	requested: ThinkingLevel | undefined,
+	inheritedLevel: ThinkingLevel,
+): ThinkingLevel | undefined {
+	if (requested !== undefined) {
+		if (!model) throw new Error("thinking_level requires a model");
+		if (!getSupportedThinkingLevels(model).includes(requested)) {
+			throw new Error(`Thinking level "${requested}" is unavailable for model ${model.provider}/${model.id}`);
+		}
+		return requested;
+	}
+	return model ? clampThinkingLevel(model, inheritedLevel) : undefined;
 }
 
 export async function runAgent(ctx: ExtensionContext, prompt: string, options: RunOptions): Promise<RunResult> {
@@ -290,7 +315,6 @@ export async function runAgent(ctx: ExtensionContext, prompt: string, options: R
 			diagnostics: [],
 		};
 	};
-	if (options.agentConfig.role) seedChildModelRole(sessionManager, options.agentConfig.role);
 	const runtime = await createAgentSessionRuntime(createRuntime, { cwd: effectiveCwd, agentDir, sessionManager });
 	options.onRuntimeCreated?.(runtime);
 

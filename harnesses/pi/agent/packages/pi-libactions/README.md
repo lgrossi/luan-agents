@@ -121,7 +121,7 @@ key IDs:
 ```json
 {
   "example.open": "ctrl+o",
-  "model-roles.select": ["alt+p", "f6"],
+  "xsettings.effort.increase": ["alt+."],
   "codex.context.cycle": "ctrl+shift+w"
 }
 ```
@@ -150,7 +150,7 @@ validator directly.
 - `pi-xsettings` loads the snapshot and exposes registered actions through
   `pi.registerShortcut()` for every configured key.
 - `pi-copy-mode` reads the snapshot for its modal actions and entry action.
-- `pi-model-roles` registers `model-roles.select`.
+- `pi-xsettings` registers `xsettings.effort.decrease` and `xsettings.effort.increase`.
 - `pi-codex-native` registers `codex.fast.toggle` and
   `codex.context.cycle`.
 

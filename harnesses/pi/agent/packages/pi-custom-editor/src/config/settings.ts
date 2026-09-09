@@ -275,7 +275,7 @@ const definitions = {
 		description: "Choose and order segments in the top-right quadrant.",
 		type: "multi-enum",
 		ordered: true,
-		default: ["path", "git", "role", "model", "thinking", "fast"],
+		default: ["path", "git", "model", "thinking", "fast"],
 		options: STATUS_SEGMENTS.filter((value) => value !== "working").map((value) =>
 			option(value, value.replaceAll("-", " "), `Show ${value.replaceAll("-", " ")}.`),
 		),

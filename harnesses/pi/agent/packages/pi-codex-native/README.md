@@ -47,6 +47,12 @@ The package currently provides these models:
 | `gpt-5.6-luna` | Text, images | Additional tools and tool search. |
 | `gpt-5.6-sol` | Text, images | Additional tools and tool search. |
 | `gpt-5.6-terra` | Text, images | Additional tools and tool search. |
+| `gpt-6-astra` | Text, images | Additional tools and tool search; reasoning through `max`. |
+
+Astra uses the existing Codex context presets and fast-mode controls. Its
+cost estimates are zero until verified pricing is available. The cached
+`ultra` reasoning level is not exposed because Pi's thinking controls stop at
+`max`; add it when Pi supports that level.
 
 Use a model explicitly when needed:
 
@@ -81,9 +87,9 @@ pi-codex-native.textVerbosity = "low"
   `codex.fast.toggle`; it does not choose a default shortcut.
 - `contextWindowPreset`: `smart` (180k), `balanced` (272k), `enhanced`
   (400k), `large` (600k), or `max` (1M). This setting applies to GPT-5.6
-  Codex models. The package also registers `codex.context.cycle`.
+  and GPT-6 Astra Codex models. The package also registers `codex.context.cycle`.
 - `contextAutoUpgrade`: `never`, `mid-turn`, or `always`. These settings
-  control whether GPT-5.6 can move to a larger context tier before compacting.
+  control whether GPT-5.6 and GPT-6 Astra can move to a larger context tier before compacting.
 - `textVerbosity`: `low`, `medium`, or `high` for the next provider request.
 
 Other extensions may request a context preset through the versioned

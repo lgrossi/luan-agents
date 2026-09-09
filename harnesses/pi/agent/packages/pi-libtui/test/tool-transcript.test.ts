@@ -1130,3 +1130,61 @@ function mouse(type: TuiMouseEvent["type"], row: number, col: number, button?: 0
 		ctrl: false,
 	};
 }
+
+describe("tool transcript body indent", () => {
+	afterEach(() => configureTuiAppearance(DEFAULT_TUI_APPEARANCE));
+
+	test("indents payload rows, narrows their width, and translates pointer columns", () => {
+		const events: TuiMouseEvent[] = [];
+		const body: Component & { onMouse(event: TuiMouseEvent): boolean } = {
+			render: (width) => ["x".repeat(width)],
+			invalidate() {},
+			onMouse(event) {
+				events.push(event);
+				return true;
+			},
+		};
+		const transcript = new ToolTranscript({
+			theme,
+			view: { verb: "Ran", status: "succeeded" },
+			body: [body],
+			bodyIndent: 4,
+		});
+		const rendered = transcript.render(20).map((line) => stripTerminalSequences(line));
+		expect(rendered[1]).toBe(`    ${"x".repeat(16)}`);
+
+		transcript.onMouse(mouse("press", 1, 9, 0));
+		expect(events.at(-1)).toMatchObject({ type: "press", row: 0, col: 5 });
+	});
+
+	test("activity payloads wrap at the indented width and fold from the indented omission row", () => {
+		const activity = new ToolActivity({
+			theme,
+			requestRender() {},
+			bodyIndent: 4,
+			view: {
+				action: { verb: "Ran", status: "succeeded" },
+				payload: {
+					kind: "text",
+					text: Array.from({ length: 12 }, (_, index) => `row ${index}`).join("\n"),
+					revision: 1,
+				},
+			},
+		});
+		const rendered = activity.render(40).map((line) => stripTerminalSequences(line).trimEnd());
+		expect(rendered.slice(1).every((line) => line.startsWith("    "))).toBe(true);
+		expect(rendered.slice(1).every((line) => visibleWidth(line) <= 40)).toBe(true);
+		const omissionRow = rendered.findIndex((line) => line.includes("rows omitted"));
+		expect(omissionRow).toBeGreaterThan(0);
+
+		expect(activity.onMouse(mouse("press", omissionRow, 6, 0))).toBe(true);
+		activity.onMouse(mouse("release", omissionRow, 6, 0));
+		expect(
+			activity
+				.render(40)
+				.map((line) => stripTerminalSequences(line))
+				.join("\n"),
+		).not.toContain("rows omitted");
+		activity.dispose();
+	});
+});

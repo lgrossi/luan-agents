@@ -1,6 +1,6 @@
 import { existsSync, realpathSync } from "node:fs";
 import { isAbsolute, join, relative } from "node:path";
-import type { AgentMessage } from "@earendil-works/pi-agent-core";
+import type { AgentMessage, ThinkingLevel } from "@earendil-works/pi-agent-core";
 import {
 	type AgentSession,
 	buildSessionContext,
@@ -10,7 +10,7 @@ import {
 	SessionManager,
 } from "@earendil-works/pi-coding-agent";
 import { type ForkTurns, selectForkedHistory } from "../core/fork-history.ts";
-import type { AgentConfig, AgentModelRole } from "../core/types.ts";
+import type { AgentConfig, AgentModelReference } from "../core/types.ts";
 import { registerPresentationResolver } from "../protocol/presentation.ts";
 import { registerSessionHierarchyProvider, type SessionHierarchyEntry } from "../protocol/session-hierarchy.ts";
 import { type RunResult, resumeAgent, runAgent, sendAgentTask, type ToolActivity } from "./agent-runner.ts";
@@ -43,7 +43,8 @@ export interface SubagentSnapshot {
 	readonly contextPercent?: number;
 	readonly compactions: number;
 	readonly activity?: { readonly kind: "compacting" } | { readonly kind: "tool"; readonly name: string };
-	readonly modelRole?: AgentModelRole;
+	readonly model?: AgentModelReference;
+	readonly thinkingLevel?: ThinkingLevel;
 	readonly transcriptAvailable: boolean;
 }
 
@@ -102,8 +103,8 @@ export interface PersistedSubagentState {
 	readonly tokenCount: number;
 	readonly contextPercent?: number;
 	readonly compactions: number;
-	readonly requestedRole?: string;
-	readonly modelRole?: AgentModelRole;
+	readonly model?: AgentModelReference;
+	readonly thinkingLevel?: ThinkingLevel;
 	readonly transcriptFile?: string;
 	readonly transcriptGeneration: number;
 	readonly forkNonBoundaryTimestamps?: readonly number[];
@@ -179,6 +180,29 @@ function isFiniteNumber(value: object, key: keyof PersistedSubagentState): boole
 	return typeof item === "number" && Number.isFinite(item);
 }
 
+function isModelReference(value: object | null | undefined): value is AgentModelReference {
+	if (!value) return false;
+	const candidate = value as Record<string, JsonValue | undefined>;
+	return (
+		typeof candidate.provider === "string" &&
+		candidate.provider.length > 0 &&
+		typeof candidate.id === "string" &&
+		candidate.id.length > 0
+	);
+}
+
+function isThinkingLevel(value: string): value is ThinkingLevel {
+	return (
+		value === "off" ||
+		value === "minimal" ||
+		value === "low" ||
+		value === "medium" ||
+		value === "high" ||
+		value === "xhigh" ||
+		value === "max"
+	);
+}
+
 // type-boundary: custom session entry data is extension-owned JSON; this validator narrows it before restoration.
 function isPersistedAgentState(value: object | null | undefined): value is PersistedSubagentState {
 	if (!value || !("id" in value) || typeof value.id !== "string" || !isCanonicalAgentPath(value.id)) return false;
@@ -192,8 +216,8 @@ function isPersistedAgentState(value: object | null | undefined): value is Persi
 				depth(value.id) === depth(parentId) + 1;
 	if (!validParent) return false;
 	const status = "status" in value ? value.status : undefined;
-	const requestedRole = "requestedRole" in value ? value.requestedRole : undefined;
-	const role = "modelRole" in value ? value.modelRole : undefined;
+	const model = "model" in value ? value.model : undefined;
+	const thinkingLevel = "thinkingLevel" in value ? value.thinkingLevel : undefined;
 	const completionDelivery = "completionDelivery" in value ? value.completionDelivery : undefined;
 	return (
 		"cwd" in value &&
@@ -218,15 +242,9 @@ function isPersistedAgentState(value: object | null | undefined): value is Persi
 			(typeof value.contextPercent === "number" && Number.isFinite(value.contextPercent))) &&
 		(!("result" in value) || value.result === undefined || typeof value.result === "string") &&
 		(!("error" in value) || value.error === undefined || typeof value.error === "string") &&
-		(requestedRole === undefined || typeof requestedRole === "string") &&
+		(model === undefined || (typeof model === "object" && model !== null && isModelReference(model))) &&
+		(thinkingLevel === undefined || (typeof thinkingLevel === "string" && isThinkingLevel(thinkingLevel))) &&
 		(!("transcriptFile" in value) || value.transcriptFile === undefined || typeof value.transcriptFile === "string") &&
-		(role === undefined ||
-			(typeof role === "object" &&
-				role !== null &&
-				"name" in role &&
-				typeof role.name === "string" &&
-				"color" in role &&
-				typeof role.color === "string")) &&
 		(!("forkNonBoundaryTimestamps" in value) ||
 			value.forkNonBoundaryTimestamps === undefined ||
 			(Array.isArray(value.forkNonBoundaryTimestamps) &&
@@ -362,7 +380,8 @@ function snapshotOf(agent: LiveAgent): SubagentSnapshot {
 			: visibleTool
 				? { kind: "tool" as const, name: visibleTool }
 				: undefined,
-		modelRole: agent.modelRole ? Object.freeze({ ...agent.modelRole }) : undefined,
+		model: agent.model ? Object.freeze({ ...agent.model }) : undefined,
+		thinkingLevel: agent.thinkingLevel,
 		transcriptAvailable: Boolean(agent.session || agent.restoredMessages),
 	});
 }
@@ -384,8 +403,8 @@ function persistedStateOf(agent: LiveAgent): PersistedSubagentState {
 		tokenCount: agent.tokenCount,
 		contextPercent: agent.contextPercent,
 		compactions: agent.compactions,
-		requestedRole: agent.requestedRole,
-		modelRole: agent.modelRole ? Object.freeze({ ...agent.modelRole }) : undefined,
+		model: agent.model ? Object.freeze({ ...agent.model }) : undefined,
+		thinkingLevel: agent.thinkingLevel,
 		transcriptFile: agent.session?.sessionManager.getSessionFile?.() ?? agent.transcriptFile,
 		transcriptGeneration: agent.transcriptGeneration,
 		forkNonBoundaryTimestamps: Object.freeze([...agent.forkNonBoundaryTimestamps].sort((a, b) => a - b)),
@@ -448,7 +467,8 @@ export class SubagentCoordinator {
 			cost: 0,
 			tokenCount: 0,
 			compactions: 0,
-			requestedRole: request.agentConfig.role,
+			model: request.agentConfig.model,
+			thinkingLevel: request.agentConfig.thinkingLevel,
 			completionDelivery: request.completionDelivery ?? "parent",
 			transcriptGeneration: 0,
 			compacting: false,
@@ -564,9 +584,9 @@ export class SubagentCoordinator {
 				tokenCount: saved.tokenCount,
 				contextPercent: saved.contextPercent,
 				compactions: saved.compactions,
-				requestedRole: saved.requestedRole,
+				model: saved.model ? { ...saved.model } : undefined,
+				thinkingLevel: saved.thinkingLevel,
 				completionDelivery: saved.completionDelivery ?? "parent",
-				modelRole: saved.modelRole ? { ...saved.modelRole } : undefined,
 				transcriptGeneration: saved.transcriptGeneration,
 				transcriptFile,
 				rootSessionId: this.rootSessionId,
@@ -581,12 +601,10 @@ export class SubagentCoordinator {
 							message: saved.message,
 							pi: runtime.pi,
 							ctx: runtime.ctx,
-							agentConfig:
-								saved.requestedRole !== undefined
-									? { role: saved.requestedRole }
-									: saved.modelRole
-										? { role: saved.modelRole.name }
-										: {},
+							agentConfig: {
+								model: saved.model ? { ...saved.model } : undefined,
+								thinkingLevel: saved.thinkingLevel,
+							},
 							forkTurns: "none",
 							cwd: saved.cwd,
 						}
@@ -742,8 +760,11 @@ export class SubagentCoordinator {
 			sessionDir: subagentSessionDir(this.rootSessionDir ?? request.ctx.sessionManager.getSessionDir(), agent.id),
 			signal: agent.abortController.signal,
 			forkedHistory: agent.forkedHistory,
-			onRuntimeResolved: (role) => {
-				if (!this.disposed && agent.turnGeneration === generation) agent.modelRole = role;
+			onRuntimeResolved: (selection) => {
+				if (this.disposed || agent.turnGeneration !== generation) return;
+				agent.model = selection.model;
+				agent.thinkingLevel = selection.thinkingLevel;
+				this.emit({ type: "checkpoint", agent: snapshotOf(agent) });
 			},
 			onRuntimeCreated: (runtime) => {
 				if (this.disposed || agent.turnGeneration !== generation) this.disposeRuntime(runtime);

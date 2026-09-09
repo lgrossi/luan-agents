@@ -24,29 +24,36 @@ pi-libtui.shimmerMarker = true
 pi-libtui.animationSpeed = "normal"
 pi-libtui.activityLine = "off"
 pi-libtui.textEffectScope = "message"
+pi-libtui.workingIndicator = "braille-scanline"
+pi-libtui.activityIndicator = "braille-wave"
+pi-libtui.activityMessage = "phase"
+pi-libtui.thinkingIndicator = "braille-pulse"
+pi-libtui.thinkingPulseEffect = "pulse"
+pi-libtui.workingMessage = "inherit"
+pi-libtui.thinkingPresentation = "inherit"
+pi-libtui.thinkingTextEffect = "glow"
+pi-libtui.workingPulseEffect = "color"
 pi-libtui.statusPresentation = "standard"
-pi-libtui.activityIndicator = "sparkle"
-pi-libtui.textEffect = "glow"
-pi-libtui.pulseEffect = "off"
+pi-libtui.textEffect = "sweep"
+pi-libtui.workingTextEffect = "rainbow-glow"
 pi-exec-command.activityMarker = "off"
-pi-custom-editor.preset = "compact-field"
+pi-exec-command.activityIndicator = "off"
 pi-custom-editor.bottomTreatment = "preset"
 pi-custom-editor.railTone = "accent"
 pi-custom-editor.promptMarker = "preset"
 pi-custom-editor.footer = "preset"
 pi-custom-editor.statusSeparator = "preset"
-pi-custom-editor.workingPlacement = "bottom-left-start"
 
 [behavior]
-pi.enabledModels = [ "openai-codex/gpt-5.6-luna", "openai-codex/gpt-5.6-terra", "openai-codex/gpt-5.6-sol" ]
 pi.compaction.enabled = true
 pi.compaction.reserveTokens = 16384
 pi.compaction.keepRecentTokens = 20000
 pi.branchSummary.skipPrompt = false
+pi.enabledModels = [ "anthropic/claude-fable-5-1", "openai/gpt-6-astra", "openai-codex/gpt-5.6-sol", "openai-codex/gpt-5.6-luna", "openai-codex/gpt-5.6-terra" ]
 pi-codex-native.cacheDiagnostics = "off"
 pi-codex-native.fallbackCompaction = false
 pi-codex-native.contextWindowPreset = "balanced"
-pi-model-roles.defaultRole = "balanced"
+pi-subagents.maxConcurrency = "4"
 
 [interaction]
 pi.steeringMode = "one-at-a-time"

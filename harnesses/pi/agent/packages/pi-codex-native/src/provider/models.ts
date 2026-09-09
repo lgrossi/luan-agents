@@ -134,6 +134,17 @@ const CODEX_MODELS: readonly CodexModel[] = [
 		toolSearch: true,
 		imageDetailOriginal: true,
 	}),
+	codexModel({
+		id: "gpt-6-astra",
+		name: "GPT-6 Astra",
+		input: ["text", "image"],
+		// Codex metadata omits pricing; replace zeros when verified rates are available.
+		cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		thinkingLevelMap: { xhigh: "xhigh", max: "max", minimal: "low" },
+		additionalTools: true,
+		toolSearch: true,
+		imageDetailOriginal: true,
+	}),
 ];
 
 export function getCodexModels(): readonly CodexModel[] {

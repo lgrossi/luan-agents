@@ -40,7 +40,7 @@ You may also see them addressed as to=/root/..., which indicates your identity i
 `;
 
 export const DEFAULT_MULTI_AGENT_V2_MODEL_OVERRIDE_USAGE_HINT_TEXT =
-	'Full-history forks (`fork_turns` omitted or `"all"`) inherit the parent model and reasoning effort and do not accept overrides. Only set `model` or `reasoning_effort` when explicitly requested by the user, applicable `AGENTS.md` instructions, or skill instructions; when doing so, set `fork_turns` to `"none"` or a positive integer string.';
+	'Full-history forks (`fork_turns` omitted or `"all"`) inherit the parent model and thinking level and do not accept overrides. Only set `model` or `thinking_level` when explicitly requested by the user, applicable `AGENTS.md` instructions, or skill instructions; when doing so, set `fork_turns` to `"none"` or a positive integer string.';
 
 export const DEFAULT_MULTI_AGENT_V2_WAIT_AGENT_USAGE_HINT_TEXT =
 	"When calling `wait_agent`, prefer longer waits (minutes) to avoid busy polling.";

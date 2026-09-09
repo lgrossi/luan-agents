@@ -180,16 +180,12 @@ describe("settings screen fields", () => {
 			},
 		};
 		const registration: SettingRegistration = {
-			namespace: "pi-model-roles",
+			namespace: "pi-example",
 			label: "Model Roles",
 			definitions: [definition],
 		};
 
-		const field = toUiField(
-			{ behavior: { "pi-model-roles": { roles: [{ name: "task" }] } } },
-			registration,
-			definition,
-		);
+		const field = toUiField({ behavior: { "pi-example": { roles: [{ name: "task" }] } } }, registration, definition);
 
 		expect(field).toMatchObject({
 			type: "list",
