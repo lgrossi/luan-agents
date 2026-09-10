@@ -5,21 +5,26 @@ next request. It keeps the selected text and the comment together, then sends
 them in the `response-annotations` envelope that Codex understands.
 
 It is a Pi extension and a small library. It does not add a model-facing tool
-or a shortcut of its own. `pi-copy-mode` supplies the usual selection actions;
-other extensions can use the same `pi-libtui/selection` capability.
+or a shortcut of its own, and it cannot select transcript text by itself: it
+acts on selections published through the `pi-libtui/selection` capability.
+`pi-copy-mode` is the extension that publishes them, so install both.
 
 ## Install
 
-This repository loads the package from `packages/pi-annotations` in Pi's
-`settings.json`. To load it in another local Pi installation, install the
-package directory:
+```sh
+pi install npm:@luan-pi/pi-copy-mode
+pi install npm:@luan-pi/pi-annotations
+```
+
+From a checkout of this repository:
 
 ```sh
 pi install ./harnesses/pi/agent/packages/pi-annotations
 ```
 
-The package depends on the sibling `pi-libtui` and `pi-xsettings` packages.
-Keep those packages available when installing it outside this repository.
+The package bundles `pi-libtui` and `pi-xsettings`. Without a selection
+provider such as `pi-copy-mode`, the extension loads but nothing can trigger
+it.
 
 ## Use it
 
@@ -94,7 +99,8 @@ const readable = parsed ? projectEnvelope(messageText) : messageText;
 The extension itself composes Pi's editor, session, and Markdown hooks. It
 uses `pi-libtui` for overlays and selection actions, `pi-xsettings` for the
 reaction list, and contributes to the `pi-developer-prompt` capability when
-that optional host is present. It does not import or require `pi-copy-mode`.
+that optional host is present. It does not import `pi-copy-mode`; any extension
+that publishes `selection.comment` and `selection.reaction` actions works.
 
 ## Wire format
 

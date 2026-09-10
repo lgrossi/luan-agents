@@ -9,6 +9,12 @@ resource URIs.
 ## Install
 
 ```sh
+pi install npm:@luan-pi/pi-skills
+```
+
+From a checkout of this repository:
+
+```sh
 pi install ./harnesses/pi/agent/packages/pi-skills
 ```
 

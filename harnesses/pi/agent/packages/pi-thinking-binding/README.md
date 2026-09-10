@@ -16,8 +16,9 @@ strips thinking from those older assistant messages on later requests. Newer
 reasoning is left alone. The session file keeps the blocks; only the provider
 request changes, which is what the API would have done anyway.
 
-Install with `pi install ./harnesses/pi/agent/packages/pi-thinking-binding`. No
-tools, settings, or keybindings.
+Install with `pi install npm:@luan-pi/pi-thinking-binding` (or
+`pi install ./harnesses/pi/agent/packages/pi-thinking-binding` from a checkout).
+No tools, settings, or keybindings.
 
 ## Architecture
 

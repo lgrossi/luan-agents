@@ -10,16 +10,20 @@ tools.
 
 ## Install
 
-From the repository root:
+```sh
+pi install npm:@luan-pi/pi-codex-native
+```
+
+From a checkout of this repository:
 
 ```sh
 just setup
 pi install ./harnesses/pi/agent/packages/pi-codex-native
 ```
 
-`just setup` installs the workspace dependencies and builds the Rust
-`web_run` binary. `pi install` adds this package to the Pi settings file used
-by the current command.
+`just setup` installs the workspace dependencies and builds the Rust `web_run`
+binary for checkout use; installed copies build it on first use. `pi install`
+adds this package to the Pi settings file used by the current command.
 
 ## Sign in and use
 

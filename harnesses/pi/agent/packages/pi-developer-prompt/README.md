@@ -7,7 +7,11 @@ how a provider serializes its request.
 
 ## Install
 
-From the repository root:
+```sh
+pi install npm:@luan-pi/pi-developer-prompt
+```
+
+From a checkout of this repository:
 
 ```sh
 just setup

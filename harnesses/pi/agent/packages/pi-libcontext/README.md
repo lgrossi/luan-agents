@@ -10,18 +10,18 @@ commands, shortcuts, tools, or UI.
 
 ## Install and import
 
-This package is private to the repository. Add it as a workspace dependency
-from another Pi package in the same repository:
+Add it as a dependency of a Pi package. Packages in this repository use the
+workspace protocol; external packages use the published version:
 
 ```json
 {
   "dependencies": {
-    "pi-libcontext": "workspace:*"
+    "@luan-pi/pi-libcontext": "workspace:*"
   }
 }
 ```
 
-Run `bun install` from the repository root, then import the public SDK:
+Run `bun install`, then import the public SDK:
 
 ```ts
 import {

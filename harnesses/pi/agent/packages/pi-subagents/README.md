@@ -15,7 +15,11 @@ The package exposes six collaboration tools:
 
 ## Install and load
 
-From the repository root:
+```sh
+pi install npm:@luan-pi/pi-subagents
+```
+
+From a checkout of this repository:
 
 ```sh
 just setup

@@ -10,16 +10,17 @@ generic `pi-libtui/selection` registry.
 
 ## Install
 
-This repository loads the package from `packages/pi-copy-mode` in Pi's
-`settings.json`. To load it in another local Pi installation:
+```sh
+pi install npm:@luan-pi/pi-copy-mode
+```
+
+From a checkout of this repository:
 
 ```sh
 pi install ./harnesses/pi/agent/packages/pi-copy-mode
 ```
 
-The package depends on the sibling `pi-libtui`, `pi-libactions`, and
-`pi-xsettings` packages. Keep those packages available when installing it
-outside this repository.
+The package bundles `pi-libtui`, `pi-libactions`, and `pi-xsettings`.
 
 ## Use it
 
