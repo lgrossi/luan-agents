@@ -7,6 +7,12 @@ It does not inspect or modify the global tool hierarchy.
 ## Install
 
 ```sh
+pi install npm:@luan-pi/pi-tool-search
+```
+
+From a checkout of this repository:
+
+```sh
 pi install ./harnesses/pi/agent/packages/pi-tool-search
 ```
 

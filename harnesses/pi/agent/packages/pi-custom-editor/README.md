@@ -7,6 +7,18 @@ renderer with semantic surfaces, rules, independently configurable rails,
 prompt-marker sequences, project/model metadata, status segments, context
 usage, and the shared working animation.
 
+## Install
+
+```sh
+pi install npm:@luan-pi/pi-custom-editor
+```
+
+From a checkout of this repository:
+
+```sh
+pi install ./harnesses/pi/agent/packages/pi-custom-editor
+```
+
 The package composes through Pi's `setEditorComponent` and `setFooter` APIs. The
 editor is `PiCustomEditor`, which extends `pi-libtui`'s `SemanticEditor` and
 therefore Pi's `CustomEditor`; pre-existing editor factories are decorated

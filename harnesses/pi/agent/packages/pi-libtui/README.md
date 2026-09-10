@@ -20,16 +20,23 @@ keeping their own behavior and settings.
 
 ## Install and load
 
-This repository loads `packages/pi-libtui` directly from Pi's `settings.json`.
-To load the package in another local Pi installation:
+Feature packages bundle their own copy, so most users never install this
+package directly. To load it on its own:
+
+```sh
+pi install npm:@luan-pi/pi-libtui
+```
+
+From a checkout of this repository:
 
 ```sh
 pi install ./harnesses/pi/agent/packages/pi-libtui
 ```
 
-Feature packages can depend on it as a local package. Install the package when
-you need the extension-side mouse/cursor bridge; importing the library alone
-is enough for pure components, color helpers, and protocol types.
+Feature packages depend on it as `@luan-pi/pi-libtui` and list its extension
+entry in their own `pi.extensions` so the mouse/cursor bridge is active;
+importing the library alone is enough for pure components, color helpers, and
+protocol types.
 
 The package also exposes `themes/harmonious.json` through its Pi manifest. If
 the terminal does not support the palette query required by that theme, the

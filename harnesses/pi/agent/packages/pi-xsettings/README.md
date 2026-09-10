@@ -13,6 +13,12 @@ file-writing side effects.
 ## Install and open
 
 ```sh
+pi install npm:@luan-pi/pi-xsettings
+```
+
+From a checkout of this repository:
+
+```sh
 pi install ./harnesses/pi/agent/packages/pi-xsettings
 ```
 
