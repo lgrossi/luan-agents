@@ -25,6 +25,7 @@
     "packages/pi-tool-search",
     "packages/pi-custom-editor",
     "packages/pi-prompt-storage",
+    "packages/pi-thinking-binding",
     {
       "source": "npm:@plannotator/pi-extension",
       "skills": []
