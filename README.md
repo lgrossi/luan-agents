@@ -70,7 +70,7 @@ TypeScript registers and composes Pi features. Rust owns the process, patch, pro
 | `code-mode-host` | Runs the Code Mode host process. |
 | `code-mode-protocol` | Defines the host wire protocol. |
 | `code-mode-runtime` | Executes restricted JavaScript and coordinates nested calls. |
-| `exec-command` | Runs bounded pipes and persistent PTY sessions. |
+| `terminal-bridge` | Runs bounded pipes and persistent PTY sessions. |
 | `web-run` | Executes the native Codex web request contract. |
 | `view-image` | Reads local images for Codex-compatible attachment previews. |
 | `xtask` | Sets up, checks, and removes managed harness links. |

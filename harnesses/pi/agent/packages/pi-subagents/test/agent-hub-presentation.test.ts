@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { SidePanelEmptyAction, SidePanelTab } from "pi-libtui";
+import type { SidePanelEmptyAction, SidePanelTab } from "@luan-pi/pi-libtui";
 import { AgentHubPresentation } from "../src/ui/agent-hub-presentation.ts";
 
 const source = {

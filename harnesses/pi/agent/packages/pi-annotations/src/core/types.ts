@@ -1,4 +1,4 @@
-import type { SelectionPoint, SelectionShape, SelectionSourceAnchor } from "pi-libtui/selection";
+import type { SelectionPoint, SelectionShape, SelectionSourceAnchor } from "@luan-pi/pi-libtui/selection";
 
 export interface AnnotationSelection {
 	messageId: string;

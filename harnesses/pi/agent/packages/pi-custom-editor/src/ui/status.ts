@@ -1,8 +1,12 @@
 import { basename } from "node:path";
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
-import { activityPresentationFrame, getTuiAppearance, requestPhaseAnimation, tuiTheme } from "pi-libtui";
-import { type EditorCompositionStatus, type EditorStatusSeparator, editorStatusSeparator } from "pi-libtui/editor";
+import { activityPresentationFrame, getTuiAppearance, requestPhaseAnimation, tuiTheme } from "@luan-pi/pi-libtui";
+import {
+	type EditorCompositionStatus,
+	type EditorStatusSeparator,
+	editorStatusSeparator,
+} from "@luan-pi/pi-libtui/editor";
 import type { StatusSegmentId } from "../core/composition.ts";
 import { formatDuration, type TuiState } from "../runtime/state.ts";
 

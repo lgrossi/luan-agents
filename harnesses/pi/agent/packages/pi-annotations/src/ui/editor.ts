@@ -8,9 +8,9 @@ import {
 	PointerInteractionController,
 	renderEditorPasteMarkerPills,
 	renderEditorTokenPills,
-} from "pi-libtui";
-import { SemanticEditor } from "pi-libtui/editor";
-import type { MouseRect, TuiMouseEvent } from "pi-libtui/mouse";
+} from "@luan-pi/pi-libtui";
+import { SemanticEditor } from "@luan-pi/pi-libtui/editor";
+import type { MouseRect, TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import { composerPillContent } from "../core/pills.ts";
 import type { AnnotationStore } from "../core/store.ts";
 import { removeTokenAtom } from "../core/store.ts";

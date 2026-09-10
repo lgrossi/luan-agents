@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ensureXSettingsRegistry } from "pi-xsettings";
+import { ensureXSettingsRegistry } from "@luan-pi/pi-xsettings";
 import { DEFAULT_SUBAGENT_SETTINGS, registerSubagentSettings } from "../src/config/settings.ts";
 import subagentsExtension from "../src/extension.ts";
 import { createRootCoordinator, getCoordinatorForSession, removeRootCoordinator } from "../src/runtime/coordinator.ts";

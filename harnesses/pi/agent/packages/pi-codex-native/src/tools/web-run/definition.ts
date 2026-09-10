@@ -36,7 +36,7 @@ export function createWebRunTool(): ToolDefinition<typeof WEB_RUN_SCHEMA, WebRun
 		async execute(_toolCallId, params, signal, _onUpdate, ctx: ExtensionContext) {
 			const startedAtMs = Date.now();
 			const model = assertCodexModel(ctx);
-			const binary = resolveWebRunBinary();
+			const binary = await resolveWebRunBinary({ onBuild: (message) => ctx.ui.notify(message, "info") });
 			const sessionId = ctx.sessionManager?.getSessionId?.();
 			const input = { ...(params as WebRunParameters), ...(sessionId ? { id: sessionId } : {}), model };
 			const stdout = await runWebRunBinary(binary, input, signal);

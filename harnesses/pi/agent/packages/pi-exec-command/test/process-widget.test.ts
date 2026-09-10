@@ -1,8 +1,8 @@
 import { afterEach, expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { visibleWidth } from "@earendil-works/pi-tui";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, whenSyntaxReady } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, whenSyntaxReady } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import type { ExecProcessSnapshot, PtyDataEvent, UnifiedExecResult } from "../src/session-manager.ts";
 import { type ProcessHubManager, ProcessTerminalStore } from "../src/ui/process-store.ts";
 import { ProcessWidget } from "../src/ui/process-widget.ts";

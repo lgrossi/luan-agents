@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-code-mode/sdk";
+import { getCodeModeToolAdapterRegistry } from "@luan-pi/pi-code-mode/sdk";
 import { registerCodeModeFunctionTool } from "../src/code-mode-tool-adapter.ts";
 
 test("the Code Mode adapter invokes the same tool behavior and disposes by identity", async () => {

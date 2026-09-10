@@ -16,7 +16,7 @@ import {
 	sharedMotionScheduler,
 	type TuiTitleSource,
 	tuiTheme,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import { Type } from "typebox";
 import type { SettingValue } from "../src/protocol/settings.ts";
 import { type SettingField, SettingsEditor } from "../src/ui/settings-editor.ts";

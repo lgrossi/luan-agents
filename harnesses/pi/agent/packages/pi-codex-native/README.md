@@ -104,8 +104,10 @@ providers before starting the Rust process. When Code Mode is installed, the
 same operation is exposed through Code Mode's adapter; this package still
 owns the definition and execution.
 
-The extension finds `web_run` in `target/release` or `target/debug`. If you
-need a different executable, set:
+The native `web_run` binary builds itself on first use with `cargo`, so a Rust
+toolchain (<https://rustup.rs>) is the only requirement. In a checkout of this
+repository the extension uses `target/` instead. If you need a different
+executable, set:
 
 ```sh
 export PI_CODEX_WEB_RUN_BIN=/absolute/path/to/web_run
@@ -123,7 +125,8 @@ endpoint; `PI_CODEX_BASE_URL` derives one when the explicit URL is absent.
   using an `openai-codex/...` model.
 - Browser login cannot return to Pi: make sure port `1455` is available. Set
   `PI_OAUTH_CALLBACK_HOST` if the callback must bind to another local host.
-- `web_run binary is not built`: run `cargo build -p web-run` or `just setup`.
+- `web_run` fails to build: make sure `cargo` is on `PATH`; in a checkout run
+  `cargo build --release -p web-run` or `just setup`.
 - `web__run` rejects the model: the active model must use provider
   `openai-codex` and API `openai-codex-responses`.
 - A custom search endpoint returns `403` or `404`: check the endpoint and

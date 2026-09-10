@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
 import {
 	type ProcessHubManager,
 	type ProcessHubSource,

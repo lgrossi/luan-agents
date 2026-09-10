@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "pi-libtui";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "@luan-pi/pi-libtui";
 import { TuiState } from "../src/runtime/state.ts";
 import { contextStatus, workingStatus } from "../src/ui/footer.ts";
 import { renderStatusGroups } from "../src/ui/status.ts";

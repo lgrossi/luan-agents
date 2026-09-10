@@ -3,14 +3,14 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { CustomEditor, type Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-code-mode/sdk";
-import { icon } from "pi-libtui";
+import { getCodeModeToolAdapterRegistry } from "@luan-pi/pi-code-mode/sdk";
+import { icon } from "@luan-pi/pi-libtui";
 import {
 	EDITOR_PROTOCOL,
 	type EditorPasteHandler,
 	type EditorRegistry,
 	type EditorRenderDecorator,
-} from "pi-libtui/editor";
+} from "@luan-pi/pi-libtui/editor";
 import { codeModeImageResult, registerViewImageCodeModeAdapter } from "../src/code-mode-adapter.ts";
 import { ImageAttachmentStore, pastedImagePath } from "../src/core/attachments.ts";
 import { parseViewImageOutput } from "../src/native/view-image.ts";

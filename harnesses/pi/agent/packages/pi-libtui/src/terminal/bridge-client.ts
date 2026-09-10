@@ -106,7 +106,7 @@ export interface TerminalBridgeClient {
 }
 
 export interface TerminalBridgeClientDependencies {
-	readonly binaryPath: () => string;
+	readonly binaryPath: () => Promise<string>;
 	readonly spawnBridge: (binaryPath: string) => ChildProcessWithoutNullStreams;
 }
 
@@ -140,10 +140,12 @@ export function createTerminalBridgeClient({
 		if (owner.exitCode === null && owner.signalCode === null) owner.kill("SIGKILL");
 	}
 
-	function getChild(): ChildProcessWithoutNullStreams {
+	async function getChild(): Promise<ChildProcessWithoutNullStreams> {
 		if (closed) throw new Error("terminal bridge is shut down");
 		if (child && child.exitCode === null && child.signalCode === null) return child;
-		const binary = binaryPath();
+		const binary = await binaryPath();
+		if (closed) throw new Error("terminal bridge is shut down");
+		if (child && child.exitCode === null && child.signalCode === null) return child;
 		let lineBuffer = "";
 		let stderr = "";
 		const decoder = new StringDecoder("utf8");
@@ -189,7 +191,7 @@ export function createTerminalBridgeClient({
 
 	async function request<T>(value: Record<string, unknown>): Promise<T> {
 		const requestId = nextRequestId++;
-		const bridge = getChild();
+		const bridge = await getChild();
 		return new Promise<T>((resolve, reject) => {
 			pending.set(requestId, { owner: bridge, resolve: resolve as (value: unknown) => void, reject });
 			const rejectWrite = (error: Error): void => {

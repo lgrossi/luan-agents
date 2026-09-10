@@ -1,14 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
-import { accessSync, constants } from "node:fs";
-import { resolve } from "node:path";
 import {
 	createTerminalBridgeClient,
 	parseTerminalBridgeReadResponse,
 	type TerminalBridgeClient,
 	type TerminalBridgeReadResponse,
 } from "./bridge-client.ts";
-import { resolveTerminalBridgeBinary } from "./bridge-binary.ts";
+import { terminalBridgeBinaryPath } from "../native-binary.ts";
 import { normalizeTerminalDimensions, TerminalProjection } from "./projection.ts";
 
 const PTY_HOST_KEY = Symbol.for("pi-libtui/pty-host/v2");
@@ -83,20 +81,7 @@ export function ensurePtyHost(scope: typeof globalThis = globalThis): PtyHost {
 	if (isPtyHost(existing)) return existing;
 	const host = createPtyHost({
 		bridge: createTerminalBridgeClient({
-			binaryPath: () =>
-				resolveTerminalBridgeBinary({
-					root: resolve(import.meta.dirname, "../../../../../../.."),
-					binaryName: process.platform === "win32" ? "exec_command_bridge.exe" : "exec_command_bridge",
-					override: process.env["PI_TERMINAL_BRIDGE_BINARY"] ?? process.env["PI_EXEC_COMMAND_BINARY"],
-					isExecutable: (path) => {
-						try {
-							accessSync(path, constants.X_OK);
-							return true;
-						} catch {
-							return false;
-						}
-					},
-				}),
+			binaryPath: terminalBridgeBinaryPath,
 			spawnBridge: (binaryPath) => spawn(binaryPath, [], { stdio: "pipe", env: process.env }),
 		}),
 		createProcessId: () => `pi-libtui-${process.pid}-${randomUUID()}`,

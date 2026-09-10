@@ -84,14 +84,14 @@ export async function executePatchWithRust({
 	cwd,
 	patchText,
 	signal,
-	binary = resolveApplyPatchBinary(),
+	binary,
 }: {
 	cwd: string;
 	patchText: string;
 	signal?: AbortSignal;
 	binary?: string;
 }): Promise<ExecutePatchResult> {
-	const child = await runApplyPatchBinary(binary, cwd, patchText, signal);
+	const child = await runApplyPatchBinary(binary ?? (await resolveApplyPatchBinary()), cwd, patchText, signal);
 	let parsed: RustApplyPatchJson;
 	try {
 		parsed = parseRustApplyPatchJson(child.stdout);

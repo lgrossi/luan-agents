@@ -754,7 +754,11 @@ fn dependency_source(
     specification: &str,
 ) -> Result<PathBuf> {
     let candidate = if specification.starts_with("workspace:") {
-        package_tree_root.join(dependency)
+        // Workspace packages live in unscoped directories even when their npm name is scoped.
+        let directory = dependency.file_name().with_context(|| {
+            format!("workspace dependency has no name: {}", dependency.display())
+        })?;
+        package_tree_root.join(directory)
     } else if let Some(relative) = specification.strip_prefix("file:") {
         package_root.join(relative)
     } else {

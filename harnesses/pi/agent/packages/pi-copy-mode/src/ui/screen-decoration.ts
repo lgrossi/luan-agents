@@ -6,7 +6,7 @@ import {
 	stripTerminalSequences,
 	visibleWidth,
 } from "@earendil-works/pi-tui";
-import { removeUnmarkedEditorCursor, renderSemanticCursor, stripCursorRoleMarkers, tuiTheme } from "pi-libtui";
+import { removeUnmarkedEditorCursor, renderSemanticCursor, stripCursorRoleMarkers, tuiTheme } from "@luan-pi/pi-libtui";
 import { graphemeEnd, type CursorDocument, type CursorPoint } from "../core/cursor.ts";
 import type { FullscreenSurface } from "../runtime/fullscreen-surface.ts";
 

@@ -1,6 +1,6 @@
 import { getSupportedThinkingLevels } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
 
 export function changeEffort(
 	pi: Pick<ExtensionAPI, "getThinkingLevel" | "setThinkingLevel">,

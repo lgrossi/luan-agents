@@ -10,11 +10,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-annotations": {
-      "name": "pi-annotations",
+      "name": "@luan-pi/pi-annotations",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -28,11 +28,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-apply-patch": {
-      "name": "pi-apply-patch",
+      "name": "@luan-pi/pi-apply-patch",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -44,11 +44,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-code-mode": {
-      "name": "pi-code-mode",
+      "name": "@luan-pi/pi-code-mode",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -63,15 +63,15 @@
       },
     },
     "harnesses/pi/agent/packages/pi-codex-native": {
-      "name": "pi-codex-native",
+      "name": "@luan-pi/pi-codex-native",
       "version": "0.1.0",
       "dependencies": {
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libcontext": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
         "partial-json": "^0.1.7",
-        "pi-code-mode": "workspace:*",
-        "pi-libactions": "workspace:*",
-        "pi-libcontext": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
         "proxy-from-env": "^2.1.0",
         "undici": "^8.10.0",
       },
@@ -92,12 +92,12 @@
       },
     },
     "harnesses/pi/agent/packages/pi-copy-mode": {
-      "name": "pi-copy-mode",
+      "name": "@luan-pi/pi-copy-mode",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -111,11 +111,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-custom-editor": {
-      "name": "pi-custom-editor",
+      "name": "@luan-pi/pi-custom-editor",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -129,11 +129,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-developer-prompt": {
-      "name": "pi-developer-prompt",
+      "name": "@luan-pi/pi-developer-prompt",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -147,13 +147,13 @@
       },
     },
     "harnesses/pi/agent/packages/pi-exec-command": {
-      "name": "pi-exec-command",
+      "name": "@luan-pi/pi-exec-command",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -168,7 +168,7 @@
       },
     },
     "harnesses/pi/agent/packages/pi-libactions": {
-      "name": "pi-libactions",
+      "name": "@luan-pi/pi-libactions",
       "version": "0.1.0",
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -182,7 +182,7 @@
       },
     },
     "harnesses/pi/agent/packages/pi-libcontext": {
-      "name": "pi-libcontext",
+      "name": "@luan-pi/pi-libcontext",
       "version": "0.1.0",
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -194,7 +194,7 @@
       },
     },
     "harnesses/pi/agent/packages/pi-libtui": {
-      "name": "pi-libtui",
+      "name": "@luan-pi/pi-libtui",
       "version": "0.1.0",
       "dependencies": {
         "@pierre/diffs": "1.3.5",
@@ -212,10 +212,10 @@
       },
     },
     "harnesses/pi/agent/packages/pi-prompt-storage": {
-      "name": "pi-prompt-storage",
+      "name": "@luan-pi/pi-prompt-storage",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -229,11 +229,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-side-chat": {
-      "name": "pi-side-chat",
+      "name": "@luan-pi/pi-side-chat",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-agent-core": "0.84.2",
@@ -249,11 +249,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-side-panel": {
-      "name": "pi-side-panel",
+      "name": "@luan-pi/pi-side-panel",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -267,12 +267,12 @@
       },
     },
     "harnesses/pi/agent/packages/pi-skills": {
-      "name": "pi-skills",
+      "name": "@luan-pi/pi-skills",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -286,13 +286,13 @@
       },
     },
     "harnesses/pi/agent/packages/pi-subagents": {
-      "name": "pi-subagents",
+      "name": "@luan-pi/pi-subagents",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
         "typebox": "1.3.15",
       },
       "devDependencies": {
@@ -311,7 +311,7 @@
       },
     },
     "harnesses/pi/agent/packages/pi-thinking-binding": {
-      "name": "pi-thinking-binding",
+      "name": "@luan-pi/pi-thinking-binding",
       "version": "0.1.0",
       "devDependencies": {
         "@earendil-works/pi-agent-core": "0.84.2",
@@ -325,12 +325,12 @@
       },
     },
     "harnesses/pi/agent/packages/pi-tool-search": {
-      "name": "pi-tool-search",
+      "name": "@luan-pi/pi-tool-search",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libtui": "workspace:*",
-        "pi-xsettings": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
+        "@luan-pi/pi-xsettings": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -344,10 +344,10 @@
       },
     },
     "harnesses/pi/agent/packages/pi-transcript": {
-      "name": "pi-transcript",
+      "name": "@luan-pi/pi-transcript",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -361,11 +361,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-tuicr": {
-      "name": "pi-tuicr",
+      "name": "@luan-pi/pi-tuicr",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -379,11 +379,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-view-image": {
-      "name": "pi-view-image",
+      "name": "@luan-pi/pi-view-image",
       "version": "0.1.0",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-code-mode": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
       },
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -396,11 +396,11 @@
       },
     },
     "harnesses/pi/agent/packages/pi-xsettings": {
-      "name": "pi-xsettings",
+      "name": "@luan-pi/pi-xsettings",
       "version": "0.1.0",
       "dependencies": {
-        "pi-libactions": "workspace:*",
-        "pi-libtui": "workspace:*",
+        "@luan-pi/pi-libactions": "workspace:*",
+        "@luan-pi/pi-libtui": "workspace:*",
         "smol-toml": "1.8.0",
         "typebox": "1.3.15",
       },
@@ -504,6 +504,50 @@
     "@earendil-works/pi-tui": ["@earendil-works/pi-tui@0.84.2", "", { "dependencies": { "get-east-asian-width": "1.6.0", "marked": "18.0.5" } }, "sha512-ds2TLihOnM5sLJB3VpXV6y0uR5efVuHf4MN7yDpsty6hA2DUO/EDVzjp/0od0G2JslzVLMjT8T8zavtxVb+qbg=="],
 
     "@google/genai": ["@google/genai@1.52.0", "", { "dependencies": { "google-auth-library": "^10.3.0", "p-retry": "^4.6.2", "protobufjs": "^7.5.4", "ws": "^8.18.0" }, "peerDependencies": { "@modelcontextprotocol/sdk": "^1.25.2" }, "optionalPeers": ["@modelcontextprotocol/sdk"] }, "sha512-gwSvbpiN/17O9TbsqSsE/OzZcpv5Fo4RQjdngGgogtuB9RsyJ8ZHhX5KjHj1bp5N9snN2eK8LDGXSaWW2hof8Q=="],
+
+    "@luan-pi/pi-annotations": ["@luan-pi/pi-annotations@workspace:harnesses/pi/agent/packages/pi-annotations"],
+
+    "@luan-pi/pi-apply-patch": ["@luan-pi/pi-apply-patch@workspace:harnesses/pi/agent/packages/pi-apply-patch"],
+
+    "@luan-pi/pi-code-mode": ["@luan-pi/pi-code-mode@workspace:harnesses/pi/agent/packages/pi-code-mode"],
+
+    "@luan-pi/pi-codex-native": ["@luan-pi/pi-codex-native@workspace:harnesses/pi/agent/packages/pi-codex-native"],
+
+    "@luan-pi/pi-copy-mode": ["@luan-pi/pi-copy-mode@workspace:harnesses/pi/agent/packages/pi-copy-mode"],
+
+    "@luan-pi/pi-custom-editor": ["@luan-pi/pi-custom-editor@workspace:harnesses/pi/agent/packages/pi-custom-editor"],
+
+    "@luan-pi/pi-developer-prompt": ["@luan-pi/pi-developer-prompt@workspace:harnesses/pi/agent/packages/pi-developer-prompt"],
+
+    "@luan-pi/pi-exec-command": ["@luan-pi/pi-exec-command@workspace:harnesses/pi/agent/packages/pi-exec-command"],
+
+    "@luan-pi/pi-libactions": ["@luan-pi/pi-libactions@workspace:harnesses/pi/agent/packages/pi-libactions"],
+
+    "@luan-pi/pi-libcontext": ["@luan-pi/pi-libcontext@workspace:harnesses/pi/agent/packages/pi-libcontext"],
+
+    "@luan-pi/pi-libtui": ["@luan-pi/pi-libtui@workspace:harnesses/pi/agent/packages/pi-libtui"],
+
+    "@luan-pi/pi-prompt-storage": ["@luan-pi/pi-prompt-storage@workspace:harnesses/pi/agent/packages/pi-prompt-storage"],
+
+    "@luan-pi/pi-side-chat": ["@luan-pi/pi-side-chat@workspace:harnesses/pi/agent/packages/pi-side-chat"],
+
+    "@luan-pi/pi-side-panel": ["@luan-pi/pi-side-panel@workspace:harnesses/pi/agent/packages/pi-side-panel"],
+
+    "@luan-pi/pi-skills": ["@luan-pi/pi-skills@workspace:harnesses/pi/agent/packages/pi-skills"],
+
+    "@luan-pi/pi-subagents": ["@luan-pi/pi-subagents@workspace:harnesses/pi/agent/packages/pi-subagents"],
+
+    "@luan-pi/pi-thinking-binding": ["@luan-pi/pi-thinking-binding@workspace:harnesses/pi/agent/packages/pi-thinking-binding"],
+
+    "@luan-pi/pi-tool-search": ["@luan-pi/pi-tool-search@workspace:harnesses/pi/agent/packages/pi-tool-search"],
+
+    "@luan-pi/pi-transcript": ["@luan-pi/pi-transcript@workspace:harnesses/pi/agent/packages/pi-transcript"],
+
+    "@luan-pi/pi-tuicr": ["@luan-pi/pi-tuicr@workspace:harnesses/pi/agent/packages/pi-tuicr"],
+
+    "@luan-pi/pi-view-image": ["@luan-pi/pi-view-image@workspace:harnesses/pi/agent/packages/pi-view-image"],
+
+    "@luan-pi/pi-xsettings": ["@luan-pi/pi-xsettings@workspace:harnesses/pi/agent/packages/pi-xsettings"],
 
     "@mariozechner/clipboard": ["@mariozechner/clipboard@0.3.9", "", { "optionalDependencies": { "@mariozechner/clipboard-darwin-arm64": "0.3.9", "@mariozechner/clipboard-darwin-universal": "0.3.9", "@mariozechner/clipboard-darwin-x64": "0.3.9", "@mariozechner/clipboard-linux-arm64-gnu": "0.3.9", "@mariozechner/clipboard-linux-arm64-musl": "0.3.9", "@mariozechner/clipboard-linux-riscv64-gnu": "0.3.9", "@mariozechner/clipboard-linux-x64-gnu": "0.3.9", "@mariozechner/clipboard-linux-x64-musl": "0.3.9", "@mariozechner/clipboard-win32-arm64-msvc": "0.3.9", "@mariozechner/clipboard-win32-x64-msvc": "0.3.9" } }, "sha512-ABnA53mdfkGZwOFUdZNv2S0CWGO/EIuPj8Vv9xmBFmSYg/qFc7ihO6q5FcQjvoE67kZpWkEc4AhD6B/os04yuA=="],
 
@@ -740,50 +784,6 @@
     "path-key": ["path-key@3.1.1", "", {}, "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q=="],
 
     "path-scurry": ["path-scurry@2.0.2", "", { "dependencies": { "lru-cache": "^11.0.0", "minipass": "^7.1.2" } }, "sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg=="],
-
-    "pi-annotations": ["pi-annotations@workspace:harnesses/pi/agent/packages/pi-annotations"],
-
-    "pi-apply-patch": ["pi-apply-patch@workspace:harnesses/pi/agent/packages/pi-apply-patch"],
-
-    "pi-code-mode": ["pi-code-mode@workspace:harnesses/pi/agent/packages/pi-code-mode"],
-
-    "pi-codex-native": ["pi-codex-native@workspace:harnesses/pi/agent/packages/pi-codex-native"],
-
-    "pi-copy-mode": ["pi-copy-mode@workspace:harnesses/pi/agent/packages/pi-copy-mode"],
-
-    "pi-custom-editor": ["pi-custom-editor@workspace:harnesses/pi/agent/packages/pi-custom-editor"],
-
-    "pi-developer-prompt": ["pi-developer-prompt@workspace:harnesses/pi/agent/packages/pi-developer-prompt"],
-
-    "pi-exec-command": ["pi-exec-command@workspace:harnesses/pi/agent/packages/pi-exec-command"],
-
-    "pi-libactions": ["pi-libactions@workspace:harnesses/pi/agent/packages/pi-libactions"],
-
-    "pi-libcontext": ["pi-libcontext@workspace:harnesses/pi/agent/packages/pi-libcontext"],
-
-    "pi-libtui": ["pi-libtui@workspace:harnesses/pi/agent/packages/pi-libtui"],
-
-    "pi-prompt-storage": ["pi-prompt-storage@workspace:harnesses/pi/agent/packages/pi-prompt-storage"],
-
-    "pi-side-chat": ["pi-side-chat@workspace:harnesses/pi/agent/packages/pi-side-chat"],
-
-    "pi-side-panel": ["pi-side-panel@workspace:harnesses/pi/agent/packages/pi-side-panel"],
-
-    "pi-skills": ["pi-skills@workspace:harnesses/pi/agent/packages/pi-skills"],
-
-    "pi-subagents": ["pi-subagents@workspace:harnesses/pi/agent/packages/pi-subagents"],
-
-    "pi-thinking-binding": ["pi-thinking-binding@workspace:harnesses/pi/agent/packages/pi-thinking-binding"],
-
-    "pi-tool-search": ["pi-tool-search@workspace:harnesses/pi/agent/packages/pi-tool-search"],
-
-    "pi-transcript": ["pi-transcript@workspace:harnesses/pi/agent/packages/pi-transcript"],
-
-    "pi-tuicr": ["pi-tuicr@workspace:harnesses/pi/agent/packages/pi-tuicr"],
-
-    "pi-view-image": ["pi-view-image@workspace:harnesses/pi/agent/packages/pi-view-image"],
-
-    "pi-xsettings": ["pi-xsettings@workspace:harnesses/pi/agent/packages/pi-xsettings"],
 
     "proper-lockfile": ["proper-lockfile@4.1.2", "", { "dependencies": { "graceful-fs": "^4.2.4", "retry": "^0.12.0", "signal-exit": "^3.0.2" } }, "sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA=="],
 

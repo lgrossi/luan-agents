@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerSidePanelProvider, type ActivityAnimationOverrides } from "pi-libtui";
+import { registerSidePanelProvider, type ActivityAnimationOverrides } from "@luan-pi/pi-libtui";
 import { getSubagentConfig, registerSubagentSettings } from "./config/settings.ts";
 import { registerSubagentActions } from "./contributions/actions.ts";
 import {

@@ -1,5 +1,5 @@
 import { type KeyId, matchesKey } from "@earendil-works/pi-tui";
-import { loadActionKeybindings } from "pi-libactions/sdk";
+import { loadActionKeybindings } from "@luan-pi/pi-libactions/sdk";
 
 export const COPY_MODE_ACTIONS = [
 	"copy-mode.up",

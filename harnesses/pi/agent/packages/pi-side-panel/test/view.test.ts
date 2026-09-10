@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import type { SidePanelTab, SplitPaneHost } from "pi-libtui";
+import type { SidePanelTab, SplitPaneHost } from "@luan-pi/pi-libtui";
 import { SidePanelView, type SidePanelViewModel } from "../src/view.ts";
 
 test("preserves the active body when only inactive tab metadata changes", () => {

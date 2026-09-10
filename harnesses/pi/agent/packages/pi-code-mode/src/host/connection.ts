@@ -8,7 +8,7 @@ type Pending = {
 };
 
 type HostConnectionOptions = {
-	binary: string;
+	binary: () => Promise<string>;
 	onMessage: (message: HostMessage) => void;
 	onFailure: (error: Error) => void;
 };
@@ -53,7 +53,7 @@ export class CodeModeHostConnection {
 	}
 
 	private async startProcess(): Promise<void> {
-		this.process.start();
+		await this.process.start();
 		const handshake = new Promise<void>((resolve, reject) => {
 			this.pending.set(0, { resolve: () => resolve(), reject });
 		});

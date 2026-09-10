@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ensureSidePanelRegistry, registerSidePanelProvider, type SidePanelProvider } from "pi-libtui";
+import { ensureSidePanelRegistry, registerSidePanelProvider, type SidePanelProvider } from "@luan-pi/pi-libtui";
 import execCommandExtension from "../src/extension.ts";
 
 type LifecycleHandler = (event: { reason?: string }, context: ExtensionContext) => void | Promise<void>;

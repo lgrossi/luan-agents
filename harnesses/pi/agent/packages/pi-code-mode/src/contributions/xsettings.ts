@@ -1,4 +1,4 @@
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan-pi/pi-xsettings/sdk";
 
 const CODE_MODE_OUTPUT_TOKEN_OPTIONS = [1_000, 2_500, 5_000, 10_000, 20_000, 50_000, 100_000] as const;
 const CODE_MODE_YIELD_OPTIONS = [1_000, 5_000, 10_000, 30_000, 60_000] as const;

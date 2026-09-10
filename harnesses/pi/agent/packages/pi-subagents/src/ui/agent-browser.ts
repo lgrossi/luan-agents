@@ -12,7 +12,7 @@ import {
 	UserMessageComponent,
 } from "@earendil-works/pi-coding-agent";
 import { Key, matchesKey, type TUI, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
-import type { MotionMount } from "pi-libtui";
+import type { MotionMount } from "@luan-pi/pi-libtui";
 import {
 	applyScrollbar,
 	FullscreenOverlay,
@@ -21,7 +21,7 @@ import {
 	SelectableList,
 	stripTopLevelZoneMarkers,
 	tuiTheme,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import type { SubagentSnapshot, TranscriptSource } from "../runtime/coordinator.ts";
 import type { AgentPresentationResolverLookup } from "../protocol/presentation.ts";
 import { renderAgentIdentity, renderAgentMetadata } from "./agent-summary.ts";

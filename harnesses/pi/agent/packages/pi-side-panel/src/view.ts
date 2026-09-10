@@ -1,9 +1,9 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, type Focusable, matchesKey, VStack, visibleWidth } from "@earendil-works/pi-tui";
-import type { ActionKeybindings } from "pi-libactions/sdk";
-import type { SidePanelContent, SidePanelEmptyAction, SidePanelTab } from "pi-libtui";
-import { DialogButtonBar, type SplitPaneHost, screenIconActionsWidth, TabBar } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import type { ActionKeybindings } from "@luan-pi/pi-libactions/sdk";
+import type { SidePanelContent, SidePanelEmptyAction, SidePanelTab } from "@luan-pi/pi-libtui";
+import { DialogButtonBar, type SplitPaneHost, screenIconActionsWidth, TabBar } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 
 const PANEL_INPUT_ACTIONS = [
 	"side-panel.toggle",

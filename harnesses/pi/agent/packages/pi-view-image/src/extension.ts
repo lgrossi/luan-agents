@@ -25,7 +25,9 @@ export default function viewImageExtension(pi: ExtensionAPI): void {
 	pi.on("model_select", (event) => configureViewImageToolForModel(tool, event.model));
 	pi.on("input", async (event, context) => {
 		const transformed = await transformPendingImageAttachments(event, attachments, (path) =>
-			runViewImageBinary(resolveViewImageBinary(), { path, detail: "original" }, context.cwd),
+			resolveViewImageBinary({ onBuild: (message) => context.ui.notify(message, "info") }).then((binary) =>
+				runViewImageBinary(binary, { path, detail: "original" }, context.cwd),
+			),
 		);
 		if (!transformed) return { action: "continue" };
 		for (const failure of transformed.failures) {

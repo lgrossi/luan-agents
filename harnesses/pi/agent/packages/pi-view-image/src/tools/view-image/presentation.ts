@@ -1,6 +1,6 @@
 import type { AgentToolResult, Theme } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, icon } from "pi-libtui";
-import { settleToolCallPreview, ToolActivity, toolCallPreview } from "pi-libtui/tool";
+import { ComponentStack, icon } from "@luan-pi/pi-libtui";
+import { settleToolCallPreview, ToolActivity, toolCallPreview } from "@luan-pi/pi-libtui/tool";
 import { VIEW_IMAGE_ICON, VIEW_IMAGE_ICON_TONE } from "../../core/appearance.ts";
 import type { ViewImageDetails } from "./result.ts";
 

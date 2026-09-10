@@ -146,7 +146,9 @@ impl Server {
             anyhow::bail!("process {} already exists", params.process_id);
         }
         if self.processes.len() >= MAX_ACTIVE_PROCESSES {
-            anyhow::bail!("exec_command supports at most {MAX_ACTIVE_PROCESSES} active processes");
+            anyhow::bail!(
+                "terminal bridge supports at most {MAX_ACTIVE_PROCESSES} active processes"
+            );
         }
         let entry = if params.tty {
             spawn_pty(params)?

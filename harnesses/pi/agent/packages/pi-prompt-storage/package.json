@@ -1,14 +1,21 @@
 {
-	"name": "pi-prompt-storage",
-	"private": true,
+	"name": "@luan-pi/pi-prompt-storage",
 	"version": "0.1.0",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/luan/agents.git",
+		"directory": "harnesses/pi/agent/packages/pi-prompt-storage"
+	},
 	"description": "Prompt stash and searchable session history for Pi",
 	"type": "module",
 	"keywords": ["pi-package"],
 	"exports": { ".": "./src/index.ts" },
-	"pi": { "extensions": ["./src/extension.ts", "./node_modules/pi-libtui/src/extension.ts"] },
-	"dependencies": { "pi-libtui": "workspace:*" },
-	"bundledDependencies": ["pi-libtui"],
+	"pi": {
+		"extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
+	},
+	"dependencies": { "@luan-pi/pi-libtui": "workspace:*" },
+	"bundledDependencies": ["@luan-pi/pi-libtui"],
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",
 		"@earendil-works/pi-tui": "*"

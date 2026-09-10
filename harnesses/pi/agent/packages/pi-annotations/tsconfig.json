@@ -4,9 +4,9 @@
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"paths": {
-			"pi-libtui": ["../pi-libtui/src/index.ts"],
-			"pi-libtui/mouse": ["../pi-libtui/src/mouse.ts"],
-			"pi-libtui/selection": ["../pi-libtui/src/selection.ts"]
+			"@luan-pi/pi-libtui": ["../pi-libtui/src/index.ts"],
+			"@luan-pi/pi-libtui/mouse": ["../pi-libtui/src/mouse.ts"],
+			"@luan-pi/pi-libtui/selection": ["../pi-libtui/src/selection.ts"]
 		},
 		"noEmit": true,
 		"incremental": true,

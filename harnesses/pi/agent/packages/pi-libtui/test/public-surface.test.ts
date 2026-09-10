@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
 
 const PUBLIC_ENTRYPOINTS = [
-	"pi-libtui",
-	"pi-libtui/diff",
-	"pi-libtui/editor",
-	"pi-libtui/folding",
-	"pi-libtui/mouse",
-	"pi-libtui/selection",
-	"pi-libtui/stream",
-	"pi-libtui/terminal",
-	"pi-libtui/tool",
+	"@luan-pi/pi-libtui",
+	"@luan-pi/pi-libtui/diff",
+	"@luan-pi/pi-libtui/editor",
+	"@luan-pi/pi-libtui/folding",
+	"@luan-pi/pi-libtui/mouse",
+	"@luan-pi/pi-libtui/selection",
+	"@luan-pi/pi-libtui/stream",
+	"@luan-pi/pi-libtui/terminal",
+	"@luan-pi/pi-libtui/tool",
 ] as const;
 
 const CAPABILITY_KEYS = [
@@ -30,7 +30,7 @@ describe("public module boundaries", () => {
 		}
 		const after = CAPABILITY_KEYS.map((key) => Object.hasOwn(globalThis, key));
 		expect(after).toEqual(before);
-		const mouse = await import("pi-libtui/mouse");
+		const mouse = await import("@luan-pi/pi-libtui/mouse");
 		expect(Object.keys(mouse).sort()).toEqual([
 			"FULLSCREEN_LAYOUT_CAPABILITY_KEY",
 			"FULLSCREEN_LAYOUT_PROTOCOL",
@@ -44,7 +44,7 @@ describe("public module boundaries", () => {
 			"registerModalPointerShield",
 			"resolveFullscreenLayout",
 		]);
-		const editor = await import("pi-libtui/editor");
+		const editor = await import("@luan-pi/pi-libtui/editor");
 		expect(Object.keys(editor).sort()).toEqual([
 			"EDITOR_PROTOCOL",
 			"EDITOR_REGISTRY_KEY",

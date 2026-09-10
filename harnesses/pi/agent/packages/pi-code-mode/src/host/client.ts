@@ -12,7 +12,7 @@ import { CodeModeHostSession } from "./session.ts";
 import type { NestedToolAdapter, RuntimeResponse, ToolExecutionContext } from "../protocol/types.ts";
 
 interface HostClientOptions {
-	binary: string;
+	binary: () => Promise<string>;
 	shutdownGraceMs?: number;
 }
 

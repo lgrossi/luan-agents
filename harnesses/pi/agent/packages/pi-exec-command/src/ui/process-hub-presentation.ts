@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { SidePanelSession, SidePanelTab } from "pi-libtui";
+import type { SidePanelSession, SidePanelTab } from "@luan-pi/pi-libtui";
 import { ProcessHub, openProcessHub } from "./process-hub.ts";
 import { ProcessHubCollection, type ProcessHubSource } from "./process-store.ts";
 

@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
 import type { Component } from "@earendil-works/pi-tui";
-import { type ComponentStack, configureTuiAppearance, icon, tuiTheme } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import { type ComponentStack, configureTuiAppearance, icon, tuiTheme } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import {
 	DEVELOPER_AUDIT_ENTRY_TYPE,
 	PROMPT_AUDIT_GROUP_ENTRY_TYPE,

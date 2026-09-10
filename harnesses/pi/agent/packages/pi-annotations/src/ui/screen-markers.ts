@@ -1,7 +1,7 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { compositeTuiLine, sliceByColumn, stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { backgroundAnsiAtColumn, PointerInteractionController } from "pi-libtui";
-import type { MouseRect, TuiMouseEvent, ViewportRect } from "pi-libtui/mouse";
+import { backgroundAnsiAtColumn, PointerInteractionController } from "@luan-pi/pi-libtui";
+import type { MouseRect, TuiMouseEvent, ViewportRect } from "@luan-pi/pi-libtui/mouse";
 import { plainPill, transcriptPillContent } from "../core/pills.ts";
 import type { DraftAnnotation } from "../core/types.ts";
 import { annotationDetailLines, decorateDetailCard, overlayTotalWidth, renderPill } from "./pills.ts";

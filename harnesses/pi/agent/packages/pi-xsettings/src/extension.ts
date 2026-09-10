@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { loadActionKeybindings, registerAction } from "pi-libactions/sdk";
+import { loadActionKeybindings, registerAction } from "@luan-pi/pi-libactions/sdk";
 import {
 	configureTuiAppearance,
 	DialogOverlayHost,
@@ -8,7 +8,7 @@ import {
 	offsetDialogHost,
 	registerSidePanelProvider,
 	type SidePanelSession,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import { configuredPiValues, syncPiSettingsJson } from "./config/pi-settings.ts";
 import {
 	DEFAULT_XSETTINGS_PRESENTATION_SETTINGS,

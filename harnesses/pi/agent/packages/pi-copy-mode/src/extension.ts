@@ -1,6 +1,6 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { Component, TUI } from "@earendil-works/pi-tui";
-import { ensureSelectionRegistry } from "pi-libtui/selection";
+import { ensureSelectionRegistry } from "@luan-pi/pi-libtui/selection";
 import { registerCopyModeAction } from "./contributions/actions.ts";
 import { registerCopyModeSettings } from "./config/settings.ts";
 import { createCopyModeHost, type CopyModeHost } from "./runtime/copy-mode.ts";

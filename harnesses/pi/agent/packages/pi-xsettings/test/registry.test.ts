@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ACTIONS_REGISTRY_KEY, ensureActionsRegistry, registerAction } from "pi-libactions/sdk";
+import { ACTIONS_REGISTRY_KEY, ensureActionsRegistry, registerAction } from "@luan-pi/pi-libactions/sdk";
 import { Type } from "typebox";
 import { ensureXSettingsRegistry, XSETTINGS_REGISTRY_KEY } from "../src/protocol/settings.ts";
 import { attachActionShortcuts } from "../src/runtime/actions.ts";

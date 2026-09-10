@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
 import { registerCopyModeAction } from "../src/contributions/actions.ts";
 
 test("entry action uses the shared registry and unregisters by identity", () => {

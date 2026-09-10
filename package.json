@@ -8,7 +8,7 @@
     "test:lint:pi": "bun test lint/pi/lint.test.ts",
     "typecheck": "tsc --build",
     "test": "cargo build --locked --release && bun run test:pi",
-    "test:pi": "bun run --filter 'pi-*' --parallel --elide-lines=0 test",
+    "test:pi": "bun run --filter '@luan-pi/*' --parallel --elide-lines=0 test",
     "check:ts": "bun run lint:pi && bun run typecheck && bun run test"
   },
   "workspaces": [

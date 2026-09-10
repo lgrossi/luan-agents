@@ -1,7 +1,12 @@
 {
-  "name": "pi-libactions",
-  "private": true,
+  "name": "@luan-pi/pi-libactions",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luan/agents.git",
+    "directory": "harnesses/pi/agent/packages/pi-libactions"
+  },
   "description": "UI-free action registry capability for Pi extensions",
   "type": "module",
   "exports": {

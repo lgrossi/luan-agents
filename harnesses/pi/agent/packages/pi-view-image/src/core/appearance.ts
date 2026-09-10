@@ -1,4 +1,4 @@
-import type { PillContent, TuiForegroundColor, TuiIconName } from "pi-libtui";
+import type { PillContent, TuiForegroundColor, TuiIconName } from "@luan-pi/pi-libtui";
 
 /** Shared visual identity for every view-image entry point. */
 export const VIEW_IMAGE_ICON = "view-image" satisfies TuiIconName;

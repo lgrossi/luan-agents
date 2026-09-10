@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { SidePanelEmptyAction, SidePanelTab } from "pi-libtui";
+import type { SidePanelEmptyAction, SidePanelTab } from "@luan-pi/pi-libtui";
 import { ProcessHubPresentation } from "../src/ui/process-hub-presentation.ts";
 
 test("Process Hub uses an attached side panel and otherwise falls back to fullscreen", async () => {

@@ -1,4 +1,4 @@
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan-pi/pi-xsettings/sdk";
 
 const definitions = {
 	copyOnSelect: {

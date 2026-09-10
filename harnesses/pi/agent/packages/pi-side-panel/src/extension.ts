@@ -1,12 +1,12 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ensureActionsRegistry, loadActionKeybindings } from "pi-libactions/sdk";
+import { ensureActionsRegistry, loadActionKeybindings } from "@luan-pi/pi-libactions/sdk";
 import {
 	ensureSidePanelRegistry,
 	mountScreenIconActions,
 	type ScreenIconActionsMount,
 	type SidePanelRegistry,
-} from "pi-libtui";
-import { ensureMouseRegistry } from "pi-libtui/mouse";
+} from "@luan-pi/pi-libtui";
+import { ensureMouseRegistry } from "@luan-pi/pi-libtui/mouse";
 import { registerSidePanelActions } from "./actions.ts";
 import { SidePanelController } from "./controller.ts";
 import { latestSidePanelLayout, SIDE_PANEL_STATE_ENTRY_TYPE } from "./state.ts";

@@ -1,8 +1,8 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { type TUI, truncateToWidth } from "@earendil-works/pi-tui";
-import type { ActivityAnimationOverrides, MotionMount } from "pi-libtui";
-import { icon, mountConfiguredAnimation, PointerInteractionController, tuiTheme } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import type { ActivityAnimationOverrides, MotionMount } from "@luan-pi/pi-libtui";
+import { icon, mountConfiguredAnimation, PointerInteractionController, tuiTheme } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import type { AgentHubAgentSnapshot, AgentHubSnapshot, AgentHubSnapshotSource } from "./agent-browser.ts";
 import {
 	formatAgentTokens,

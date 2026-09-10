@@ -8,15 +8,16 @@
 
 ## Install
 
-Build the native host from the repository root, then install the package:
-
 ```sh
-cargo build --release -p code-mode-host
-pi install ./harnesses/pi/agent/packages/pi-code-mode
+pi install npm:@luan-pi/pi-code-mode
 ```
 
-The extension looks for `target/release/code-mode-host`. Set
-`PI_CODE_MODE_HOST_BINARY` when the host is somewhere else.
+The native `code-mode-host` binary builds itself on first use with `cargo`, so a
+Rust toolchain (<https://rustup.rs>) is the only requirement. Builds land under
+Pi's agent directory (`native/code-mode-host/<version>/`) and are shared by
+every extension that needs them. In a checkout of this repository the extension
+uses `target/` instead (`cargo build --release -p code-mode-host`). Set
+`PI_CODE_MODE_HOST_BINARY` to use a host from somewhere else.
 
 ## Who owns the tool hierarchy
 
@@ -140,7 +141,7 @@ An ordinary Pi function tool registers through the UI-free SDK's
 have one execution path and one presentation owner:
 
 ```ts
-import { registerCodeModeFunctionTool } from "pi-code-mode/sdk";
+import { registerCodeModeFunctionTool } from "@luan-pi/pi-code-mode/sdk";
 
 const dispose = registerCodeModeFunctionTool(tool, {
   outputSchema: {
@@ -156,7 +157,7 @@ Use the lower-level adapter only for freeform tools or behavior that cannot be
 expressed by a Pi `ToolDefinition`:
 
 ```ts
-import { registerCodeModeToolAdapter } from "pi-code-mode/sdk";
+import { registerCodeModeToolAdapter } from "@luan-pi/pi-code-mode/sdk";
 
 const dispose = registerCodeModeToolAdapter({
   name: "example_tool",
@@ -234,8 +235,8 @@ call traces.
 - **The settings picker does not show a tool:** its package has not registered
   the Pi tool and a Code Mode adapter yet. A tool may appear in the picker while
   inactive, but it is lifted only when the session activates it.
-- **The host cannot be found:** run `cargo build --release -p code-mode-host`
-  or set `PI_CODE_MODE_HOST_BINARY` to an executable host.
+- **The host fails to build:** make sure `cargo` is installed and on `PATH`, or
+  set `PI_CODE_MODE_HOST_BINARY` to an executable host.
 - **A nested call is blocked:** check Code Mode preflight registrations as well
   as the direct-call hook; nested execution does not fire Pi's normal tool
   hooks.

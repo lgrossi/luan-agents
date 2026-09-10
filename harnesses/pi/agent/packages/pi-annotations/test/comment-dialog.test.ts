@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import type { KeybindingsManager, TUI } from "@earendil-works/pi-tui";
 import { CURSOR_MARKER, stripTerminalSequences } from "@earendil-works/pi-tui";
-import { icon, type ModalOverlayMouseEvent, tuiTheme } from "pi-libtui";
+import { icon, type ModalOverlayMouseEvent, tuiTheme } from "@luan-pi/pi-libtui";
 import { CommentDialog, type CommentOverlayResult } from "../src/ui/composer-overlays.ts";
 
 // type-boundary: the component test supplies only Theme methods used by CommentDialog and DialogButtonBar.

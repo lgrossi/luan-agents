@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { tuiTheme } from "pi-libtui";
+import { tuiTheme } from "@luan-pi/pi-libtui";
 import { TuiState } from "../src/runtime/state.ts";
 import { PiCustomEditor } from "../src/ui/pi-custom-editor.ts";
 

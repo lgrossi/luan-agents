@@ -5,7 +5,7 @@ import type { HostMessage } from "./protocol.js";
 const DEFAULT_SHUTDOWN_GRACE_MS = 250;
 
 type HostSessionOptions = {
-	binary: string;
+	binary: () => Promise<string>;
 	shutdownGraceMs?: number | undefined;
 	onMessage: (message: HostMessage) => void;
 	onFailure: (error: Error) => void;

@@ -1,7 +1,7 @@
 # pi-exec-command
 
 `pi-exec-command` adds two Pi tools backed by the Rust
-`exec_command_bridge` binary:
+`terminal_bridge` binary:
 
 - `exec_command` starts a shell command.
 - `write_stdin` sends input to, or polls, a running command.
@@ -20,26 +20,26 @@ and terminate actions.
 
 ## Install
 
-Build the bridge, then install the package from the repository root:
-
 ```sh
-cargo build --release -p exec-command
-pi install ./harnesses/pi/agent/packages/pi-exec-command
+pi install npm:@luan-pi/pi-exec-command
 ```
 
-The binary resolver checks these paths in order:
+The native `terminal_bridge` binary builds itself on first use with `cargo`, so
+a Rust toolchain (<https://rustup.rs>) is the only requirement. `pi-libtui` owns
+the bridge and resolves it in this order:
 
-1. `PI_EXEC_COMMAND_BINARY`, when set;
-2. `target/release/exec_command_bridge`;
-3. `target/debug/exec_command_bridge`.
+1. `PI_TERMINAL_BRIDGE_BINARY`, when set;
+2. the build for this package version under Pi's agent directory
+   (`native/terminal-bridge/<version>/bin/terminal_bridge`), building it if absent;
+3. `target/{release,debug}/terminal_bridge` when the package runs from a checkout of this repository.
 
 The override must point to an executable file. For example:
 
 ```sh
-PI_EXEC_COMMAND_BINARY=/tmp/exec_command_bridge pi
+PI_TERMINAL_BRIDGE_BINARY=/tmp/terminal_bridge pi
 ```
 
-Without an override, build the bridge if Pi reports that it is missing.
+In a checkout, `cargo build --release -p terminal-bridge` is enough.
 
 ## `exec_command`
 
@@ -214,7 +214,7 @@ default and updates live when changed.
 | `write_stdin` schema and call | `src/tools/write-stdin/definition.ts` and `execute.ts` |
 | Session state, waits, limits, and replay | `src/session-manager.ts` |
 | Process snapshots and explicit controls | `src/session-manager.ts` over the native bridge protocol |
-| Bridge process and wire protocol | `src/bridge-client.ts` and `crates/exec-command` |
+| Bridge process and wire protocol | `pi-libtui`'s terminal bridge client and `crates/terminal-bridge` |
 | Result/details model | `src/tools/result.ts` and `src/tools/presentation.ts` |
 | Exploration summary | `src/core/shell-summary.ts` classifies a command into read/list/search steps or one opaque run |
 | TUI rendering | `src/ui/presentation.ts`, `src/ui/command-transcript.ts`, and `src/ui/shell-command-action.ts` map exec semantics onto `pi-libtui`'s generic streaming activity with an indented payload |
@@ -225,8 +225,8 @@ default and updates live when changed.
 
 ## Troubleshooting
 
-- **Bridge missing:** run `cargo build --release -p exec-command`, or set
-  `PI_EXEC_COMMAND_BINARY` to an executable bridge.
+- **Bridge fails to build:** make sure `cargo` is installed and on `PATH`, or
+  set `PI_TERMINAL_BRIDGE_BINARY` to an executable bridge.
 - **The command starts in the wrong directory:** pass `workdir`; a previous
   command's `cd` does not affect the next call.
 - **Input is rejected:** start the command with `tty: true`.

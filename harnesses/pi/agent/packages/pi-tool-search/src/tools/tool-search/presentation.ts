@@ -1,6 +1,6 @@
 import type { AgentToolResult, Theme } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, icon } from "pi-libtui";
-import { settleToolCallPreview, ToolActivity, ToolTranscript, toolCallPreview } from "pi-libtui/tool";
+import { ComponentStack, icon } from "@luan-pi/pi-libtui";
+import { settleToolCallPreview, ToolActivity, ToolTranscript, toolCallPreview } from "@luan-pi/pi-libtui/tool";
 import type { ToolSearchDetails } from "./result.ts";
 
 interface PresentationContext {

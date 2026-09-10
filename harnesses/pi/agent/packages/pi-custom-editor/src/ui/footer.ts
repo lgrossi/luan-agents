@@ -1,6 +1,6 @@
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import type { Component, TUI } from "@earendil-works/pi-tui";
-import { renderEditorCompositionStatus } from "pi-libtui/editor";
+import { renderEditorCompositionStatus } from "@luan-pi/pi-libtui/editor";
 import { getCustomEditorSettings } from "../config/settings.ts";
 import { resolveEditorComposition } from "../core/composition.ts";
 import type { TuiState } from "../runtime/state.ts";

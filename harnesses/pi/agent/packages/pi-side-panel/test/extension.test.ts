@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { ExtensionAPI, ExtensionContext, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
-import { ensureSidePanelRegistry } from "pi-libtui";
+import { ensureSidePanelRegistry } from "@luan-pi/pi-libtui";
 import sidePanelExtension from "../src/extension.ts";
 
 type EventHandler = (event: object, context: ExtensionContext) => void | Promise<void>;

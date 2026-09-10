@@ -3,10 +3,10 @@ use std::path::PathBuf;
 
 use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
 use base64::Engine;
-use exec_command::{ExecParams, Server};
 use pretty_assertions::assert_eq;
 use proptest::prelude::*;
 use proptest_derive::Arbitrary;
+use terminal_bridge::{ExecParams, Server};
 
 fn collect_until_exit(
     server: &Server,

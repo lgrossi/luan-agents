@@ -1,8 +1,8 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { sliceByColumn, stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { removeUnmarkedEditorCursor, subscribeTuiAppearance } from "pi-libtui";
-import { ensureMouseRegistry } from "pi-libtui/mouse";
-import { ensureSelectionRegistry, type SelectionActionRequest } from "pi-libtui/selection";
+import { removeUnmarkedEditorCursor, subscribeTuiAppearance } from "@luan-pi/pi-libtui";
+import { ensureMouseRegistry } from "@luan-pi/pi-libtui/mouse";
+import { ensureSelectionRegistry, type SelectionActionRequest } from "@luan-pi/pi-libtui/selection";
 import { registerAnnotationSettings } from "./config/settings.ts";
 import {
 	ANNOTATION_SYSTEM_GUIDANCE,

@@ -3,9 +3,9 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-code-mode/sdk";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, icon } from "pi-libtui";
-import { parseUnifiedDiff } from "pi-libtui/diff";
+import { getCodeModeToolAdapterRegistry } from "@luan-pi/pi-code-mode/sdk";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, icon } from "@luan-pi/pi-libtui";
+import { parseUnifiedDiff } from "@luan-pi/pi-libtui/diff";
 import { resolveApplyPatchBinary } from "../src/binary.ts";
 import { executePatchWithRust } from "../src/executor.ts";
 import applyPatchExtension from "../src/extension.ts";
@@ -45,12 +45,8 @@ afterEach(() => {
 	Reflect.deleteProperty(globalThis, codeModeAdaptersKey);
 });
 
-test("the binary override resolves a real executable", () => {
-	expect(resolveApplyPatchBinary({ PI_APPLY_PATCH_BIN: releaseBinary })).toBe(releaseBinary);
-});
-
-test("the default binary resolves from the root release target", () => {
-	expect(resolveApplyPatchBinary({})).toBe(releaseBinary);
+test("the binary override resolves a real executable", async () => {
+	expect(await resolveApplyPatchBinary()).toBe(releaseBinary);
 });
 
 test("manual-edit guidance is conditional on apply_patch being exposed", () => {

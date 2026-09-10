@@ -8,11 +8,16 @@ import {
 	stripTerminalSequences,
 	visibleWidth,
 } from "@earendil-works/pi-tui";
-import { mountSelectionActionBar, TransientPill } from "pi-libtui";
-import { ensureFoldingRegistry, type FoldingRegistry, type FoldOperation, foldTargetAt } from "pi-libtui/folding";
-import { ensureMouseRegistry, type MouseRegistry, type TuiMouseEvent } from "pi-libtui/mouse";
-import type { NativeSelectionCompleted, SelectionQuoteAnchor, SelectionShape } from "pi-libtui/selection";
-import { ensureSelectionRegistry, type SelectionPoint, type SelectionRegistry } from "pi-libtui/selection";
+import { mountSelectionActionBar, TransientPill } from "@luan-pi/pi-libtui";
+import {
+	ensureFoldingRegistry,
+	type FoldingRegistry,
+	type FoldOperation,
+	foldTargetAt,
+} from "@luan-pi/pi-libtui/folding";
+import { ensureMouseRegistry, type MouseRegistry, type TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+import type { NativeSelectionCompleted, SelectionQuoteAnchor, SelectionShape } from "@luan-pi/pi-libtui/selection";
+import { ensureSelectionRegistry, type SelectionPoint, type SelectionRegistry } from "@luan-pi/pi-libtui/selection";
 import {
 	type CopyModeAction,
 	type CopyModeKeybindings,

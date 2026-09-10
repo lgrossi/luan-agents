@@ -5,7 +5,7 @@ import { createTerminalBridgeClient, parseTerminalBridgeReadResponse } from "../
 test("rejects an invalid native response and replaces its bridge generation", async () => {
 	let generation = 0;
 	const bridge = createTerminalBridgeClient({
-		binaryPath: () => process.execPath,
+		binaryPath: async () => process.execPath,
 		spawnBridge: () => {
 			generation += 1;
 			const source =

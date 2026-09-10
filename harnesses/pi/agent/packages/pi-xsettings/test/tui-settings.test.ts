@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, getTuiAppearance, icon } from "pi-libtui";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, getTuiAppearance, icon } from "@luan-pi/pi-libtui";
 import { registerTuiSettings } from "../src/config/tui-settings.ts";
 import { ensureXSettingsRegistry } from "../src/protocol/settings.ts";
 

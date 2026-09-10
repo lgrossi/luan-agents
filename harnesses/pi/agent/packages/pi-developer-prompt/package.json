@@ -1,21 +1,24 @@
 {
-  "name": "pi-developer-prompt",
-  "private": true,
+  "name": "@luan-pi/pi-developer-prompt",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luan/agents.git",
+    "directory": "harnesses/pi/agent/packages/pi-developer-prompt"
+  },
   "description": "Provider instructions and developer-message composition for Pi",
   "type": "module",
   "keywords": ["pi-package"],
-  "exports": {
-    ".": "./src/index.ts"
-  },
+  "exports": { ".": "./src/index.ts" },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/pi-libtui/src/extension.ts"]
+    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
   },
   "dependencies": {
-    "pi-libtui": "workspace:*",
-    "pi-xsettings": "workspace:*"
+    "@luan-pi/pi-libtui": "workspace:*",
+    "@luan-pi/pi-xsettings": "workspace:*"
   },
-  "bundledDependencies": ["pi-libtui", "pi-xsettings"],
+  "bundledDependencies": ["@luan-pi/pi-libtui", "@luan-pi/pi-xsettings"],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"

@@ -1,5 +1,5 @@
 import type { AgentToolResult, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 
 export const NESTED_TOOL_ADAPTER_PROTOCOL = "pi-code-mode/nested-tool-adapters/v2" as const;
 export const NESTED_TOOL_ADAPTERS = Symbol.for(NESTED_TOOL_ADAPTER_PROTOCOL);

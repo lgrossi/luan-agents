@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Component } from "@earendil-works/pi-tui";
-import { ensureSplitPaneRegistry, type SidePanelTab } from "pi-libtui";
+import { ensureSplitPaneRegistry, type SidePanelTab } from "@luan-pi/pi-libtui";
 import { SidePanelController } from "../src/controller.ts";
 import type { SidePanelLayoutState } from "../src/state.ts";
 

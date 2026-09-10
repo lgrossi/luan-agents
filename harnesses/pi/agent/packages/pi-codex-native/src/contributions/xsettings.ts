@@ -1,6 +1,6 @@
-import type { ContextWindowPreset } from "pi-libcontext/sdk";
-import type { TuiForegroundColor } from "pi-libtui";
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import type { ContextWindowPreset } from "@luan-pi/pi-libcontext/sdk";
+import type { TuiForegroundColor } from "@luan-pi/pi-libtui";
+import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan-pi/pi-xsettings/sdk";
 
 export const CODEX_CONTEXT_WINDOWS: Readonly<Record<ContextWindowPreset, number>> = {
 	smart: 180_000,

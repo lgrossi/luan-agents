@@ -314,9 +314,15 @@ export {
 	whenSyntaxReady,
 } from "./syntax.ts";
 export {
-	resolveTerminalBridgeBinary,
-	type TerminalBridgeBinaryOptions,
-} from "./terminal/bridge-binary.ts";
+	type EnsureNativeBinaryHooks,
+	ensureNativeBinary,
+	locateNativeBinary,
+	type NativeBinary,
+	type NativeBinaryLocation,
+	type NativeBinaryOptions,
+	TERMINAL_BRIDGE,
+	terminalBridgeBinaryPath,
+} from "./native-binary.ts";
 export {
 	createTerminalBridgeClient,
 	parseTerminalBridgeReadResponse,

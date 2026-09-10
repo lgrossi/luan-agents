@@ -25,7 +25,7 @@ from another Pi package in the same repository:
 Run `bun install` from the repository root, then import the public SDK:
 
 ```ts
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
 ```
 
 The package has no direct dependencies. It requires the Pi coding-agent and
@@ -56,7 +56,7 @@ Use a stable, namespaced ID. Register during extension setup and retain the
 disposer for reload and shutdown:
 
 ```ts
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
 
 const unregister = registerAction({
   id: "example.open",
@@ -75,7 +75,7 @@ unregister();
 registry can use the full API:
 
 ```ts
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
 
 const actions = ensureActionsRegistry();
 const stopListening = actions.onRegister((action) => {

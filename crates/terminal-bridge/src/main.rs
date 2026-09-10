@@ -1,3 +1,3 @@
 fn main() -> anyhow::Result<()> {
-    exec_command::run_main()
+    terminal_bridge::run_main()
 }

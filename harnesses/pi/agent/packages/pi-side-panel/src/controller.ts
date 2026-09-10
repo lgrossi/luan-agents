@@ -1,6 +1,11 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import type { ActionKeybindings } from "pi-libactions/sdk";
-import { mountSplitPane, type SidePanelEmptyAction, type SidePanelSession, type SidePanelTab } from "pi-libtui";
+import type { ActionKeybindings } from "@luan-pi/pi-libactions/sdk";
+import {
+	mountSplitPane,
+	type SidePanelEmptyAction,
+	type SidePanelSession,
+	type SidePanelTab,
+} from "@luan-pi/pi-libtui";
 import { EMPTY_SIDE_PANEL_STATE, type SidePanelLayoutState } from "./state.ts";
 import { SidePanelView, type SidePanelViewModel } from "./view.ts";
 

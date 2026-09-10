@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { type ActionKeybindings, type ActionRegistration, ensureActionsRegistry } from "pi-libactions/sdk";
+import { type ActionKeybindings, type ActionRegistration, ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
 
 export function attachActionShortcuts(
 	pi: Pick<ExtensionAPI, "registerShortcut">,

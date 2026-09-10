@@ -1,8 +1,8 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import type { Component } from "@earendil-works/pi-tui";
-import type { ActivityAnimationOverrides } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
-import { type TerminalOutputUpdate, ToolActivity, type ToolTranscriptStatus } from "pi-libtui/tool";
+import type { ActivityAnimationOverrides } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+import { type TerminalOutputUpdate, ToolActivity, type ToolTranscriptStatus } from "@luan-pi/pi-libtui/tool";
 import type { ShellAction } from "../core/shell-summary.ts";
 import { SHELL_COMMAND_BODY_INDENT, ShellCommandAction } from "./shell-command-action.ts";
 
