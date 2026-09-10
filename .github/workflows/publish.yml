@@ -1,0 +1,58 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  npm:
+    name: Publish Pi packages to npm
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Set up Node and npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm >= 11.5.1.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
+      - name: Install workspace
+        run: bun install --frozen-lockfile
+
+      - name: Publish every package at the tagged version
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+        run: |
+          set -eu
+          version="${GITHUB_REF_NAME#v}"
+          for package in harnesses/pi/agent/packages/*/; do
+            package="${package%/}"
+            if ! bun -e 'const [dir, version] = process.argv.slice(1); const m = await Bun.file(dir + "/package.json").json(); process.exit(m.version === version ? 0 : 1);' "$package" "$version"; then
+              echo "skip $package (version is not $version)"
+              continue
+            fi
+            just pi-publish "$package"
+          done

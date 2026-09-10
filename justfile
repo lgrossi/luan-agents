@@ -49,9 +49,12 @@ pi-pack package dest="target/npm":
     npm pack --ignore-scripts --json --pack-destination "$dest" | bun -e 'const [entry]=await Bun.stdin.json(); console.log(process.argv[1] + "/" + entry.filename);' "$dest"
 
 # Pack one Pi package and publish it to npm. Requires the git tag for its version so first-use native builds resolve.
+# Skips versions that are already on the registry so a release can be re-run safely.
 pi-publish package:
-    @version="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log(m.version);' "{{ package }}")"; \
+    @manifest="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log(m.name + " " + m.version);' "{{ package }}")"; \
+    name="${manifest% *}"; version="${manifest#* }"; \
     if ! git -C "{{ repo }}" rev-parse -q --verify "refs/tags/v$version" >/dev/null; then echo "missing git tag v$version; tag and push it before publishing" >&2; exit 1; fi; \
+    if test -n "$(npm view "$name@$version" version 2>/dev/null)"; then echo "$name@$version is already published"; exit 0; fi; \
     archive="$(just repo="{{ repo }}" pi-pack "{{ package }}")"; \
     npm publish --access public "$archive"
 
