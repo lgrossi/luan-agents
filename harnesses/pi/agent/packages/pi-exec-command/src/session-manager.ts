@@ -2,11 +2,11 @@ import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 import { StringDecoder } from "node:string_decoder";
 import {
-	type BridgeReadResponse,
-	createExecBridgeClient,
-	type ExecBridgeClient,
-	parseExecBridgeReadResponse,
-} from "./bridge-client.ts";
+	createTerminalBridgeClient,
+	parseTerminalBridgeReadResponse,
+	type TerminalBridgeClient,
+	type TerminalBridgeReadResponse,
+} from "@luan-pi/pi-libtui";
 import {
 	appendBounded,
 	chunkId,
@@ -125,7 +125,7 @@ interface CompletedSession {
 }
 
 export interface ExecSessionManagerOptions {
-	bridge?: ExecBridgeClient;
+	bridge?: TerminalBridgeClient;
 	binaryPath?: () => string;
 	env?: NodeJS.ProcessEnv;
 	maxSessionBufferChars?: number;
@@ -230,11 +230,11 @@ export function createExecSessionManager(
 	const env = { ...(options.env ?? process.env) };
 	const bridge =
 		options.bridge ??
-		createExecBridgeClient({
+		createTerminalBridgeClient({
 			binaryPath:
 				options.binaryPath ??
 				(() => {
-					throw new Error("exec_command bridge path was not configured");
+					throw new Error("terminal bridge path was not configured");
 				}),
 			spawnBridge: (binaryPath) => spawn(binaryPath, [], { stdio: "pipe", env }),
 		});
@@ -357,7 +357,7 @@ export function createExecSessionManager(
 
 	async function pollLoop(session: Session): Promise<void> {
 		while (!stopped && !session.closed) {
-			let response: BridgeReadResponse;
+			let response: TerminalBridgeReadResponse;
 			try {
 				const result = await bridge.request<unknown>({
 					op: "read",
@@ -367,8 +367,8 @@ export function createExecSessionManager(
 					// timeout only recovers a lost wake without steady idle bridge traffic.
 					wait_ms: BRIDGE_READ_IDLE_TIMEOUT_MS,
 				});
-				const parsed = parseExecBridgeReadResponse(result, session.lastSeq + 1);
-				if (!parsed) throw new Error("exec_command_bridge emitted an invalid read result");
+				const parsed = parseTerminalBridgeReadResponse(result, session.lastSeq + 1);
+				if (!parsed) throw new Error("terminal_bridge emitted an invalid read result");
 				response = parsed;
 			} catch (error) {
 				appendBounded(session, `${error instanceof Error ? error.message : String(error)}\n`, maxSessionBufferChars);
@@ -413,7 +413,7 @@ export function createExecSessionManager(
 				} catch (error) {
 					appendBounded(
 						session,
-						`exec_command_bridge reap failed: ${error instanceof Error ? error.message : String(error)}\n`,
+						`terminal_bridge reap failed: ${error instanceof Error ? error.message : String(error)}\n`,
 						maxSessionBufferChars,
 					);
 					session.exitCode = 1;

@@ -1,5 +1,5 @@
 import type { ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
-import type { ActivityAnimationOverrides } from "pi-libtui";
+import type { ActivityAnimationOverrides } from "@luan-pi/pi-libtui";
 import { Type } from "typebox";
 import { DEFAULT_EXEC_COMMAND_SETTINGS, type ExecCommandSettings } from "../../contributions/xsettings.ts";
 import { renderExecCommandCall, renderExecResult } from "../../ui/presentation.ts";

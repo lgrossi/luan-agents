@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import type { AgentHubSnapshot, AgentHubSnapshotSource } from "../src/ui/agent-browser.ts";
 import { AgentWidget } from "../src/ui/agent-widget.ts";
 

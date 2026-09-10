@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { initTheme, type Theme } from "@earendil-works/pi-coding-agent";
 import { KeybindingsManager, setKeybindings, stripTerminalSequences, TUI_KEYBINDINGS } from "@earendil-works/pi-tui";
-import { icon, tuiTheme } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import { icon, tuiTheme } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import type { SettingValue } from "../src/protocol/settings.ts";
 import { SettingsEditor } from "../src/ui/settings-editor.ts";
 import { type SettingsScreenField, XSettingsScreen } from "../src/ui/xsettings-screen.ts";

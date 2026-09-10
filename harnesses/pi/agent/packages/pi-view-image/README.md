@@ -7,15 +7,14 @@ formats retain their original bytes.
 
 ## Install
 
-Build the native bridge, then install the package from the repository root:
-
 ```sh
-cargo build --release -p view-image
-pi install ./harnesses/pi/agent/packages/pi-view-image
+pi install npm:@luan-pi/pi-view-image
 ```
 
-The bridge resolver checks `PI_VIEW_IMAGE_BIN`, then the workspace release and
-debug targets. The override must point to an executable file.
+The native `view_image` binary builds itself on first use with `cargo`, so a
+Rust toolchain (<https://rustup.rs>) is the only requirement. In a checkout of
+this repository the package uses `target/` instead. `PI_VIEW_IMAGE_BIN`
+overrides both; it must point to an executable file.
 
 ## Usage
 

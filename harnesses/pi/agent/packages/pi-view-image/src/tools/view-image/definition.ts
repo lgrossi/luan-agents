@@ -103,7 +103,8 @@ export function createViewImageTool(): ToolDefinition<ViewImageParameters, ViewI
 			if (!supportsViewImageInputs(context.model)) throw new Error(UNSUPPORTED_MESSAGE);
 			const input = effectiveViewImageParams(params, context.model);
 			const startedAt = performance.now();
-			const output = await runViewImageBinary(resolveViewImageBinary(), input, context.cwd, signal);
+			const binary = await resolveViewImageBinary({ onBuild: (message) => context.ui.notify(message, "info") });
+			const output = await runViewImageBinary(binary, input, context.cwd, signal);
 			return createViewImageResult(input, output, Math.max(0, Math.round(performance.now() - startedAt)));
 		},
 	};

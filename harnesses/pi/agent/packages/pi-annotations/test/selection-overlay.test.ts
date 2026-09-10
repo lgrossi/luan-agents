@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { SelectionActionRequest } from "pi-libtui/selection";
+import type { SelectionActionRequest } from "@luan-pi/pi-libtui/selection";
 import { composeAnnotation, selectionOverlayAnchor } from "../src/runtime/annotations.ts";
 
 function request(

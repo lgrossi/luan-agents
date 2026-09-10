@@ -6,16 +6,14 @@ called directly by Pi or from Code Mode.
 
 ## Install
 
-Build the native tool from the repository root, then install the Pi package:
-
 ```sh
-cargo build --release -p apply-patch
-pi install ./harnesses/pi/agent/packages/pi-apply-patch
+pi install npm:@luan-pi/pi-apply-patch
 ```
 
-The package normally runs `target/release/apply_patch`. Set
-`PI_APPLY_PATCH_BIN` to an executable binary elsewhere when developing or
-testing.
+The native `apply_patch` binary builds itself on first use with `cargo`, so a
+Rust toolchain (<https://rustup.rs>) is the only requirement. In a checkout of
+this repository the package uses `target/` instead. Set `PI_APPLY_PATCH_BIN` to
+an executable binary elsewhere when developing or testing.
 
 ## Direct and Code Mode calls
 
@@ -101,15 +99,15 @@ timing, native result, and partial-failure information.
 | Tool definition | `src/tools/apply-patch/definition.ts` |
 | Execution owner | `src/executor.ts` and the Rust `apply-patch` crate |
 | State owner | The native process owns one patch execution; the package keeps no session state |
-| Native boundary | `src/executor.ts` spawns `target/release/apply_patch` |
+| Native boundary | `src/executor.ts` spawns `apply_patch` resolved by `src/binary.ts` |
 | Hierarchy bridge | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
 | Presentation owner | `src/tools/apply-patch/presentation.ts` previews input while queued/running and renders the native committed diff when complete |
 | Public capabilities | Direct `apply_patch`, Code Mode adapter, executor, and result types |
 
 ## Troubleshooting
 
-- **Binary not found:** run `cargo build --release -p apply-patch`, or set
-  `PI_APPLY_PATCH_BIN` to an executable file.
+- **Binary fails to build:** make sure `cargo` is installed and on `PATH`, or
+  set `PI_APPLY_PATCH_BIN` to an executable file.
 - **The tool stays direct:** select `apply_patch` in Code Mode's `Tools under
   exec` setting and restart the session. Only Code Mode owns placement.
 - **The tool is missing entirely:** check Pi's active tool selection. A strict

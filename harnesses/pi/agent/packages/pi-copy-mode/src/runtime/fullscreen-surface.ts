@@ -1,6 +1,6 @@
 import type { TUI } from "@earendil-works/pi-tui";
 import { stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { type LayoutBox, type LayoutSelectionPoint, resolveFullscreenLayout } from "pi-libtui/mouse";
+import { type LayoutBox, type LayoutSelectionPoint, resolveFullscreenLayout } from "@luan-pi/pi-libtui/mouse";
 import type { CursorPoint } from "../core/cursor.ts";
 
 interface PrivateFullscreenRenderer {

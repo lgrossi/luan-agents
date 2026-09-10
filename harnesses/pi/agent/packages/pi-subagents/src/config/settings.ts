@@ -1,5 +1,5 @@
-import { TUI_ACTIVITY_INDICATOR_OPTIONS } from "pi-libtui";
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import { TUI_ACTIVITY_INDICATOR_OPTIONS } from "@luan-pi/pi-libtui";
+import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan-pi/pi-xsettings/sdk";
 import type { MultiAgentMode } from "../core/instructions.ts";
 
 export type SubagentConfig = {

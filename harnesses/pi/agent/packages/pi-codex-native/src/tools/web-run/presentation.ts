@@ -1,6 +1,6 @@
 import type { AgentToolResult, Theme } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, icon, sanitizeTuiText } from "pi-libtui";
-import { settleToolCallPreview, ToolActivity, ToolTranscript, toolCallPreview } from "pi-libtui/tool";
+import { ComponentStack, icon, sanitizeTuiText } from "@luan-pi/pi-libtui";
+import { settleToolCallPreview, ToolActivity, ToolTranscript, toolCallPreview } from "@luan-pi/pi-libtui/tool";
 import type { WebRunToolDetails } from "./result.ts";
 import type { WebRunParameters } from "./schema.ts";
 

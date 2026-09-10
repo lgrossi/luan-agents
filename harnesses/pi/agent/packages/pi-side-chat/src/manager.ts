@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import type { SplitPaneHost } from "pi-libtui";
+import type { SplitPaneHost } from "@luan-pi/pi-libtui";
 import {
 	FullscreenOverlay,
 	fullscreenOverlayOptions,
@@ -7,7 +7,7 @@ import {
 	PtyProcess,
 	type SidePanelSession,
 	type SidePanelTab,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import {
 	createSideChatCommand,
 	prepareSideChatSession,

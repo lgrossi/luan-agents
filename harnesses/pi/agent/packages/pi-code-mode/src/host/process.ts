@@ -4,13 +4,13 @@ const MAX_FRAME_BYTES = 64 * 1024 * 1024;
 const MAX_QUEUED_WRITE_BYTES = 128 * 1024 * 1024;
 
 type HostProcessOptions = {
-	binary: string;
+	binary: () => Promise<string>;
 	onMessage: (message: unknown) => void;
 	onFailure: (error: Error) => void;
 };
 
 export class CodeModeHostProcess {
-	private readonly binary: string;
+	private readonly binary: () => Promise<string>;
 	private readonly onMessage: (message: unknown) => void;
 	private readonly onFailure: (error: Error) => void;
 	private child: ChildProcessWithoutNullStreams | undefined;
@@ -28,8 +28,8 @@ export class CodeModeHostProcess {
 		return this.child !== undefined;
 	}
 
-	start(): void {
-		const child = spawn(this.binary, [], {
+	async start(): Promise<void> {
+		const child = spawn(await this.binary(), [], {
 			stdio: ["pipe", "pipe", "pipe"],
 			shell: false,
 		});

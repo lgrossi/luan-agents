@@ -101,10 +101,32 @@ The root library surface keeps these implementation boundaries:
 | Editor protocol and presentation | `src/editor/protocol.ts`, `src/editor/presentation.ts`, `src/editor/chrome.ts`, `src/editor/composition.ts`, and `src/editor/layout.ts` (re-exported by `src/editor.ts`) |
 | Syntax highlighting | `src/syntax.ts` |
 | Shared native PTY lifecycle | `src/terminal/bridge-client.ts`, `src/terminal/pty-host.ts`, and `src/terminal/pty-pane.ts` |
+| Native binary discovery and first-use builds | `src/native-binary.ts` |
 
 The extension host keeps the shared PTY host alive across an extension reload
 so feature-owned process leases can reattach without losing terminal state. A
 session switch or quit shuts the host down.
+
+### Native binaries
+
+Feature packages shell out to Rust binaries from this repository's `crates/`
+(`terminal_bridge`, `code-mode-host`, `apply_patch`, `view_image`, `web_run`).
+`ensureNativeBinary(binary, hooks?)` resolves one for the running process:
+
+1. the binary's override env var (for example `PI_TERMINAL_BRIDGE_BINARY`),
+   which must name an executable file;
+2. `<agentDir>/native/<crate>/v<version>/bin/<name>`, built on first use with
+   `cargo install --git … --rev v<version> --root …` when absent, where
+   `<version>` is this package's version;
+3. `target/{release,debug}/<name>` when the package runs from a checkout of this
+   repository. A checkout without a built binary is reported, not built.
+
+A Rust toolchain is the only requirement for consumers. Builds are keyed by
+crate and revision, so every installed `pi-libtui` copy shares them, and
+concurrent requests in one process share one build. Pass `onBuild` to surface
+the delay in the UI. Publishing a version requires a matching `v<version>` git
+tag; cross-process build deduplication is a deliberate limit until concurrent
+first-use builds are observed.
 
 These are implementation paths, not additional package exports. Consumers keep
 using the documented package root and subpaths so the public API remains stable.

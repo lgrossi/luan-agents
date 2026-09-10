@@ -1,6 +1,6 @@
 import type { Component } from "@earendil-works/pi-tui";
-import { ComponentStack, icon, type tuiTheme } from "pi-libtui";
-import { LiveToolAction, type ToolActionView, ToolTranscript } from "pi-libtui/tool";
+import { ComponentStack, icon, type tuiTheme } from "@luan-pi/pi-libtui";
+import { LiveToolAction, type ToolActionView, ToolTranscript } from "@luan-pi/pi-libtui/tool";
 import type { FollowupTaskDetails } from "../tools/followup-task/result.ts";
 import type { InterruptAgentDetails } from "../tools/interrupt-agent/result.ts";
 import type { ListAgentsDetails } from "../tools/list-agents/result.ts";

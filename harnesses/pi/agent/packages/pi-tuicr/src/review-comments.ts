@@ -1,7 +1,12 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { findScreenTextRect, type HoverDetailCardMount, mountHoverDetailCard, renderEditorTokenPills } from "pi-libtui";
-import type { EditorRegistry } from "pi-libtui/editor";
-import type { MouseRegistry } from "pi-libtui/mouse";
+import {
+	findScreenTextRect,
+	type HoverDetailCardMount,
+	mountHoverDetailCard,
+	renderEditorTokenPills,
+} from "@luan-pi/pi-libtui";
+import type { EditorRegistry } from "@luan-pi/pi-libtui/editor";
+import type { MouseRegistry } from "@luan-pi/pi-libtui/mouse";
 import { formatTuicrComments, type TuicrComment } from "./tuicr-review.ts";
 
 const REVIEW_COMMENTS_TOKEN = String.fromCodePoint(0x100001);

@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerCodeModeFunctionTool } from "pi-code-mode/sdk";
+import { registerCodeModeFunctionTool } from "@luan-pi/pi-code-mode/sdk";
 import registerNativeCompaction from "./compaction/index.ts";
 import registerContextWindow from "./context-window.ts";
 import { registerCodexNativeXSettings } from "./contributions/xsettings.ts";

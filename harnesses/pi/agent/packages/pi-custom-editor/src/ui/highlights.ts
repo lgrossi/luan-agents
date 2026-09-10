@@ -1,6 +1,12 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, truncateToWidth } from "@earendil-works/pi-tui";
-import { backgroundAnsiAtColumn, contrastingPillBackground, markdownCodeRanges, renderPill, tuiTheme } from "pi-libtui";
+import {
+	backgroundAnsiAtColumn,
+	contrastingPillBackground,
+	markdownCodeRanges,
+	renderPill,
+	tuiTheme,
+} from "@luan-pi/pi-libtui";
 import { collectHighlightMatches } from "../core/highlights.ts";
 import {
 	type EditorHighlightMatch,

@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { tuiTheme } from "pi-libtui";
+import { tuiTheme } from "@luan-pi/pi-libtui";
 import type { CacheDiagnosticsMode } from "../contributions/xsettings.ts";
 import type {
 	CodexDiagnosticsEvent,

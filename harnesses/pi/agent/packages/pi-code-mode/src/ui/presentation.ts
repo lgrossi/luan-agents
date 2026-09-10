@@ -1,8 +1,8 @@
 import type { AgentToolResult, Theme, ToolRenderResultOptions } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth } from "@earendil-works/pi-tui";
-import { ComponentStack, icon, SyntaxText, sanitizeTuiField, TabBar, tuiTheme } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
-import { ToolActivity, type ToolTranscriptStatus } from "pi-libtui/tool";
+import { ComponentStack, icon, SyntaxText, sanitizeTuiField, TabBar, tuiTheme } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+import { ToolActivity, type ToolTranscriptStatus } from "@luan-pi/pi-libtui/tool";
 import { getNestedToolAdapterRegistry, type NestedToolPresentationComponent } from "../protocol/nested-tools.ts";
 import type { CodeModeToolDetails, NestedToolTrace } from "../protocol/types.ts";
 

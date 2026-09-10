@@ -7,9 +7,9 @@ import {
 	type ModalOverlayMouseEvent,
 	mountModalOverlay,
 	placeAnchoredOverlay,
-} from "pi-libtui";
-import type { MouseRegistry } from "pi-libtui/mouse";
-import type { SelectionPoint } from "pi-libtui/selection";
+} from "@luan-pi/pi-libtui";
+import type { MouseRegistry } from "@luan-pi/pi-libtui/mouse";
+import type { SelectionPoint } from "@luan-pi/pi-libtui/selection";
 
 export type CommentOverlayResult = { action: "save"; text: string } | { action: "delete" };
 export type ReactionOverlayResult = { action: "save"; text: string };

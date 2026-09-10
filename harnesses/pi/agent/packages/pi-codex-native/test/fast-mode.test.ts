@@ -2,7 +2,7 @@ import { afterEach, expect, test } from "bun:test";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import registerFastMode from "../src/fast-mode.ts";
 import { DEFAULT_CODEX_NATIVE_SETTINGS } from "../src/contributions/xsettings.ts";
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
 
 const REGISTRY_KEY = Symbol.for("pi-libactions/registry/v1");
 

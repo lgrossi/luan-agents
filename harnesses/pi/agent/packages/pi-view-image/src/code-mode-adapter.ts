@@ -1,5 +1,5 @@
 import type { AgentToolResult } from "@earendil-works/pi-coding-agent";
-import { type CodeModeToolDetails, registerCodeModeFunctionTool } from "pi-code-mode/sdk";
+import { type CodeModeToolDetails, registerCodeModeFunctionTool } from "@luan-pi/pi-code-mode/sdk";
 import type { createViewImageTool } from "./tools/view-image/definition.ts";
 import type { ViewImageContent } from "./tools/view-image/result.ts";
 

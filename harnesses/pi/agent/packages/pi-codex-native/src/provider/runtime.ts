@@ -8,7 +8,7 @@ import type {
 	SimpleStreamOptions,
 } from "@earendil-works/pi-ai";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { listCodeModeToolNames } from "pi-code-mode/sdk";
+import { listCodeModeToolNames } from "@luan-pi/pi-code-mode/sdk";
 import { createGrammarToolInputProperties } from "../constrained-sampling.ts";
 import { buildRequestBody } from "./request-body.ts";
 import { normalizeResponsesToolHistory } from "../responses/tool-history.ts";

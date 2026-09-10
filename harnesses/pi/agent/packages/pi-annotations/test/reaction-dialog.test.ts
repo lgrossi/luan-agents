@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import type { KeybindingsManager, TUI } from "@earendil-works/pi-tui";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
-import { type ModalOverlayMouseEvent, tuiTheme } from "pi-libtui";
+import { type ModalOverlayMouseEvent, tuiTheme } from "@luan-pi/pi-libtui";
 import { ReactionDialog, type ReactionOverlayResult } from "../src/ui/composer-overlays.ts";
 
 // type-boundary: the component test supplies only Theme methods used by the shared panel and button bar.

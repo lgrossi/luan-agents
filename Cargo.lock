@@ -719,22 +719,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "exec-command"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "base64",
- "pretty_assertions",
- "proptest",
- "proptest-derive",
- "pty-process",
- "rstest",
- "rustix 1.1.4",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "fastrand"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2617,6 +2601,22 @@ dependencies = [
  "timezone_provider",
  "tinystr",
  "writeable",
+]
+
+[[package]]
+name = "terminal-bridge"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64",
+ "pretty_assertions",
+ "proptest",
+ "proptest-derive",
+ "pty-process",
+ "rstest",
+ "rustix 1.1.4",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

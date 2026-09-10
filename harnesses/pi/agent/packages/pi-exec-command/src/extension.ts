@@ -5,8 +5,11 @@ import {
 	getAgentDir,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
-import { registerSidePanelProvider, type ActivityAnimationOverrides } from "pi-libtui";
-import { resolveExecCommandBinary } from "./binary.ts";
+import {
+	registerSidePanelProvider,
+	type ActivityAnimationOverrides,
+	terminalBridgeBinaryPath,
+} from "@luan-pi/pi-libtui";
 import { registerCodeModeExecAdapters } from "./code-mode-adapters.ts";
 import { openRegisteredProcessHub, registerProcessHubHost, retainProcessHubAction } from "./contributions/actions.ts";
 import {
@@ -73,7 +76,7 @@ export default function execCommandExtension(pi: ExtensionAPI): void {
 	const runtime = createExecRuntime(() =>
 		createExecSessionManager(
 			{
-				binaryPath: resolveExecCommandBinary,
+				binaryPath: terminalBridgeBinaryPath,
 				defaultExecYieldTimeMs: settings.defaultExecYieldMs,
 				defaultMaxOutputTokens: settings.defaultOutputTokens,
 				defaultLoginShell: settings.defaultLoginShell,

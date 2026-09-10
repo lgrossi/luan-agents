@@ -1,32 +1,153 @@
 # pi-tuicr
 
-`pi-tuicr` owns the review workflow. The `side-panel.tuicr.open` action opens a
-review target picker. With `pi-side-panel` installed, reviews appear as ``
-tabs and the active target remains a right-aligned dropdown on the tab row.
-Without the host, the picker and the same full tuicr TUI open as overlays.
+`pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action opens a
+picker of git review targets, launches `tuicr` in an embedded PTY, and watches
+tuicr's session files for review comments. Comments written in tuicr appear in
+Pi's editor as a single attachment pill and expand into a formatted request
+when the prompt is submitted.
 
-Review comments are watched from tuicr's session files rather than polled. They
-appear live in Pi's editor as one ` N review comments` attachment. Its hover
-detail uses the same reusable `pi-libtui` detail-card component as annotations.
-The package passes the resolved light or dark appearance to tuicr so embedded
-truecolor rendering does not rely on a terminal background query.
+It is a Pi extension, not a model-facing tool. It registers no tools and adds
+no settings.
 
-`ctrl+shift+g` is configured in the managed `keybindings.json`, not this
-extension. `tuicr` must be available on `PATH`.
+## Install
 
-## Architecture
+```sh
+pi install npm:@luan-pi/pi-tuicr
+```
+
+From a checkout of this repository:
+
+```sh
+pi install ./harnesses/pi/agent/packages/pi-tuicr
+```
+
+The package bundles its `pi-libactions` and `pi-libtui` dependencies and also
+loads the `pi-libtui` extension entry, which provides the side-panel, editor,
+and mouse registries it uses.
+
+### External requirements
+
+- `tuicr` must be on `PATH`. The extension checks `tuicr --version` before
+  listing targets and reports "Could not start tuicr — is it on your PATH?" if
+  that fails.
+- The embedded terminal is `PtyPane` from `pi-libtui`, which needs the
+  native `terminal_bridge` binary. It builds itself on first use with `cargo`,
+  so a Rust toolchain (<https://rustup.rs>) is required; or point
+  `PI_TERMINAL_BRIDGE_BINARY` at an existing build.
+- `git` is used to discover a base branch for the branch-comparison targets.
+
+## Use it
+
+The extension registers one action, `side-panel.tuicr.open` ("Review changes
+with tuicr"). Running it lists review targets for the current working
+directory:
+
+| Target | tuicr arguments |
+| --- | --- |
+| Uncommitted changes | `-w` |
+| Branch vs `<base>` (+ uncommitted) | `-r <base>..HEAD -w` |
+| Branch vs `<base>` | `-r <base>..HEAD` |
+| Last commit | `-r HEAD~1..HEAD` |
+| Pick commits | none (tuicr's own picker) |
+| Every tracked file | `-A` |
+| Custom revset… | prompts for a revset, then `-r <revset>` |
+| Pull request… | prompts for a number, `owner/repo#N`, or URL, then `pr <target>` |
+
+The two branch targets appear only when a base branch is found. The base is the
+first of `origin/HEAD`'s target, `origin/main`, `origin/master`, `main`, or
+`master` that exists and is not the current branch.
+
+`tuicr` is launched with `--appearance dark` or `--appearance light`, resolved
+from Pi's active theme, so embedded truecolor rendering does not depend on a
+terminal background query.
+
+### With a side-panel host
+
+When a `pi-libtui` side-panel host is attached, each review is a tab labelled
+"Review" (or "Review N" once there is more than one). The tab's header action
+shows the current target label and reruns `side-panel.tuicr.open`; on an
+active review tab that reopens the target picker as a floating overlay over
+the running tuicr pane. Picking the same target again closes the picker;
+picking a different one restarts tuicr for that target. Cancelling the picker
+on a tab that has no target yet closes the tab. The tab closes itself when
+tuicr exits. The panel's empty state also gets a "Review" entry that runs the
+same action.
+
+### Without a side-panel host
+
+The target list appears in Pi's standard select prompt and tuicr opens in a
+fullscreen overlay titled "Review". Closing the overlay or quitting tuicr ends
+the review.
+
+### Review comments
+
+Before launching, the extension records the ids of comments that already exist
+in tuicr sessions for this repository (via `tuicr review list --all` and
+`tuicr review comments --session <path>`). It then watches tuicr's session
+directories with `fs.watch` and re-reads changed `.json` files, debounced by
+25 ms, rather than polling the CLI. Only sessions whose `repo_path` matches
+Pi's working directory are considered; review-level, file-level, and
+line-level comments are all collected, and comments with empty content are
+ignored.
+
+New comments are published into Pi's editor as one "N review comments" pill
+backed by a private token appended to the editor text. Hovering the pill shows
+a detail card listing each comment with its type and `path:line` anchor. When
+the prompt is submitted, the token is replaced with:
+
+```
+I reviewed your changes. Please address these comments:
+
+1. `src/one.ts:4` - Updated first issue
+2. `src/two.ts` [SUGGESTION] - Second issue
+```
+
+The comment set clears once Pi confirms that user message started. Disposing
+the extension (session end or reload) removes the token from the editor
+without submitting anything. Comments still present when a review closes are
+published as well, so nothing written in tuicr is lost when it exits.
+
+Session directories are discovered from `tuicr review list --all` and fall
+back to tuicr's platform default: `~/Library/Application Support/tuicr/reviews/sessions`
+on macOS, `%LOCALAPPDATA%\tuicr\reviews\sessions` on Windows, and
+`$XDG_DATA_HOME/tuicr/reviews/sessions` (default `~/.local/share/...`) elsewhere.
+
+## Keybindings
+
+The package registers `side-panel.tuicr.open` through `pi-libactions` and does
+not choose a shortcut. Bind it in the managed `keybindings.json` (this
+repository's is `harnesses/pi/agent/keybindings.json`). `/reload` picks up
+keybinding changes.
+
+## Settings
+
+None. The package does not read `pi-xsettings` or any configuration file.
+
+## Library API
+
+`src/index.ts` exports `TuicrManager`, `ReviewCommentAttachments`, and the
+contents of `src/tuicr-review.ts` (`createTuicrRuntime`, `listTuicrTargets`,
+`prepareTuicrReview`, `createTuicrCommentFeed`, `formatTuicrComments`, and
+their types). Importing it does not start the extension.
+
+## Layout
 
 | Concern | Owner |
 | --- | --- |
-| Git target discovery, process launch, comments watcher | `src/tuicr-review.ts` |
-| PTY lifecycle, panel contribution, overlay fallback | `src/manager.ts` |
-| Editor attachment and shared hover detail | `src/review-comments.ts` |
-| Action and optional provider registration | `src/extension.ts` |
+| Pi hooks, action and side-panel provider registration, runtime wiring | `src/extension.ts` |
+| Review tabs, target picker, PTY lifecycle, overlay fallback | `src/manager.ts` |
+| Target list, base-branch discovery, tuicr JSON parsing, session-file watcher, comment formatting | `src/tuicr-review.ts` |
+| Editor pill, hover detail card, submit-time expansion | `src/review-comments.ts` |
+| Public exports | `src/index.ts` |
 
-## Validate
+## Develop
 
 ```sh
-bun run --cwd harnesses/pi/agent/packages/pi-tuicr typecheck
-bun test harnesses/pi/agent/packages/pi-tuicr/test
-just pi-install-check harnesses/pi/agent/packages/pi-tuicr
+cd harnesses/pi/agent/packages/pi-tuicr
+bun run typecheck
+bun test test
 ```
+
+Tests cover target discovery when tuicr is missing, the session-file comment
+feed, the editor attachment, and overlay suppression after dispose. They use
+injected runtimes and do not run `tuicr` or `git`.

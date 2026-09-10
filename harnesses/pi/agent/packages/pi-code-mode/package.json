@@ -1,7 +1,12 @@
 {
-  "name": "pi-code-mode",
-  "private": true,
+  "name": "@luan-pi/pi-code-mode",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luan/agents.git",
+    "directory": "harnesses/pi/agent/packages/pi-code-mode"
+  },
   "description": "Restricted JavaScript tool composition for Pi",
   "type": "module",
   "keywords": ["pi-package"],
@@ -10,7 +15,7 @@
     "./sdk": "./src/sdk.ts"
   },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/pi-libtui/src/extension.ts"]
+    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
@@ -18,10 +23,10 @@
     "typebox": "*"
   },
   "dependencies": {
-    "pi-libtui": "workspace:*",
-    "pi-xsettings": "workspace:*"
+    "@luan-pi/pi-libtui": "workspace:*",
+    "@luan-pi/pi-xsettings": "workspace:*"
   },
-  "bundledDependencies": ["pi-libtui", "pi-xsettings"],
+  "bundledDependencies": ["@luan-pi/pi-libtui", "@luan-pi/pi-xsettings"],
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.84.2",
     "@earendil-works/pi-tui": "0.84.2",

@@ -1,5 +1,5 @@
 import type { AgentToolResult, Theme, ToolRenderResultOptions } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, icon } from "pi-libtui";
+import { ComponentStack, icon } from "@luan-pi/pi-libtui";
 import {
 	createUnifiedDiffModel,
 	parseUnifiedDiff,
@@ -7,8 +7,13 @@ import {
 	type UnifiedDiffHunkInput,
 	type UnifiedDiffModel,
 	type UnifiedDiffRowInput,
-} from "pi-libtui/diff";
-import { settleToolCallPreview, ToolActivity, type ToolTranscriptStatus, toolCallPreview } from "pi-libtui/tool";
+} from "@luan-pi/pi-libtui/diff";
+import {
+	settleToolCallPreview,
+	ToolActivity,
+	type ToolTranscriptStatus,
+	toolCallPreview,
+} from "@luan-pi/pi-libtui/tool";
 import { parsePatchActions } from "../../patch.ts";
 import type { ParsedPatchAction } from "../../types.ts";
 import type { ApplyPatchToolDetails } from "./result.ts";

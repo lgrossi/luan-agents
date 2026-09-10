@@ -1,7 +1,7 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { compositeTuiLine, sliceByColumn, visibleWidth } from "@earendil-works/pi-tui";
-import { backgroundAnsiAtColumn, PointerInteractionController } from "pi-libtui";
-import type { MouseRect, TuiMouseEvent, ViewportRect } from "pi-libtui/mouse";
+import { backgroundAnsiAtColumn, PointerInteractionController } from "@luan-pi/pi-libtui";
+import type { MouseRect, TuiMouseEvent, ViewportRect } from "@luan-pi/pi-libtui/mouse";
 import { plainPill, responsePillContent } from "../core/pills.ts";
 import type { ResolvedAnnotationLink } from "../core/presentation.ts";
 import { findAnnotationPointMarkers, replaceAnnotationMarker, stripAnnotationMarker } from "./annotation-markers.ts";

@@ -8,7 +8,7 @@ import {
 	SessionManager,
 	sessionEntryToContextMessages,
 } from "@earendil-works/pi-coding-agent";
-import { createTuiThemeVariation } from "pi-libtui";
+import { createTuiThemeVariation } from "@luan-pi/pi-libtui";
 import type { SideChatStateTab } from "./state.ts";
 
 export const SIDE_CONVERSATION_BOUNDARY = `Side conversation boundary.

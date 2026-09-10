@@ -1,4 +1,4 @@
-import type { TuiForegroundColor, TuiIconName } from "pi-libtui";
+import type { TuiForegroundColor, TuiIconName } from "@luan-pi/pi-libtui";
 
 export const EDITOR_HIGHLIGHT_PROTOCOL = "pi-custom-editor/highlights/v1" as const;
 export const EDITOR_HIGHLIGHT_REGISTRY_KEY = Symbol.for(EDITOR_HIGHLIGHT_PROTOCOL);

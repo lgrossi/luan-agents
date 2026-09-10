@@ -19,7 +19,7 @@ import {
 	type SelectableListRenderContext,
 	SemanticInput,
 	tuiTheme,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import type { TSchema } from "typebox";
 import { checkSchema } from "../config/schema.ts";
 import type { ListDefinition, ListItemField, SettingOption, SettingValue } from "../protocol/settings.ts";

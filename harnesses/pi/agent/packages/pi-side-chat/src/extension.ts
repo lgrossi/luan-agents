@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
-import { ensureSidePanelRegistry, registerSidePanelProvider } from "pi-libtui";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
+import { ensureSidePanelRegistry, registerSidePanelProvider } from "@luan-pi/pi-libtui";
 import { SideChatManager } from "./manager.ts";
 import { claimSideChatProcesses } from "./process-registry.ts";
 import { createSideChatRuntime, writeSideChatSession } from "./session.ts";

@@ -1,9 +1,9 @@
 import { afterEach, expect, test } from "bun:test";
 import { AssistantMessageComponent, initTheme, ToolExecutionComponent } from "@earendil-works/pi-coding-agent";
 import { Container, ProcessTerminal, Text, TuiAltScreen, visibleWidth } from "@earendil-works/pi-tui";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, sharedMotionScheduler } from "pi-libtui";
-import { mountTranscriptProjection, type TranscriptEntry } from "pi-libtui/tool";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, sharedMotionScheduler } from "@luan-pi/pi-libtui";
+import { mountTranscriptProjection, type TranscriptEntry } from "@luan-pi/pi-libtui/tool";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import { theme } from "../node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/theme/theme.js";
 import { ActivityTranscript, activitySummary } from "../src/activity-transcript.ts";
 

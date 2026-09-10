@@ -170,7 +170,7 @@ such as package loading, trust, telemetry, provider, and model configuration in
 Feature packages should import the UI-free SDK, not the host extension:
 
 ```ts
-import { createSettings } from "pi-xsettings/sdk";
+import { createSettings } from "@luan-pi/pi-xsettings/sdk";
 
 const settings = createSettings({
   namespace: "pi-example",

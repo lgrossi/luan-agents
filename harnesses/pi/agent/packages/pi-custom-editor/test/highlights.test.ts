@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { CURSOR_MARKER, stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { tuiTheme } from "pi-libtui";
+import { tuiTheme } from "@luan-pi/pi-libtui";
 import { defaultHighlightContributions } from "../src/contributions/default-highlights.ts";
 import { fileIcon } from "../src/core/file-icons.ts";
 import { atReferenceMatches, collectHighlightMatches, slashCommandMatch } from "../src/core/highlights.ts";

@@ -1,6 +1,6 @@
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import type { KeyId, TUI } from "@earendil-works/pi-tui";
-import type { DialogHost } from "pi-libtui";
+import type { DialogHost } from "@luan-pi/pi-libtui";
 import { configuredPiValues, piSettingDefinitions, syncPiSettingsJson } from "../config/pi-settings.ts";
 import { setPath, type SettingsRecord, type XSettingsStore } from "../config/store.ts";
 import type { SettingRegistration, SettingValue, XSettingsRegistry } from "../protocol/settings.ts";

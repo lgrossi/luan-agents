@@ -13,7 +13,7 @@ export class CodeModeRuntime {
 	constructor(private readonly pi: Pick<ExtensionAPI, "getAllTools">) {}
 
 	getClient(): CodeModeHostClient {
-		this.client ??= new CodeModeHostClient({ binary: resolveCodeModeHostBinary() });
+		this.client ??= new CodeModeHostClient({ binary: resolveCodeModeHostBinary });
 		return this.client;
 	}
 

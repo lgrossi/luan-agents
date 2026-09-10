@@ -31,6 +31,31 @@ test:
 pi-test:
     bun run --cwd "{{ repo }}" test:pi
 
+# Build a publishable npm tarball for one Pi package. Workspace deps are bundled from sibling packages.
+pi-pack package dest="target/npm":
+    @stage="$(mktemp -d)"; \
+    trap 'rm -rf "$stage"' EXIT; \
+    package_path="$(cd "$(dirname "{{ package }}")" && pwd)/$(basename "{{ package }}")"; \
+    package_tree="{{ repo }}/harnesses/pi/agent/packages"; \
+    case "$package_path" in "$package_tree"/*) ;; *) echo "package must be under $package_tree" >&2; exit 1;; esac; \
+    if test "$(dirname "$package_path")" != "$package_tree" || test ! -d "$package_path" || test ! -f "$package_path/package.json"; then echo "package must be a direct package directory with package.json under $package_tree" >&2; exit 1; fi; \
+    package_name="$(basename "$package_path")"; \
+    dest="$(mkdir -p "{{ dest }}" && cd "{{ dest }}" && pwd)"; \
+    mkdir -p "$stage/packages"; \
+    tar -C "$package_tree" --exclude='*/node_modules' --exclude='node_modules' -cf - . | tar -C "$stage/packages" -xf -; \
+    bun -e 'import { existsSync, readdirSync } from "node:fs"; import { basename, resolve } from "node:path"; const tree=process.argv[1]; for(const directory of readdirSync(tree)){ const path=resolve(tree,directory,"package.json"); if(!existsSync(path)) continue; const manifest=await Bun.file(path).json(); let changed=false; for(const [name,specification] of Object.entries(manifest.dependencies ?? {})){ if(typeof specification !== "string" || !specification.startsWith("workspace:")) continue; const sibling=basename(name); if(!existsSync(resolve(tree,sibling,"package.json"))) throw new Error("workspace dependency has no package directory: " + name); manifest.dependencies[name]="file:../" + sibling; changed=true; } if(changed) await Bun.write(path,JSON.stringify(manifest,null,2) + "\n"); }' "$stage/packages"; \
+    cd "$stage/packages/$package_name"; \
+    npm install --ignore-scripts --package-lock=false --install-links --omit=dev --no-audit --no-fund >/dev/null; \
+    npm pack --ignore-scripts --json --pack-destination "$dest" | bun -e 'const [entry]=await Bun.stdin.json(); console.log(process.argv[1] + "/" + entry.filename);' "$dest"
+
+# Pack one Pi package and publish it to npm. Requires the git tag for its version so first-use native builds resolve.
+pi-publish package:
+    @version="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log(m.version);' "{{ package }}")"; \
+    if ! git -C "{{ repo }}" rev-parse -q --verify "refs/tags/v$version" >/dev/null; then echo "missing git tag v$version; tag and push it before publishing" >&2; exit 1; fi; \
+    archive="$(just repo="{{ repo }}" pi-pack "{{ package }}")"; \
+    npm publish --access public "$archive"
+
+# Pack one Pi package, then install and load it from a temporary agent directory.
 pi-install-check package:
     @check_root="$(mktemp -d)"; \
     trap 'rm -rf "$check_root"' EXIT; \
@@ -40,19 +65,8 @@ pi-install-check package:
     live_settings_kind=missing; \
     if test -L "$live_settings"; then live_settings_kind=symlink; elif test -e "$live_settings"; then live_settings_kind=file; fi; \
     live_settings_state="$live_settings_kind:$live_settings_target:$live_settings_checksum"; \
-    package_path="$(cd "$(dirname "{{ package }}")" && pwd)/$(basename "{{ package }}")"; \
-    package_tree="{{ repo }}/harnesses/pi/agent/packages"; \
-    case "$package_path" in "$package_tree"/*) ;; *) echo "package must be under $package_tree" >&2; exit 1;; esac; \
-    if test "$(dirname "$package_path")" != "$package_tree" || test ! -d "$package_path" || test ! -f "$package_path/package.json"; then echo "package must be a direct package directory with package.json under $package_tree" >&2; exit 1; fi; \
-    package_name="$(basename "$package_path")"; \
-    mkdir -p "$check_root/packages" "$check_root/unpacked"; \
-    tar -C "$package_tree" --exclude='*/node_modules' --exclude='node_modules' -cf - . | tar -C "$check_root/packages" -xf -; \
-    bun -e 'import { existsSync, readdirSync } from "node:fs"; import { resolve } from "node:path"; const tree=process.argv[1]; for(const directory of readdirSync(tree)){ const path=resolve(tree,directory,"package.json"); if(!existsSync(path)) continue; const manifest=await Bun.file(path).json(); let changed=false; for(const [name,specification] of Object.entries(manifest.dependencies ?? {})){ if(typeof specification !== "string" || !specification.startsWith("workspace:")) continue; if(!existsSync(resolve(tree,name,"package.json"))) throw new Error(`workspace dependency has no package directory: ${name}`); manifest.dependencies[name]=`file:../${name}`; changed=true; } if(changed) await Bun.write(path,`${JSON.stringify(manifest,null,2)}\n`); }' "$check_root/packages"; \
-    cd "$check_root/packages/$package_name"; \
-    npm install --ignore-scripts --package-lock=false --install-links --omit=dev --no-audit --no-fund; \
-    npm pack --ignore-scripts --json --pack-destination "$check_root" > "$check_root/pack.json"; \
-    archive="$(find "$check_root" -maxdepth 1 -name '*.tgz' -print -quit)"; \
-    test -n "$archive"; \
+    archive="$(just repo="{{ repo }}" pi-pack "{{ package }}" "$check_root")"; \
+    mkdir -p "$check_root/unpacked"; \
     tar -xzf "$archive" -C "$check_root/unpacked"; \
     packaged="$check_root/unpacked/package"; \
     mkdir -p "$check_root/external"; \

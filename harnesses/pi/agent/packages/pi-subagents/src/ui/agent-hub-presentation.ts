@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { SidePanelSession, SidePanelTab } from "pi-libtui";
+import type { SidePanelSession, SidePanelTab } from "@luan-pi/pi-libtui";
 import type { AgentPresentationResolverLookup } from "../protocol/presentation.ts";
 import { AgentHub, type AgentHubSnapshotSource, openAgentHub } from "./agent-browser.ts";
 

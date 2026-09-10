@@ -1,5 +1,5 @@
-import type { TuiForegroundColor } from "pi-libtui";
-import type { EditorCompositionPreview } from "pi-libtui/editor";
+import type { TuiForegroundColor } from "@luan-pi/pi-libtui";
+import type { EditorCompositionPreview } from "@luan-pi/pi-libtui/editor";
 import type { TSchema } from "typebox";
 
 export const XSETTINGS_REGISTRY_KEY = Symbol.for("pi-xsettings/registry/v1");

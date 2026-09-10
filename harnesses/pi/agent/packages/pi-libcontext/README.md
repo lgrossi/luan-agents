@@ -29,7 +29,7 @@ import {
   requestedContextWindowPreset,
   ensureContextWindowSourceRegistry,
   type ContextWindowPreset,
-} from "pi-libcontext/sdk";
+} from "@luan-pi/pi-libcontext/sdk";
 ```
 
 The package has no runtime dependencies. Its only peer dependency is Pi's
@@ -78,7 +78,7 @@ A source has an ID and a function that derives a preset for the current Pi
 context:
 
 ```ts
-import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "pi-libcontext/sdk";
+import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "@luan-pi/pi-libcontext/sdk";
 
 const unregister = ensureContextWindowSourceRegistry().register({
   id: "example",

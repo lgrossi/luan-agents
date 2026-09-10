@@ -1,12 +1,12 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { visibleWidth } from "@earendil-works/pi-tui";
-import type { SelectionActionRequest } from "pi-libtui/selection";
+import type { SelectionActionRequest } from "@luan-pi/pi-libtui/selection";
 import type { AnnotationSelection, DraftAnnotation, ResponseAnnotation } from "../core/types.ts";
 import { removeTokenAtom, tokenInsertion, type AnnotationStore } from "../core/store.ts";
 import { getReactions } from "../config/settings.ts";
 import { showCommentOverlay, showReactionOverlay } from "../ui/composer-overlays.ts";
-import type { MouseRegistry } from "pi-libtui/mouse";
-import type { SelectionPoint } from "pi-libtui/selection";
+import type { MouseRegistry } from "@luan-pi/pi-libtui/mouse";
+import type { SelectionPoint } from "@luan-pi/pi-libtui/selection";
 
 // type-boundary: Pi session entries contain provider AgentMessage variants; these guards narrow only text-bearing fields.
 type PiMessageBoundary = unknown;

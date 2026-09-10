@@ -1,4 +1,4 @@
-import { tuiTheme } from "pi-libtui";
+import { tuiTheme } from "@luan-pi/pi-libtui";
 
 declare const theme: Parameters<typeof tuiTheme>[0];
 const colors = tuiTheme(theme);

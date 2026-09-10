@@ -85,7 +85,7 @@ The package export surface is intentionally pure and does not start Pi:
 For example:
 
 ```ts
-import { parseEnvelope, projectEnvelope } from "pi-annotations";
+import { parseEnvelope, projectEnvelope } from "@luan-pi/pi-annotations";
 
 const parsed = parseEnvelope(messageText);
 const readable = parsed ? projectEnvelope(messageText) : messageText;

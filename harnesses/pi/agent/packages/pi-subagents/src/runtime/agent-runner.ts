@@ -17,7 +17,7 @@ import {
 	type SessionStartEvent,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
-import { listCodeModeToolNames } from "pi-code-mode/sdk";
+import { listCodeModeToolNames } from "@luan-pi/pi-code-mode/sdk";
 import { SUBAGENT_TASK_MESSAGE_TYPE } from "../core/fork-history.ts";
 import { primePromptEnvelope } from "../protocol/prompt-envelope.ts";
 import { buildAgentPrompt } from "../core/prompts.ts";

@@ -13,8 +13,8 @@ import {
 	type TuiTheme,
 	tuiTheme,
 	whenSyntaxReady,
-} from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+} from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import type { ExecProcessSnapshot } from "../session-manager.ts";
 import type { ProcessTerminalStore } from "./process-store.ts";
 

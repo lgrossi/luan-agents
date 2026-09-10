@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, test } from "bun:test";
 import type { AgentToolResult, Theme } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, icon, MarkdownText, whenSyntaxReady } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
-import { ToolActivity } from "pi-libtui/tool";
+import { ComponentStack, icon, MarkdownText, whenSyntaxReady } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+import { ToolActivity } from "@luan-pi/pi-libtui/tool";
 import {
 	type NestedToolPresentationComponent,
 	type NestedToolPresentationTrace,

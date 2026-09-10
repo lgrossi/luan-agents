@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { ensureActionsRegistry } from "pi-libactions/sdk";
-import type { SidePanelSession } from "pi-libtui";
+import { ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
+import type { SidePanelSession } from "@luan-pi/pi-libtui";
 import { registerSidePanelActions } from "../src/actions.ts";
 
 test("registers panel actions that invoke the panel", async () => {

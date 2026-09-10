@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { ExecBridgeClient } from "../src/bridge-client.ts";
+import type { TerminalBridgeClient } from "@luan-pi/pi-libtui";
 import {
 	createExecSessionManager,
 	type ExecProcessSnapshot,
@@ -51,7 +51,7 @@ class ManualRuntime implements ExecSessionRuntime {
 test("session output preserves UTF-8 characters split across bridge chunks", async () => {
 	let reads = 0;
 	const operations: unknown[] = [];
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			operations.push(request["op"]);
 			if (request["op"] === "exec") return { processId: "test" } as T;
@@ -89,7 +89,7 @@ test("session output preserves UTF-8 characters split across bridge chunks", asy
 
 test("drains a closed native backlog before completing the session", async () => {
 	let reads = 0;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -121,7 +121,7 @@ test("drains a closed native backlog before completing the session", async () =>
 });
 
 test("publishes output when a process finishes before the waiter subscribes", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -148,7 +148,7 @@ test("publishes output when a process finishes before the waiter subscribes", as
 });
 
 test("fails a session instead of accepting output after a sequence gap", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			return {
@@ -174,7 +174,7 @@ test("a throwing progress observer cannot own session cleanup", async () => {
 	let shutdown = false;
 	let reads = 0;
 	let updates = 0;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -205,7 +205,7 @@ test("a throwing progress observer cannot own session cleanup", async () => {
 });
 
 test("a completed session can be polled again", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -231,7 +231,7 @@ test("a completed session can be polled again", async () => {
 
 test("configured defaults control shell mode and returned output", async () => {
 	let execRequest: Record<string, unknown> | undefined;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") {
 				execRequest = request;
@@ -265,7 +265,7 @@ test("configured defaults control shell mode and returned output", async () => {
 
 test("manager replaces a fish environment shell before spawning", async () => {
 	let execRequest: Record<string, unknown> | undefined;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") {
 				execRequest = request;
@@ -289,7 +289,7 @@ test("manager replaces a fish environment shell before spawning", async () => {
 test("continuous output cannot extend execution past the hard wait limit", async () => {
 	const runtime = new ManualRuntime();
 	let sequence = 0;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			runtime.advance(25);
@@ -314,7 +314,7 @@ test("continuous output cannot extend execution past the hard wait limit", async
 });
 
 test("completed replay evicts the oldest session after its fixed bound", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: request["process_id"] } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -338,7 +338,7 @@ test("completed replay evicts the oldest session after its fixed bound", async (
 });
 
 test("failed process starts do not consume active session slots", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request(): Promise<never> {
 			throw new Error("spawn failed");
 		},
@@ -356,7 +356,7 @@ test("failed process starts do not consume active session slots", async () => {
 test("an abort racing process creation terminates the spawned command", async () => {
 	let releaseSpawn: (() => void) | undefined;
 	let terminated = 0;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") {
 				await new Promise<void>((resolve) => {
@@ -387,7 +387,7 @@ test("an abort racing process creation terminates the spawned command", async ()
 
 test("rejects a process after the active session limit", async () => {
 	let stopped = false;
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: request["process_id"] } as T;
 			if (request["op"] === "terminate") return { terminated: true } as T;
@@ -412,7 +412,7 @@ test("rejects a process after the active session limit", async () => {
 });
 
 test("shutdown rejects a pending execution instead of returning a phantom session", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: request["process_id"] } as T;
 			return await new Promise<T>(() => {});
@@ -429,7 +429,7 @@ test("shutdown rejects a pending execution instead of returning a phantom sessio
 test("write aborts without waiting for a blocked native stdin request", async () => {
 	const runtime = new ManualRuntime();
 	const writeGate = Promise.withResolvers<{ status: string }>();
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: "test" } as T;
 			if (request["op"] === "write") return writeGate.promise as Promise<T>;
@@ -452,7 +452,7 @@ test("write aborts without waiting for a blocked native stdin request", async ()
 });
 
 test("publishes bounded process snapshots and raw PTY data", async () => {
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			if (request["op"] === "exec") return { processId: request["process_id"] } as T;
 			if (request["op"] === "reap") return { removed: true } as T;
@@ -495,7 +495,7 @@ test("publishes bounded process snapshots and raw PTY data", async () => {
 test("routes process controls through the native process identity", async () => {
 	const runtime = new ManualRuntime();
 	const requests: Record<string, unknown>[] = [];
-	const bridge: ExecBridgeClient = {
+	const bridge: TerminalBridgeClient = {
 		async request<T>(request: Record<string, unknown>): Promise<T> {
 			requests.push(request);
 			if (request["op"] === "exec") return { processId: request["process_id"] } as T;

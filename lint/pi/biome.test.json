@@ -17,7 +17,7 @@
 					"importNames": ["Editor", "EditorTheme", "Input", "SelectList"],
 					"message": "Use the matching pi-libtui semantic input, editor, or selection component instead of Pi's raw component."
 				},
-				"pi-libtui": {
+				"@luan-pi/pi-libtui": {
 					"importNames": ["ToolActivity", "ToolTranscript", "toolCallPreview"],
 					"message": "Import tool presentation APIs from pi-libtui/tool."
 				}

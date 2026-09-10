@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ensureXSettingsRegistry } from "pi-xsettings";
+import { ensureXSettingsRegistry } from "@luan-pi/pi-xsettings";
 import { DEFAULT_EXEC_COMMAND_SETTINGS, registerExecCommandXSettings } from "../src/contributions/xsettings.ts";
 import { createExecRuntime } from "../src/extension.ts";
 import type { ExecSessionManager, UnifiedExecResult } from "../src/session-manager.ts";

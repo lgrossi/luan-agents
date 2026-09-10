@@ -8,7 +8,14 @@ import {
 	truncateToWidth,
 	visibleWidth,
 } from "@earendil-works/pi-tui";
-import { ComponentStack, DialogButtonBar, type DialogHost, SelectableList, SemanticInput, tuiTheme } from "pi-libtui";
+import {
+	ComponentStack,
+	DialogButtonBar,
+	type DialogHost,
+	SelectableList,
+	SemanticInput,
+	tuiTheme,
+} from "@luan-pi/pi-libtui";
 import { RenderLines } from "./fields.ts";
 
 class StringItemEditor extends ComponentStack {

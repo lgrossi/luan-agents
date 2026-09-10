@@ -72,9 +72,11 @@ seeds = []
         (package, source_dependency)
     }
 
+    /// `dependency` is the npm name; the sibling directory is its last path segment.
     fn local_package(&self, name: &str, dependency: &str) -> (PathBuf, PathBuf) {
         let package = self.repository.join("source/packages").join(name);
-        let source_dependency = self.repository.join("source/packages").join(dependency);
+        let directory = Path::new(dependency).file_name().expect("dependency name");
+        let source_dependency = self.repository.join("source/packages").join(directory);
         fs::create_dir_all(&package).expect("create package");
         fs::create_dir_all(&source_dependency).expect("create local dependency");
         fs::write(
@@ -199,13 +201,18 @@ fn managed_package_tree_excludes_development_surfaces_and_retires_old_links(
 }
 
 #[rstest]
-fn local_package_dependencies_link_to_live_sources(fixture: HarnessFixture) -> Result<()> {
+#[case("pi-shared")]
+#[case("@scope/pi-shared")]
+fn local_package_dependencies_link_to_live_sources(
+    fixture: HarnessFixture,
+    #[case] dependency_name: &str,
+) -> Result<()> {
     fixture.write_managed(&[], &["packages"]);
-    let (_package, dependency) = fixture.local_package("pi-example", "pi-shared");
+    let (_package, dependency) = fixture.local_package("pi-example", dependency_name);
     fs::write(dependency.join("new-file.ts"), "export const live = true;")?;
 
     run(Operation::Setup, &fixture.repository, &fixture.home)?;
-    let installed = fixture.target_dependency("pi-example", "pi-shared");
+    let installed = fixture.target_dependency("pi-example", dependency_name);
     assert_eq!(fs::read_link(&installed)?, fs::canonicalize(&dependency)?);
     ChildPath::new(installed.join("new-file.ts")).assert(predicate::path::exists());
     Ok(())

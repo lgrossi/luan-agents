@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import { dispatchEditorRender, ensureEditorRegistry } from "pi-libtui/editor";
-import type { OverlayMouseRegion, ScreenDecoratorRegistration } from "pi-libtui/mouse";
+import { dispatchEditorRender, ensureEditorRegistry } from "@luan-pi/pi-libtui/editor";
+import type { OverlayMouseRegion, ScreenDecoratorRegistration } from "@luan-pi/pi-libtui/mouse";
 import { ReviewCommentAttachments } from "../src/review-comments.ts";
 
 const theme = {

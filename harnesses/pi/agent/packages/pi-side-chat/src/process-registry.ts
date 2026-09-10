@@ -1,4 +1,4 @@
-import type { PtyProcess } from "pi-libtui";
+import type { PtyProcess } from "@luan-pi/pi-libtui";
 
 const PROCESS_REGISTRY_KEY = Symbol.for("pi-side-chat/process-registry/v1");
 

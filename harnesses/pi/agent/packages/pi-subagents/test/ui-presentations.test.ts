@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "pi-libtui";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "@luan-pi/pi-libtui";
 import {
 	formatAgentCost,
 	formatAgentDuration,

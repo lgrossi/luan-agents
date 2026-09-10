@@ -7,7 +7,7 @@ import {
 	icon,
 	sharedMotionScheduler,
 	whenSyntaxReady,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 import { DEFAULT_EXEC_COMMAND_SETTINGS } from "../src/contributions/xsettings.ts";
 import type { ExecProcessSnapshot } from "../src/session-manager.ts";
 import { createExecCommandTool } from "../src/tools/exec-command/definition.ts";

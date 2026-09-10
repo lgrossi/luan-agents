@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, icon } from "pi-libtui";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, icon } from "@luan-pi/pi-libtui";
 import toolSearchExtension from "../src/extension.ts";
 import { searchTools, type ToolMetadata } from "../src/search.ts";
 import { createToolSearchTool, TOOL_SEARCH_NAME } from "../src/tools/tool-search/definition.ts";

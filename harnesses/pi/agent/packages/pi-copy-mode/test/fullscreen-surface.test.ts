@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { TUI } from "@earendil-works/pi-tui";
-import { FULLSCREEN_LAYOUT_CAPABILITY_KEY } from "pi-libtui/mouse";
+import { FULLSCREEN_LAYOUT_CAPABILITY_KEY } from "@luan-pi/pi-libtui/mouse";
 import { validateFullscreenSurface } from "../src/runtime/fullscreen-surface.ts";
 import { ensureTestLayoutCapability, removeTestLayoutCapability } from "./layout-capability.ts";
 

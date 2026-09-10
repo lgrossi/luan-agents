@@ -75,9 +75,9 @@ test("does not expose provider request controls", () => {
 	expect(properties.sports.items.properties.league.enum).toContain("nba");
 });
 
-test("rejects an explicit non-executable binary", () => {
+test("rejects an explicit non-executable binary", async () => {
 	process.env["PI_CODEX_WEB_RUN_BIN"] = "/private/tmp/web-run-does-not-exist";
-	expect(() => resolveWebRunBinary()).toThrow("is not executable");
+	await expect(resolveWebRunBinary()).rejects.toThrow("is not executable");
 });
 
 test("executes the local Rust web runner against the configured endpoint", async () => {
@@ -95,7 +95,7 @@ test("executes the local Rust web runner against the configured endpoint", async
 		},
 	});
 	try {
-		process.env["PI_CODEX_WEB_RUN_BIN"] = resolveWebRunBinary();
+		process.env["PI_CODEX_WEB_RUN_BIN"] = await resolveWebRunBinary();
 		process.env["PI_CODEX_SEARCH_URL"] = `http://127.0.0.1:${server.port}/alpha/search`;
 		process.env["PI_CODEX_ACCESS_TOKEN"] = "test-token";
 		process.env["PI_CODEX_ACCOUNT_ID"] = "test-account";

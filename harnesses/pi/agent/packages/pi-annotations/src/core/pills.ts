@@ -1,4 +1,4 @@
-import { icon, type PillContent, renderPillText } from "pi-libtui";
+import { icon, type PillContent, renderPillText } from "@luan-pi/pi-libtui";
 import { legacyAnnotationText } from "./envelope.ts";
 import type { DraftAnnotation, ResponseAnnotation } from "./types.ts";
 

@@ -1,5 +1,5 @@
-import { registerAction } from "pi-libactions/sdk";
-import type { SidePanelSession } from "pi-libtui";
+import { registerAction } from "@luan-pi/pi-libactions/sdk";
+import type { SidePanelSession } from "@luan-pi/pi-libtui";
 
 export function registerSidePanelActions(panel: SidePanelSession): () => void {
 	const disposers = [

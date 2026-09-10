@@ -7,7 +7,7 @@ import type { NestedToolAdapter, RuntimeResponse, ToolExecutionContext } from ".
 const clients: CodeModeHostClient[] = [];
 
 function client(): CodeModeHostClient {
-	const value = new CodeModeHostClient({ binary: resolveCodeModeHostBinary(), shutdownGraceMs: 1_000 });
+	const value = new CodeModeHostClient({ binary: resolveCodeModeHostBinary, shutdownGraceMs: 1_000 });
 	clients.push(value);
 	return value;
 }

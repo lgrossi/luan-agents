@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { AnnotationStore, removeTokenAtom, tokenInsertion, tokenPreview } from "../src/core/store.ts";
-import { icon } from "pi-libtui";
+import { icon } from "@luan-pi/pi-libtui";
 import { plainPill } from "../src/core/pills.ts";
 import type { AnnotationSelection } from "../src/core/types.ts";
 

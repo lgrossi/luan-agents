@@ -9,9 +9,9 @@ import {
 	type TuiBackgroundToken,
 	type TuiForegroundColor,
 	tuiTheme,
-} from "pi-libtui";
+} from "@luan-pi/pi-libtui";
 
-export { decorateDetailCard, overlayTotalWidth } from "pi-libtui";
+export { decorateDetailCard, overlayTotalWidth } from "@luan-pi/pi-libtui";
 
 import { legacyAnnotationText } from "../core/envelope.ts";
 import type { DraftAnnotation, ResponseAnnotation } from "../core/types.ts";

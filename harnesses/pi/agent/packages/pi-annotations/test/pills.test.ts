@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { icon, tuiTheme } from "pi-libtui";
+import { icon, tuiTheme } from "@luan-pi/pi-libtui";
 import { annotationIcon, plainPill } from "../src/core/pills.ts";
 import type { AnnotationSelection, DraftAnnotation } from "../src/core/types.ts";
 import { annotationDetailLines, renderPill } from "../src/ui/pills.ts";

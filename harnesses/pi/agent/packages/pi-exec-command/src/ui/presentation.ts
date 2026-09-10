@@ -1,6 +1,6 @@
 import type { AgentToolResult, Theme, ToolRenderResultOptions } from "@earendil-works/pi-coding-agent";
-import { type ActivityAnimationOverrides, ComponentStack } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import { type ActivityAnimationOverrides, ComponentStack } from "@luan-pi/pi-libtui";
+import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
 import {
 	settleToolCallPreview,
 	type TerminalOutputUpdate,
@@ -9,7 +9,7 @@ import {
 	type ToolOutputUpdate,
 	type ToolTranscriptStatus,
 	toolCallPreview,
-} from "pi-libtui/tool";
+} from "@luan-pi/pi-libtui/tool";
 import { type ShellAction, summarizeShellCommand } from "../core/shell-summary.ts";
 import type { ExecProcessSnapshot, ExecSessionManager } from "../session-manager.ts";
 import type { ExecToolPresentationDetails } from "../tools/presentation.ts";

@@ -54,7 +54,7 @@
 										"importNames": ["Editor", "EditorTheme", "Input", "SelectList"],
 										"message": "Use the matching pi-libtui semantic input, editor, or selection component instead of Pi's raw component."
 									},
-									"pi-libtui": {
+									"@luan-pi/pi-libtui": {
 										"importNames": [
 											"LiveToolAction",
 											"settleToolCallPreview",
@@ -82,7 +82,7 @@
 								},
 								"patterns": [
 									{
-										"group": ["pi-libtui/src/*", "pi-libtui/src/**"],
+										"group": ["@luan-pi/pi-libtui/src/*", "@luan-pi/pi-libtui/src/**"],
 										"message": "Import the public pi-libtui or pi-libtui/mouse entry point, not private source files."
 									}
 								]

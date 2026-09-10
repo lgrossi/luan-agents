@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { ComponentStack, tuiTheme } from "pi-libtui";
-import { ensureMouseRegistry } from "pi-libtui/mouse";
+import { ComponentStack, tuiTheme } from "@luan-pi/pi-libtui";
+import { ensureMouseRegistry } from "@luan-pi/pi-libtui/mouse";
 import { registerSkillCodeModeAdapter } from "./code-mode-adapter.ts";
 import { getSkillsSettings, registerSkillsXSettings } from "./contributions/xsettings.ts";
 import { registerSkillEditorHighlights } from "./contributions/editor-highlights.ts";

@@ -1,6 +1,6 @@
 import type { ExtensionContext, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
-import { markEditorCursor } from "pi-libtui";
+import { markEditorCursor } from "@luan-pi/pi-libtui";
 import {
 	type EditorFactory,
 	type EditorMinimumRowsLease,
@@ -9,7 +9,7 @@ import {
 	installEditorMinimumRows,
 	renderEditorComposition,
 	SemanticEditor,
-} from "pi-libtui/editor";
+} from "@luan-pi/pi-libtui/editor";
 import { getCustomEditorSettings } from "../config/settings.ts";
 import { resolveEditorComposition } from "../core/composition.ts";
 import type { TuiState } from "../runtime/state.ts";

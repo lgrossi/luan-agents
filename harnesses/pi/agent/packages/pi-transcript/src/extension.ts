@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { mountTranscriptProjection } from "pi-libtui/tool";
+import { mountTranscriptProjection } from "@luan-pi/pi-libtui/tool";
 import { ActivityTranscript } from "./activity-transcript.ts";
 
 export default function transcriptExtension(pi: ExtensionAPI): void {

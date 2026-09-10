@@ -1,7 +1,7 @@
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, Text, truncateToWidth } from "@earendil-works/pi-tui";
-import { ComponentStack, icon, MarkdownText, sanitizeTuiField, tuiTheme } from "pi-libtui";
-import { ToolActivity } from "pi-libtui/tool";
+import { ComponentStack, icon, MarkdownText, sanitizeTuiField, tuiTheme } from "@luan-pi/pi-libtui";
+import { ToolActivity } from "@luan-pi/pi-libtui/tool";
 import type { PromptAuditRole } from "./contributions/xsettings.ts";
 import type { PromptEnvelope } from "./prompt-envelope.ts";
 

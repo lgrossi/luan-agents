@@ -1,6 +1,12 @@
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { Key, matchesKey, type TUI, truncateToWidth, visibleWidth, wrapTextWithAnsi } from "@earendil-works/pi-tui";
-import { applyScrollbar, FullscreenOverlay, fullscreenOverlayOptions, SelectableList, tuiTheme } from "pi-libtui";
+import {
+	applyScrollbar,
+	FullscreenOverlay,
+	fullscreenOverlayOptions,
+	SelectableList,
+	tuiTheme,
+} from "@luan-pi/pi-libtui";
 import {
 	ProcessHubCollection,
 	type ProcessHubModel,
