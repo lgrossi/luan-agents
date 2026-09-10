@@ -124,6 +124,22 @@ bun run test:pi
 cargo nextest run --locked
 ```
 
+## Release
+
+Pi packages publish to npm under `@luan-pi` from GitHub Actions. Bump every
+package version, commit, then tag and push:
+
+```sh
+git tag v0.2.0 && git push origin main v0.2.0
+```
+
+`.github/workflows/publish.yml` publishes each package whose version matches the
+tag and skips versions already on the registry. It authenticates with npm
+trusted publishing (OIDC), so no token is stored; each package must list this
+repository's `publish.yml` as a trusted publisher on npmjs.com once. Native
+binaries build on first use from the same tag, so never move or delete a
+released tag. `just pi-publish <package>` runs the same steps locally.
+
 ## Common problems
 
 **A native tool says its binary is missing.** Run `cargo build --locked --release`, or `just setup` to rebuild and check everything.
