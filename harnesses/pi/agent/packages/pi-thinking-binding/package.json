@@ -1,0 +1,28 @@
+{
+  "name": "pi-thinking-binding",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Drop Anthropic thinking blocks that a system prompt or tool change has already invalidated",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "pi": {
+    "extensions": ["./src/extension.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": "0.84.2",
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "@types/bun": "^1.3.0",
+    "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --build",
+    "test": "bun test --only-failures test"
+  }
+}
