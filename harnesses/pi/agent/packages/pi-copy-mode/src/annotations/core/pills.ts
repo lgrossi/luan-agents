@@ -1,5 +1,4 @@
 import { icon, type PillContent, renderPillText } from "pi-libtui";
-import { legacyAnnotationText } from "./envelope.ts";
 import type { DraftAnnotation, ResponseAnnotation } from "./types.ts";
 
 const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -27,5 +26,5 @@ export function plainPill(content: PillContent): string {
 }
 
 export function responsePillContent(annotation: ResponseAnnotation, index: number): PillContent {
-	return annotationPillContent(legacyAnnotationText(annotation.annotation), index);
+	return annotationPillContent(annotation.annotation, index);
 }

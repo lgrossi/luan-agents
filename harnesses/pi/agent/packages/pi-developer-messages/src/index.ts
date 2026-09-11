@@ -4,8 +4,8 @@ export {
 	PROMPT_AUDIT_GROUP_ENTRY_TYPE,
 	publishPromptAuditEntries,
 	registerPromptAuditEntryRenderers,
-	removeLegacyPromptAuditEntries,
-	removeLegacyPromptAuditMessages,
+	removePromptAuditEntries,
+	removePromptAuditMessages,
 	type PromptAuditGroupData,
 } from "./audit-entries.ts";
 export {

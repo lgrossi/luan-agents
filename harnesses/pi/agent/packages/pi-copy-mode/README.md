@@ -9,9 +9,9 @@ commands.
 
 ## Preview
 
-![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.png)
+![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.mp4).
 
 ## Install
 
@@ -170,20 +170,15 @@ One example per group; the full ID list follows.
 
 ## Settings
 
-Copy settings use the `pi-copy-mode` namespace:
+Settings use the `pi-copy-mode` namespace:
 
 | Key | Default | Meaning |
 | --- | --- | --- |
+| `reactions` | Seven reactions listed above | Ordered choices in the reaction picker. An empty list disables it until a choice is configured. |
 | `copyOnSelect` | `false` | Copy text immediately when a mouse selection is completed. When off, the selection stays available for the action bar and keyboard adoption. |
 
-Edit it under Interaction → Copy mode via `/xsettings` when
-`pi-xsettings` is installed; otherwise the default applies.
-
-Reaction choices retain their existing `pi-annotations.reactions` setting
-under Interaction → Copy mode. The default is the seven reactions above; an
-empty ordered list disables the picker until a choice is configured. Existing
-settings and `copy-mode.*` keybindings keep working after migration. Without
-the xsettings host, both features use their compiled defaults.
+Edit them under Interaction → Copy mode via `/xsettings` when
+`pi-xsettings` is installed; otherwise the compiled defaults apply.
 
 ## Library API
 
@@ -196,7 +191,7 @@ Importing `pi-copy-mode` does not start the extension. It exports:
   `moveVirtualCursor`, `graphemeEnd`, and `scrollTopForCursor`, plus their
   document and point types.
 
-The root export and `pi-copy-mode/annotations` also expose annotation helpers without starting Pi:
+`pi-copy-mode/annotations` exposes annotation helpers without starting Pi:
 
 - Envelope: `serializeEnvelope`, `parseEnvelope`, `projectEnvelope`,
   `responseAnnotations`, `annotationText`.
@@ -205,7 +200,6 @@ The root export and `pi-copy-mode/annotations` also expose annotation helpers wi
   `removeTokenAtom`.
 - Presentation: `plainPill`, `composerPillContent`, `responsePillContent`,
   `transcriptPillContent`, `AnnotationPresentationGroups`.
-- Settings: `DEFAULT_REACTIONS`, `getReactions`.
 - Types: `AnnotationSelection`, `DraftAnnotation`, `ResponseAnnotation`,
   `ParsedResponseAnnotations`, `ResolvedAnnotationLink`.
 
@@ -234,9 +228,7 @@ Each item contains text selected from an earlier response and may include a user
 ordinary prompt text
 ```
 
-Reactions are serialized as ordinary annotation text. Older envelopes that
-used the previous `Reaction: “…”` spelling are still read when Pi redraws a
-session.
+Reactions are serialized as ordinary annotation text.
 
 ## Architecture
 
@@ -259,7 +251,7 @@ or native executable is registered.
 | Extension entry, ownership claim, session lifecycle | `src/extension.ts` |
 | `copy-mode.enter` action registration | `src/contributions/actions.ts` |
 | Action IDs, keybinding loading and matching | `src/config/keybindings.ts` |
-| `copyOnSelect` setting | `src/config/settings.ts` |
+| Copy and reaction settings | `src/config/settings.ts` |
 | Modal host: input, selection kinds, copy, selection requests, folds | `src/runtime/copy-mode.ts` |
 | Validated fullscreen surface and clipboard fallback | `src/runtime/fullscreen-surface.ts` |
 | Cursor clamping and basic motions | `src/core/cursor.ts` |
@@ -270,7 +262,7 @@ or native executable is registered.
 | Draft store, envelopes, directives, presentation | `src/annotations/core/` |
 | Selection resolution, compose and edit flows | `src/annotations/runtime/annotations.ts` |
 | Comment/reaction dialogs, editor pills, transcript markers | `src/annotations/ui/` |
-| Reaction definitions and developer-message contribution | `src/annotations/config/settings.ts`, `src/annotations/contributions/developer-prompt.ts` |
+| Reaction definitions and developer-message contribution | `src/config/settings.ts`, `src/annotations/contributions/developer-prompt.ts` |
 
 ## Troubleshooting
 
@@ -286,14 +278,6 @@ or native executable is registered.
 - "Copy mode requires Pi's fullscreen TUI": the package targets Pi 0.84.2's
   private fullscreen surface and fails closed when the layout does not match.
 
-## Migration from pi-annotations
-
-Install Copy Mode and remove the old `@luan-pi/pi-annotations` package from
-Pi's enabled packages to avoid loading the old annotation handlers alongside
-the merged feature. Saved reaction settings, envelopes, annotation links,
-and action IDs remain compatible. Update library imports to
-`pi-copy-mode/annotations` or the Copy Mode root.
-
 ## Develop
 
 Source: https://github.com/luan/agents, directory
@@ -301,4 +285,4 @@ harnesses/pi/agent/packages/pi-copy-mode. Run `bun run typecheck` and
 `bun test test` in that directory.
 
 The combined gallery video includes selection/copying and annotation workflows.
-[Selection and copying](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode-selection.mp4) · [Comments and reactions](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode-annotations.mp4).
+[Selection and copying](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode-selection.mp4) · [Comments and reactions](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode-annotations.mp4).

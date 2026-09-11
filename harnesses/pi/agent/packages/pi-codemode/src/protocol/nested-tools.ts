@@ -1,7 +1,7 @@
 import type { AgentToolResult, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import type { TuiMouseEvent } from "pi-libtui/mouse";
 
-export const NESTED_TOOL_ADAPTER_PROTOCOL = "pi-code-mode/nested-tool-adapters/v2" as const;
+export const NESTED_TOOL_ADAPTER_PROTOCOL = "pi-codemode/nested-tool-adapters/v2" as const;
 export const NESTED_TOOL_ADAPTERS = Symbol.for(NESTED_TOOL_ADAPTER_PROTOCOL);
 
 // type-boundary: Pi tool inputs and details are heterogeneous; each owning tool validates its input and result.
@@ -63,7 +63,7 @@ export interface NestedToolPresentationContext {
 	readonly lastComponent: NestedToolPresentationComponent | undefined;
 }
 
-/** Execution bridge only. pi-code-mode settings own whether this tool is lifted out of Pi's direct tool set. */
+/** Execution bridge only. pi-codemode settings own whether this tool is lifted out of Pi's direct tool set. */
 export interface NestedToolAdapter {
 	name: string;
 	kind: NestedToolKind;

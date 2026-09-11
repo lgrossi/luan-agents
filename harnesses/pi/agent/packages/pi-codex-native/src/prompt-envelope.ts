@@ -1,4 +1,4 @@
-const PROMPT_ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-prompt/envelope-service/v1");
+const PROMPT_ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-messages/envelope-service/v1");
 
 export interface PromptEnvelope {
 	systemPrompt: string;

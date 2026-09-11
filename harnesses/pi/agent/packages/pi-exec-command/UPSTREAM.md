@@ -20,7 +20,7 @@
 - Non-TTY commands use pipe stdio. A retained control PTY creates the isolated
   session and process group used for descendant termination.
 - Direct and Code Mode calls share the same Pi tool definitions. The execution
-  bridge registers adapters through `pi-code-mode/sdk`.
+  bridge registers adapters through `pi-codemode/sdk`.
 - Code Mode owns adapter hierarchy and exposure.
 
 ## Preserved behavior

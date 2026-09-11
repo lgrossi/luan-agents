@@ -3,8 +3,8 @@ import type { Component, Focusable } from "@earendil-works/pi-tui";
 import type { SplitPaneHost, TuiIconName } from "pi-libtui";
 import type { TuiMouseEvent } from "pi-libtui/mouse";
 
-export const SIDE_PANEL_REGISTRY_KEY = Symbol.for("pi-side-panel/registry/v1");
-export const SIDE_PANEL_PROTOCOL = "pi-side-panel/registry/v1" as const;
+export const SIDE_PANEL_REGISTRY_KEY = Symbol.for("pi-panels/registry/v1");
+export const SIDE_PANEL_PROTOCOL = "pi-panels/registry/v1" as const;
 
 export type SidePanelContent = Component &
 	Partial<Focusable> & {

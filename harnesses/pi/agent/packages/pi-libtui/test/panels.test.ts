@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { ensureSidePanelRegistry, SIDE_PANEL_PROTOCOL, type SidePanelProvider } from "../src/side-panel.ts";
+import { ensureSidePanelRegistry, SIDE_PANEL_PROTOCOL, type SidePanelProvider } from "../src/panels.ts";
 
 function provider(id: string, session: object = {}): SidePanelProvider {
 	return { id, session, attach: () => undefined };

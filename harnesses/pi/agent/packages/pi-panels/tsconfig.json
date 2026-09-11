@@ -6,7 +6,7 @@
     "strict": true,
     "noEmit": true,
     "incremental": true,
-    "tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-side-panel.tsbuildinfo",
+    "tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-panels.tsbuildinfo",
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

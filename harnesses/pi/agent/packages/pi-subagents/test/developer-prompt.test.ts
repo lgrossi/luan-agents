@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, expect, test } from "bun:test";
 import { hasDeveloperPromptHost, registerSubagentPromptContributions } from "../src/contributions/developer-prompt.ts";
 
-const REGISTRY_KEY = Symbol.for("pi-developer-prompt/developer-messages/v1");
-const ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-prompt/envelope-service/v1");
+const REGISTRY_KEY = Symbol.for("pi-developer-messages/developer-messages/v1");
+const ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-messages/envelope-service/v1");
 const REGISTRATION_STATE_KEY = Symbol.for("pi-subagents/developer-prompt-registration/v1");
 const slots = globalThis as typeof globalThis & Record<symbol, object | undefined>;
 let previousRegistry: object | undefined;

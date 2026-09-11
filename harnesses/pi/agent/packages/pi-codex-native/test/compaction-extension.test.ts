@@ -265,7 +265,7 @@ test("the provider hook restores the remote replay window after session resume",
 });
 
 test("the compaction request rebuilds the current instructions, developer guidance, and AGENTS context", async () => {
-	const serviceKey = Symbol.for("pi-developer-prompt/envelope-service/v1");
+	const serviceKey = Symbol.for("pi-developer-messages/envelope-service/v1");
 	const slots = globalThis as typeof globalThis & Record<symbol, unknown>;
 	const previous = slots[serviceKey];
 	let sent: Record<string, unknown> | undefined;
@@ -296,7 +296,7 @@ test("the compaction request rebuilds the current instructions, developer guidan
 		id: "developer-audit-entry",
 		parentId: userEntry.id,
 		timestamp: "2026-08-18T00:00:01.000Z",
-		customType: "pi-developer-prompt/developer",
+		customType: "pi-developer-messages/developer",
 		content: "audit-only developer marker",
 		display: true,
 		details: { role: "developer", id: "skills" },
@@ -306,7 +306,7 @@ test("the compaction request rebuilds the current instructions, developer guidan
 		id: "context-audit-entry",
 		parentId: developerAuditEntry.id,
 		timestamp: "2026-08-18T00:00:02.000Z",
-		customType: "pi-developer-prompt/context-user",
+		customType: "pi-developer-messages/context-user",
 		content: "audit-only user marker",
 		display: true,
 		details: { role: "user", id: "agents-md" },
@@ -429,7 +429,7 @@ async function expectPiFallback(
 	abortBeforeFallbackRequest = false,
 	fallbackCompaction = true,
 ): Promise<void> {
-	const serviceKey = Symbol.for("pi-developer-prompt/envelope-service/v1");
+	const serviceKey = Symbol.for("pi-developer-messages/envelope-service/v1");
 	const slots = globalThis as typeof globalThis & Record<symbol, unknown>;
 	const previousService = slots[serviceKey];
 	slots[serviceKey] = {

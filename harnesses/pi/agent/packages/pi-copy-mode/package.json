@@ -1,6 +1,6 @@
 {
   "name": "pi-copy-mode",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,8 +28,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.mp4"
   },
   "dependencies": {
     "pi-libactions": "workspace:*",

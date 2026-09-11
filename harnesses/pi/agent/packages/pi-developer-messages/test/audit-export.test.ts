@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { DEVELOPER_AUDIT_ENTRY_TYPE } from "../src/audit-entries.ts";
 
 test("Pi's HTML export retains prompt audit entry data", async () => {
-	const directory = await mkdtemp(join(tmpdir(), "pi-developer-prompt-export-"));
+	const directory = await mkdtemp(join(tmpdir(), "pi-developer-messages-export-"));
 	const sessionPath = join(directory, "session.jsonl");
 	const outputPath = join(directory, "session.html");
 	try {

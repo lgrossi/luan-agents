@@ -13,9 +13,9 @@ Upstream attribution for the ported transport and conversion code is in
 
 ## Preview
 
-![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.png)
+![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.mp4).
 
 ## Install
 
@@ -86,7 +86,7 @@ window from a preset: `smart` (180k), `balanced` (272k), `enhanced` (400k),
 extension may request a preset through the provider-owned
 [context-window capability](context-window-protocol.md); without one, the
 `contextWindowPreset` setting is used. Its published capability identity is
-preserved for compatibility with older `pi-libcontext` SDK copies.
+preserved for compatibility with older `pi-codex-native` SDK copies.
 
 `contextAutoUpgrade` controls what happens when Pi reaches its compaction
 threshold: `never` compacts, `mid-turn` moves to the next tier after a tool

@@ -65,7 +65,7 @@ export default function sidePanelExtension(pi: ExtensionAPI): void {
 		panel = controller;
 		disposeActions = registerSidePanelActions(controller);
 		controls = mountScreenIconActions({
-			id: "pi-side-panel.controls",
+			id: "pi-panels.controls",
 			theme: context.ui.theme,
 			registry: ensureMouseRegistry(),
 			actions: [
@@ -73,14 +73,14 @@ export default function sidePanelExtension(pi: ExtensionAPI): void {
 					value: "zoom",
 					glyph: "󰘖",
 					tooltip: () => (controller.isZoomed() ? "Restore side panel" : "Expand side panel"),
-					shortcuts: bindings["side-panel.zoom"],
+					shortcuts: bindings["panels.zoom"],
 					visible: () => controller.isVisible(),
 				},
 				{
 					value: "toggle",
 					glyph: () => (controller.isVisible() ? "" : ""),
 					tooltip: () => (controller.isVisible() ? "Hide side panel" : "Show side panel"),
-					shortcuts: bindings["side-panel.toggle"],
+					shortcuts: bindings["panels.toggle"],
 				},
 			],
 			onActivate: (value) => {

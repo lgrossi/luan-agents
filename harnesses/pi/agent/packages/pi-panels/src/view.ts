@@ -6,11 +6,11 @@ import { DialogButtonBar, type SplitPaneHost, screenIconActionsWidth, TabBar } f
 import type { TuiMouseEvent } from "pi-libtui/mouse";
 
 const PANEL_INPUT_ACTIONS = [
-	"side-panel.toggle",
-	"side-panel.zoom",
-	"side-panel.focus.next",
-	"side-panel.tab.previous",
-	"side-panel.tab.next",
+	"panels.toggle",
+	"panels.zoom",
+	"panels.focus.next",
+	"panels.tab.previous",
+	"panels.tab.next",
 ] as const;
 
 export interface SidePanelViewModel {

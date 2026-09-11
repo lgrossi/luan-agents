@@ -10,9 +10,9 @@ Upstream attribution: see `UPSTREAM.md`.
 
 ## Preview
 
-![pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-exec-command.png)
+![pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-exec-command.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.mp4).
 
 ## Install
 

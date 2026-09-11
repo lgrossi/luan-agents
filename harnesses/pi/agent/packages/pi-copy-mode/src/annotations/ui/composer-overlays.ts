@@ -48,7 +48,7 @@ export async function showReactionOverlay(
 			});
 			return mountModalOverlay(dialog, {
 				registry,
-				id: "pi-annotations.reaction-picker",
+				id: "pi-copy-mode.annotations.reaction-picker",
 				getRect: () => placement.rect,
 				getShieldRect: () => ({ x: 0, y: 0, width: terminal.terminalCols, height: terminal.terminalRows }),
 			});
@@ -92,7 +92,7 @@ export async function showCommentOverlay(
 			});
 			return mountModalOverlay(dialog, {
 				registry,
-				id: "pi-annotations.comment-editor",
+				id: "pi-copy-mode.annotations.comment-editor",
 				getRect: () => placement.rect,
 				getShieldRect: () => ({ x: 0, y: 0, width: terminal.terminalCols, height: terminal.terminalRows }),
 			});

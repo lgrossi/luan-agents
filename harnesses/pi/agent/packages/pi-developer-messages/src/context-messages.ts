@@ -1,5 +1,4 @@
-export const AGENTS_CONTEXT_MESSAGE_TYPE = "pi-developer-prompt/agents-md";
-const LEGACY_AGENTS_CONTEXT_MESSAGE_TYPES = ["pi-system-prompt/agents-md"];
+export const AGENTS_CONTEXT_MESSAGE_TYPE = "pi-developer-messages/agents-md";
 export const AGENTS_CONTEXT_MESSAGE_ID = "agents-md";
 
 interface ContextFile {
@@ -43,10 +42,7 @@ export function injectAgentsContext<T extends AgentMessageLike>(
 	content: string | undefined,
 ): (T | AgentsContextMessage)[] | undefined {
 	const filtered = messages.filter(
-		(message) =>
-			message.role !== "custom" ||
-			(message.customType !== AGENTS_CONTEXT_MESSAGE_TYPE &&
-				!LEGACY_AGENTS_CONTEXT_MESSAGE_TYPES.includes(message.customType as string)),
+		(message) => message.role !== "custom" || message.customType !== AGENTS_CONTEXT_MESSAGE_TYPE,
 	);
 	if (!content) return filtered.length === messages.length ? undefined : filtered;
 	return [

@@ -18,9 +18,9 @@ registers no model-facing tools, keybindings, or feature-specific UI.
 
 The native palette diagnostic and shared picker components in Xsettings.
 
-![pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-libtui.png)
+![pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-libtui.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.mp4).
 
 ## Install
 
@@ -176,7 +176,7 @@ through `src/color/resolver.ts`. Feature code uses only the root color API:
 | --- | --- |
 | Extension entry and host | `src/extension.ts`, `src/host/` |
 | Layout and rendering infrastructure | `src/background-surface.ts`, `src/component-stack.ts`, `src/line-layout.ts`, `src/render-cache.ts`, `src/scrollbar.ts` |
-| Split panes and side panel | `src/split-pane.ts`, `src/host/split-pane-bridge.ts`, `src/side-panel.ts` |
+| Split panes and side panel | `src/split-pane.ts`, `src/host/split-pane-bridge.ts`, `src/panels.ts` |
 | Overlays | `src/overlay/` |
 | Controls | `src/controls/` |
 | Text content, glyphs, status, pills, editor | `src/content/`, `src/decoration/`, `src/editor.ts`, `src/editor/` |

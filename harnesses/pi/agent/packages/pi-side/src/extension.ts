@@ -37,13 +37,13 @@ export default function sideChatExtension(pi: ExtensionAPI): void {
 		activeSession = nextContext.sessionManager;
 		unregisterAction?.();
 		unregisterAction = registerAction({
-			id: "side-panel.chat.new",
+			id: "panels.chat.new",
 			description: "Start a new side chat",
 			run: () => manager?.newChat(),
 		});
 		unregisterProvider = registerSidePanelProvider(
 			{
-				id: "pi-side-chat",
+				id: "pi-side",
 				session: nextContext,
 				attach(panel) {
 					return manager?.attachPanel(panel);

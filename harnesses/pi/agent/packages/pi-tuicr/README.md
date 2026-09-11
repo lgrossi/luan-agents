@@ -11,9 +11,9 @@ no settings.
 
 ## Preview
 
-![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-tuicr.png)
+![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-tuicr.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.mp4).
 
 ## Install
 
@@ -41,7 +41,7 @@ overlay. Both modes are described below.
 
 ## Use it
 
-The extension registers one action, `side-panel.tuicr.open` ("Review changes
+The extension registers one action, `panels.tuicr.open` ("Review changes
 with tuicr"). Running it lists review targets for Pi's current working
 directory:
 
@@ -69,7 +69,7 @@ terminal background query.
 
 When a side-panel host is attached, each review is a tab labelled "Review" (or
 "Review N" once there is more than one). The tab's header action shows the
-current target label and reruns `side-panel.tuicr.open`; on an active review
+current target label and reruns `panels.tuicr.open`; on an active review
 tab that reopens the target picker as a floating overlay over the running
 tuicr pane. Picking the same target again closes the picker; picking a
 different one restarts tuicr for that target. Cancelling the picker on a tab
@@ -118,14 +118,14 @@ on macOS, `%LOCALAPPDATA%\tuicr\reviews\sessions` on Windows, and
 
 ## Keybindings
 
-`side-panel.tuicr.open` is registered through `pi-libactions` and has no
+`panels.tuicr.open` is registered through `pi-libactions` and has no
 default key. Bind it in `keybindings.json` in Pi's agent directory (normally
 `~/.pi/agent/keybindings.json`). The file maps action IDs to a key ID or an
 array of key IDs:
 
 ```json
 {
-  "side-panel.tuicr.open": "ctrl+shift+r"
+  "panels.tuicr.open": "ctrl+shift+r"
 }
 ```
 

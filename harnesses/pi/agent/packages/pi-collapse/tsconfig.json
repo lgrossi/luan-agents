@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler",
 		"strict": true, "noEmit": true, "incremental": true,
-		"tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-transcript.tsbuildinfo",
+		"tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-collapse.tsbuildinfo",
 		"allowImportingTsExtensions": true, "skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true, "types": ["bun"]
 	},

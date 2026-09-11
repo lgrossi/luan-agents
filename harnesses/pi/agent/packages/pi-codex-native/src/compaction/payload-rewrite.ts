@@ -242,12 +242,8 @@ function isNativeCompactionContextMessage(message: AgentMessage): boolean {
 		message.role === "custom" &&
 		(message.customType === "codex-web-search-activity" ||
 			message.customType === "image-attach-preview" ||
-			message.customType === "pi-developer-prompt/developer" ||
-			message.customType === "pi-developer-prompt/context-user" ||
-			message.customType === "pi-developer-prompt/developer" ||
-			message.customType === "pi-developer-prompt/context-user" ||
-			message.customType === "pi-system-prompt/developer" ||
-			message.customType === "pi-system-prompt/context-user")
+			message.customType === "pi-developer-messages/developer" ||
+			message.customType === "pi-developer-messages/context-user")
 	) {
 		return false;
 	}

@@ -11,9 +11,9 @@ Upstream attribution: see `UPSTREAM.md`.
 
 ## Preview
 
-![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-view-image.png)
+![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-view-image.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.mp4).
 
 ## Install
 
@@ -68,7 +68,7 @@ Behaviour:
 
 ### Inside Code Mode
 
-The tool is also registered through `pi-code-mode/sdk`. In a Code Mode
+The tool is also registered through `pi-codemode/sdk`. In a Code Mode
 script, `view_image` returns `{ image_url, detail }`, where `image_url` is a
 base64 `data:` URL. Forward it with `image(result)` so the model sees the image:
 

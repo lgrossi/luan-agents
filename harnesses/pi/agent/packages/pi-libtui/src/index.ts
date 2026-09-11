@@ -292,7 +292,7 @@ export {
 	type SidePanelRegistry,
 	type SidePanelSession,
 	type SidePanelTab,
-} from "./side-panel.ts";
+} from "./panels.ts";
 export {
 	ensureSplitPaneRegistry,
 	type MountedSplitPane,

@@ -1,8 +1,8 @@
 import { parseEnvelope } from "../core/envelope.ts";
 
-const CONTRIBUTIONS = Symbol.for("pi-developer-prompt/developer-messages/v1");
-const ENVELOPE_SERVICE = Symbol.for("pi-developer-prompt/envelope-service/v1");
-const CONTRIBUTION_ID = "pi-annotations/directives";
+const CONTRIBUTIONS = Symbol.for("pi-developer-messages/developer-messages/v1");
+const ENVELOPE_SERVICE = Symbol.for("pi-developer-messages/envelope-service/v1");
+const CONTRIBUTION_ID = "pi-copy-mode/annotations/directives";
 
 export const ANNOTATION_SYSTEM_GUIDANCE =
 	'When referring to one of the current user\'s response annotations, emit :pi-annotation{index="N"} outside code, using its 1-based array index.';
@@ -18,7 +18,7 @@ interface DeveloperMessageContribution {
 }
 
 interface ContributionRegistry extends Map<string, DeveloperMessageContribution> {
-	protocol: "pi-developer-prompt/developer-messages/v1";
+	protocol: "pi-developer-messages/developer-messages/v1";
 	version: 1;
 }
 type PromptCapabilities = typeof globalThis & {
@@ -31,7 +31,7 @@ export function registerAnnotationDeveloperPrompt(): () => void {
 	const registry = isContributionRegistry(root[CONTRIBUTIONS])
 		? root[CONTRIBUTIONS]
 		: (Object.assign(new Map<string, DeveloperMessageContribution>(), {
-				protocol: "pi-developer-prompt/developer-messages/v1" as const,
+				protocol: "pi-developer-messages/developer-messages/v1" as const,
 				version: 1 as const,
 			}) as ContributionRegistry);
 	root[CONTRIBUTIONS] = registry;
@@ -55,7 +55,7 @@ function isContributionRegistry(value: unknown): value is ContributionRegistry {
 	if (!value || typeof value !== "object") return false;
 	const candidate = value as Partial<ContributionRegistry>;
 	return (
-		candidate.protocol === "pi-developer-prompt/developer-messages/v1" &&
+		candidate.protocol === "pi-developer-messages/developer-messages/v1" &&
 		candidate.version === 1 &&
 		typeof candidate.get === "function" &&
 		typeof candidate.set === "function" &&

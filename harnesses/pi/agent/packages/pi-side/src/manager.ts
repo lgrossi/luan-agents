@@ -50,7 +50,7 @@ export class SideChatManager {
 		this.removeEmptyAction = panel.registerEmptyAction({
 			id: "side-chat.new",
 			label: "Side chat",
-			actionId: "side-panel.chat.new",
+			actionId: "panels.chat.new",
 		});
 		// Restored children start only when presented. Hidden children remain live,
 		// while focus reporting lets cooperative TUIs pause their animation timers.
@@ -135,7 +135,7 @@ export class SideChatManager {
 			id: tab.id,
 			label: tab.label,
 			icon: { glyph: "󱐒" },
-			inputActions: ["side-panel.chat.new"],
+			inputActions: ["panels.chat.new"],
 			create: (host: SplitPaneHost, _theme: Theme) =>
 				new PtyPane(this.processes.get(tab.id)!, {
 					tui: host.tui,

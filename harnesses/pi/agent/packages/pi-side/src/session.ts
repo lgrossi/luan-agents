@@ -76,7 +76,7 @@ export function createSideChatRuntime(
 
 export function sideChatSessionRoot(context: ExtensionContext): string {
 	if (context.sessionManager.getSessionFile()) return context.sessionManager.getSessionDir();
-	return join(tmpdir(), "pi-side-chat", context.sessionManager.getSessionId());
+	return join(tmpdir(), "pi-side", context.sessionManager.getSessionId());
 }
 
 /** Create the child session and theme before its PTY command can start. */
@@ -118,7 +118,7 @@ export function writeSideChatSession(session: SideChatSessionWrite): void {
 		`${[header, sessionInfo, ...inheritedEntries].map((entry) => JSON.stringify(entry)).join("\n")}\n`,
 	);
 	const fork = SessionManager.open(sessionFile, session.sessionDir);
-	fork.appendCustomMessageEntry("pi-side-chat-boundary", SIDE_CONVERSATION_BOUNDARY, false);
+	fork.appendCustomMessageEntry("pi-side-boundary", SIDE_CONVERSATION_BOUNDARY, false);
 }
 
 export function createSideChatCommand(options: SideChatCommandOptions): string {

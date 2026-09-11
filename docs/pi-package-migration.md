@@ -1,4 +1,4 @@
-# Pi package migration — 0.3.1
+# Pi package migration — 0.3.2
 
 The packages have moved from `@luan-pi` to the names below. Annotations are now
 part of Copy Mode; Tool Search remains independently installable.
@@ -36,13 +36,11 @@ pi install npm:pi-copy-mode
 ```
 
 Only remove packages you have installed. Restart Pi afterward. Do not load the
-old and new packages together: both may register the same feature. Existing
-action IDs, keybindings, settings namespaces, and versioned capability identifiers
-retain their names. No manual settings-file migration is required.
+old and new packages together: both may register the same feature. Use the current setting namespaces and action IDs documented in each package README.
+Old identifiers and settings are not supported.
 
 Library consumers must update npm dependencies and imports to the new package
-names. Annotation exports moved to `pi-copy-mode/annotations` and the Copy Mode
-root. The old published versions remain available; deprecation messages identify
+names. Annotation library exports are available through `pi-copy-mode/annotations`. The old published versions remain available; deprecation messages identify
 the replacements.
 
 `pi-fileops` currently supplies `apply_patch`. Its tool name, native binary, and
@@ -56,5 +54,4 @@ Copy Mode video covers selection/copying and comments/reactions; its README link
 to the two individual workflows as well.
 
 The attempted `pi-code-mode` publication was rejected by npm because of its
-unpublished registry record. Code Mode is published as `pi-codemode`; its
-`pi-code-mode` settings namespace and capability IDs are unchanged.
+unpublished registry record. Code Mode is published as `pi-codemode`; its settings namespace is `pi-codemode`.

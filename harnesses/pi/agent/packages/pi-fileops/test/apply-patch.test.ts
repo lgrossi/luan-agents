@@ -22,7 +22,7 @@ const releaseBinary = join(
 	process.platform === "win32" ? "apply_patch.exe" : "apply_patch",
 );
 const originalOverride = process.env["PI_APPLY_PATCH_BIN"];
-const codeModeAdaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
+const codeModeAdaptersKey = Symbol.for("pi-codemode/nested-tool-adapters/v2");
 const presentationTheme = {
 	name: "patch-view",
 	bold: (text: string) => text,
