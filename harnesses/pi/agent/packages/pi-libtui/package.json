@@ -1,6 +1,6 @@
 {
 	"name": "@luan-pi/pi-libtui",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -9,6 +9,7 @@
 	},
 	"description": "Shared TUI components and generic mouse compatibility for local Pi extensions",
 	"type": "module",
+	"keywords": ["pi-package"],
 	"exports": {
 		".": "./src/index.ts",
 		"./diff": "./src/diff/index.ts",
@@ -22,7 +23,9 @@
 	},
 	"pi": {
 		"extensions": ["./src/extension.ts"],
-		"themes": ["./themes"]
+		"themes": ["./themes"],
+		"image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-libtui.png",
+		"video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-libtui.mp4"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",

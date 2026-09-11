@@ -1,4 +1,4 @@
-import type { ContextWindowPreset } from "@luan-pi/pi-libcontext/sdk";
+import type { ContextWindowPreset } from "../protocol/context-window.ts";
 import type { TuiForegroundColor } from "@luan-pi/pi-libtui";
 import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan-pi/pi-xsettings/sdk";
 

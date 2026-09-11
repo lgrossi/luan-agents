@@ -11,6 +11,12 @@ It is a Pi extension, not a model-facing tool. It changes only how existing
 transcript components are laid out on screen. Session history, tool output, and
 model-visible content are never rewritten.
 
+## Preview
+
+![pi-transcript in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-transcript.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-transcript.mp4).
+
 ## Install
 
 ```sh

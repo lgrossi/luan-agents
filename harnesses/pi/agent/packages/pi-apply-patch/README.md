@@ -8,6 +8,10 @@ and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
 
 Adapted from upstream Codex tooling; see UPSTREAM.md for provenance.
 
+## Preview
+
+![pi-apply-patch in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-apply-patch.png)
+
 ## Install
 
 ```sh

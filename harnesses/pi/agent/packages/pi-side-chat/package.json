@@ -1,6 +1,6 @@
 {
   "name": "@luan-pi/pi-side-chat",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,7 +12,9 @@
   "keywords": ["pi-package"],
   "exports": { ".": "./src/index.ts" },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
+    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
+    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-side-chat.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-side-chat.mp4"
   },
   "dependencies": {
     "@luan-pi/pi-libactions": "workspace:*",

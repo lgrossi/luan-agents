@@ -10,6 +10,14 @@ disturbing the main thread.
 It is a Pi extension, not a model-facing tool. It registers one command
 (`/side`), one action (`side-panel.chat.new`), and a side-panel provider.
 
+## Preview
+
+Independent side conversation beside the main Pi session.
+
+![pi-side-chat in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-side-chat.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-side-chat.mp4).
+
 ## Install
 
 ```sh

@@ -2,7 +2,7 @@ import { afterEach, expect, test } from "bun:test";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
 import { ensureActionsRegistry } from "@luan-pi/pi-libactions/sdk";
-import { ensureContextWindowSourceRegistry } from "@luan-pi/pi-libcontext/sdk";
+import { ensureContextWindowSourceRegistry } from "../src/protocol/context-window.ts";
 import { ensureXSettingsRegistry } from "@luan-pi/pi-xsettings";
 import registerContextWindow from "../src/context-window.ts";
 import {

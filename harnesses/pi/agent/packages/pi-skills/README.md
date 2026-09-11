@@ -6,6 +6,12 @@ instructions only when a task needs them. The package also lists available
 skills in the developer prompt, autocompletes `$skill` references in the
 editor, and shows loaded skills as compact rows in the transcript.
 
+## Preview
+
+![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-skills.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-skills.mp4).
+
 ## Install
 
 ```sh

@@ -1,6 +1,6 @@
 {
   "name": "@luan-pi/pi-codex-native",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -10,9 +10,14 @@
   "description": "Headless Codex provider capabilities for pi",
   "type": "module",
   "keywords": ["pi-package"],
-  "exports": { ".": "./src/index.ts" },
+  "exports": {
+    ".": "./src/index.ts",
+    "./context-window": "./src/protocol/context-window.ts"
+  },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
+    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
+    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-codex-native.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-codex-native.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
@@ -24,7 +29,6 @@
   "dependencies": {
     "partial-json": "^0.1.7",
     "@luan-pi/pi-libactions": "workspace:*",
-    "@luan-pi/pi-libcontext": "workspace:*",
     "@luan-pi/pi-libtui": "workspace:*",
     "@luan-pi/pi-code-mode": "workspace:*",
     "@luan-pi/pi-xsettings": "workspace:*",
@@ -33,7 +37,6 @@
   },
   "bundledDependencies": [
     "@luan-pi/pi-libactions",
-    "@luan-pi/pi-libcontext",
     "@luan-pi/pi-libtui",
     "@luan-pi/pi-code-mode",
     "@luan-pi/pi-xsettings"

@@ -5,10 +5,14 @@ export type ContextWindowPreset = (typeof CONTEXT_WINDOW_PRESETS)[number];
 export const CONTEXT_WINDOW_PREFERENCES = ["default", ...CONTEXT_WINDOW_PRESETS] as const;
 export type ContextWindowPreference = (typeof CONTEXT_WINDOW_PREFERENCES)[number];
 
-export function isContextWindowPreset(value: unknown): value is ContextWindowPreset {
+// type-boundary: third-party context-window sources can return unchecked values; isContextWindowPreset validates them.
+type UntrustedContextWindowPreset = unknown;
+
+export function isContextWindowPreset(value: UntrustedContextWindowPreset): value is ContextWindowPreset {
 	return typeof value === "string" && CONTEXT_WINDOW_PRESETS.includes(value as ContextWindowPreset);
 }
 
+// Keep the published capability identity so older bundled SDK copies still interoperate.
 export const CONTEXT_WINDOW_SOURCES_KEY = Symbol.for("pi-libcontext/sources/v1");
 export const CONTEXT_WINDOW_SOURCES_PROTOCOL = "pi-libcontext/sources/v1" as const;
 

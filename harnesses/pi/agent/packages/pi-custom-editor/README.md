@@ -8,6 +8,12 @@ native input rows, cursor, and autocomplete output and only re-draws the chrome
 around them. It also highlights `@file` references and slash commands as you
 type.
 
+## Preview
+
+![pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-custom-editor.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-custom-editor.mp4).
+
 ## Install
 
 ```sh

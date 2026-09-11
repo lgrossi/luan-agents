@@ -14,6 +14,12 @@ The extension registers six collaboration tools for the model:
 - `list_agents` returns the current tree snapshot.
 - `wait_agent` waits for a useful tree update and returns only compact status.
 
+## Preview
+
+![pi-subagents in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-subagents.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-subagents.mp4).
+
 ## Install
 
 ```sh

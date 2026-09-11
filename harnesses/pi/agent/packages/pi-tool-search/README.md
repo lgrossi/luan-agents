@@ -4,6 +4,12 @@
 activates tools which are currently inactive. It searches only the scope
 assigned to it. It does not inspect or modify the global tool hierarchy.
 
+## Preview
+
+![pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.mp4).
+
 ## Install
 
 ```sh

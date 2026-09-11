@@ -9,6 +9,12 @@ formatted request when the prompt is submitted.
 It is a Pi extension, not a model-facing tool. It registers no tools and adds
 no settings.
 
+## Preview
+
+![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.mp4).
+
 ## Install
 
 ```sh

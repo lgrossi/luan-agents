@@ -6,6 +6,12 @@ roles: provider (system) instructions, developer messages, and project context
 files such as `AGENTS.md`. It does not register tools, keybindings, or
 commands, and it does not decide how a provider serializes its request.
 
+## Preview
+
+![pi-developer-prompt in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-developer-prompt.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-developer-prompt.mp4).
+
 ## Install
 
 ```sh

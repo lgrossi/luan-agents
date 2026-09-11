@@ -11,6 +11,14 @@ the user's `keybindings.json` and binds each configured key to the matching
 action. Modal features such as `@luan-pi/pi-copy-mode` read the same snapshot
 without registering their keys as global editor shortcuts.
 
+## Preview
+
+Actions registered by Side Panel and Side Chat, bound by Xsettings, and listed in Pi's `/hotkeys`. The library itself registers no UI.
+
+![pi-libactions in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-libactions.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-libactions.mp4).
+
 ## For users: `keybindings.json`
 
 Actions registered through this library have no default keys. You choose every

@@ -56,7 +56,6 @@ These packages register no Pi extension by themselves.
 | Package | What it owns |
 | --- | --- |
 | [`pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. |
-| [`pi-libcontext`](harnesses/pi/agent/packages/pi-libcontext/README.md) | The UI-free context-window preference registry shared by model and provider extensions. |
 
 `pi-libtui` is the one deliberate dual-role package: imports expose reusable components without side effects, while its extension entry point installs generic terminal compatibility for Pi.
 

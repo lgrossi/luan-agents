@@ -8,6 +8,12 @@ and its subagents, shows their bounded output, attaches to retained PTY state,
 forwards terminal input, and exposes interrupt and terminate actions.
 Upstream attribution: see `UPSTREAM.md`.
 
+## Preview
+
+![pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-exec-command.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-exec-command.mp4).
+
 ## Install
 
 ```sh
