@@ -1,1 +1,1 @@
-export { registerCodeModeFunctionTool } from "pi-codemode/sdk";
+export { registerCodeModeFunctionTool } from "@cfcluan/pi-code-mode/sdk";

@@ -17,7 +17,7 @@
     "packages/pi-developer-messages",
     "packages/pi-codex-native",
     "packages/pi-skills",
-    "packages/pi-codemode",
+    "packages/pi-code-mode",
     "packages/pi-exec-command",
     "packages/pi-fileops",
     "packages/pi-view-image",

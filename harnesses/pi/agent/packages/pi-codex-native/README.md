@@ -26,7 +26,7 @@ Optional companions:
   settings below and binds the package's actions to keys from
   `keybindings.json`. Without it, compiled defaults apply and no keys are
   bound.
-- `pi install npm:pi-codemode` exposes `web__run` inside Code Mode
+- `pi install npm:@cfcluan/pi-code-mode` exposes `web__run` inside Code Mode
   scripts as well as directly. Without it, `web__run` is only a direct tool.
 
 ## Sign in and use

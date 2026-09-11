@@ -157,7 +157,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		const active = ["exec", "wait", "skill", "tool_search", "resident"];
 		let execDescription = "";
 		const handlers = new Map<string, TestHandler[]>();
-		const key = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+		const key = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 		const previous = Reflect.get(globalThis, key);
 		const registry = adapterRegistry([]);
 		Reflect.set(globalThis, key, registry);
@@ -207,7 +207,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		const active = ["exec", "wait", "skill", "resident"];
 		const handlers = new Map<string, TestHandler[]>();
 		const settingsKey = Symbol.for("pi-xsettings/registry/v1");
-		const adaptersKey = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+		const adaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 		const previousSettings = Reflect.get(globalThis, settingsKey);
 		const previousAdapters = Reflect.get(globalThis, adaptersKey);
 		Reflect.set(globalThis, settingsKey, settingsRegistry({ tools: ["resident"] }));
@@ -240,7 +240,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		] as ToolDefinition[];
 		const handlers = new Map<string, TestHandler[]>();
 		const settingsKey = Symbol.for("pi-xsettings/registry/v1");
-		const adaptersKey = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+		const adaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 		const previousSettings = Reflect.get(globalThis, settingsKey);
 		const previousAdapters = Reflect.get(globalThis, adaptersKey);
 		const registry = adapterRegistry(["tool_search", "exec_command"]);
@@ -294,7 +294,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		const tools: ToolDefinition[] = [];
 		const handlers = new Map<string, TestHandler>();
 		const settingsKey = Symbol.for("pi-xsettings/registry/v1");
-		const adaptersKey = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+		const adaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 		const previousSettings = Reflect.get(globalThis, settingsKey);
 		const previousAdapters = Reflect.get(globalThis, adaptersKey);
 		Reflect.set(globalThis, settingsKey, settingsRegistry({ enabled: false }));
@@ -328,7 +328,7 @@ declare const tools: { exec_command(args: { cmd: string; }): Promise<{ output: s
 		const tools = [{ name: "resident" }, { name: "skill" }, { name: "tool_search" }] as ToolDefinition[];
 		const handlers = new Map<string, TestHandler>();
 		const settingsKey = Symbol.for("pi-xsettings/registry/v1");
-		const adaptersKey = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+		const adaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 		const previousSettings = Reflect.get(globalThis, settingsKey);
 		const previousAdapters = Reflect.get(globalThis, adaptersKey);
 		Reflect.set(globalThis, settingsKey, settingsRegistry({ enabled: false }));
@@ -462,7 +462,7 @@ function adapterRegistry(names: string[]) {
 		]),
 	);
 	return {
-		protocol: "pi-codemode/nested-tool-adapters/v2",
+		protocol: "pi-code-mode/nested-tool-adapters/v2",
 		version: 2,
 		adapters,
 		claim() {},

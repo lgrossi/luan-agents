@@ -5,7 +5,7 @@ import {
 	type CodeModeToolInput,
 	type CodeModeToolInvocationContext,
 	registerCodeModeToolAdapter,
-} from "pi-codemode/sdk";
+} from "@cfcluan/pi-code-mode/sdk";
 import { renderApplyPatchResult } from "./tools/apply-patch/presentation.ts";
 import type { ApplyPatchToolDetails } from "./tools/apply-patch/result.ts";
 

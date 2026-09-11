@@ -1,6 +1,6 @@
 {
   "name": "pi-exec-command",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,13 +29,13 @@
     "typebox": "*"
   },
   "dependencies": {
-    "pi-codemode": "workspace:*",
+    "@cfcluan/pi-code-mode": "workspace:*",
     "pi-libactions": "workspace:*",
     "pi-libtui": "workspace:*",
     "pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-codemode",
+    "@cfcluan/pi-code-mode",
     "pi-libactions",
     "pi-libtui",
     "pi-xsettings"

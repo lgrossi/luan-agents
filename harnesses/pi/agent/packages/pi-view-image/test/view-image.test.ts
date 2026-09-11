@@ -3,7 +3,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { CustomEditor, type Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-codemode/sdk";
+import { getCodeModeToolAdapterRegistry } from "@cfcluan/pi-code-mode/sdk";
 import { icon } from "pi-libtui";
 import {
 	EDITOR_PROTOCOL,

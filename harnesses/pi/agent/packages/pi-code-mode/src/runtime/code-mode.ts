@@ -8,7 +8,7 @@ import { setLiftedToolNames } from "../protocol/hierarchy.ts";
 export class CodeModeRuntime {
 	private client: CodeModeHostClient | undefined;
 	private liftedToolNames: readonly string[] = [];
-	private readonly hierarchyScope = Symbol("pi-codemode-runtime");
+	private readonly hierarchyScope = Symbol("pi-code-mode-runtime");
 
 	constructor(private readonly pi: Pick<ExtensionAPI, "getAllTools">) {}
 

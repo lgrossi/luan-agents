@@ -7,7 +7,7 @@ import { createToolSearchTool, TOOL_SEARCH_NAME } from "../src/tools/tool-search
 import { renderToolSearchResult } from "../src/tools/tool-search/presentation.ts";
 
 const SETTINGS_KEY = Symbol.for("pi-xsettings/registry/v1");
-const ADAPTERS_KEY = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+const ADAPTERS_KEY = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 
 afterEach(() => {
 	Reflect.deleteProperty(globalThis, SETTINGS_KEY);

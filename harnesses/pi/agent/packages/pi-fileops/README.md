@@ -22,7 +22,7 @@ Requires a Rust toolchain (<https://rustup.rs>). The `apply_patch` binary builds
 itself on first use under Pi's agent directory (`native/apply-patch/<version>/`).
 Set `PI_APPLY_PATCH_BIN` to use a prebuilt binary.
 
-Optional companion: `pi install npm:pi-codemode` adds the `exec`
+Optional companion: `pi install npm:@cfcluan/pi-code-mode` adds the `exec`
 tool and can move `apply_patch` under it; without it `apply_patch` is always a
 direct tool.
 
@@ -33,7 +33,7 @@ a Code Mode execution adapter. Code Mode alone decides which one the model
 sees:
 
 - Without Code Mode, or when `apply_patch` is not selected in Code Mode's
-  `pi-codemode.tools` setting, the model calls the direct tool with
+  `pi-code-mode.tools` setting, the model calls the direct tool with
   `{ "input": "...patch text..." }`.
 - When it is selected there and `exec` is active, it disappears from the direct
   tool list and becomes `tools.apply_patch("...patch text...")` inside `exec`.
@@ -147,7 +147,7 @@ add `result` (the native result); `partial_failure` adds
 
 - **Binary fails to build:** make sure `cargo` is installed and on `PATH`, or
   set `PI_APPLY_PATCH_BIN` to an executable file.
-- **The tool stays direct:** install `pi-codemode`, select
+- **The tool stays direct:** install `pi-code-mode`, select
   `apply_patch` in its `tools` setting, and restart the session. Only Code
   Mode owns placement.
 - **The tool is missing entirely:** check Pi's active tool selection. A strict

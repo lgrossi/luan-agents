@@ -1,4 +1,4 @@
-# Pi package migration — 0.3.2
+# Pi package names
 
 The packages have moved from `@luan-pi` to the names below. Annotations are now
 part of Copy Mode; Tool Search remains independently installable.
@@ -7,7 +7,7 @@ part of Copy Mode; Tool Search remains independently installable.
 | --- | --- |
 | `@luan-pi/pi-annotations` | `pi-copy-mode` |
 | `@luan-pi/pi-apply-patch` | `pi-fileops` |
-| `@luan-pi/pi-code-mode` | `pi-codemode` |
+| `@luan-pi/pi-code-mode` | `@cfcluan/pi-code-mode` |
 | `@luan-pi/pi-codex-native` | `pi-codex-native` |
 | `@luan-pi/pi-copy-mode` | `pi-copy-mode` |
 | `@luan-pi/pi-custom-editor` | `pi-custom-editor` |
@@ -53,5 +53,4 @@ The gallery media in this release shows real Bootty workflows. The combined
 Copy Mode video covers selection/copying and comments/reactions; its README links
 to the two individual workflows as well.
 
-The attempted `pi-code-mode` publication was rejected by npm because of its
-unpublished registry record. Code Mode is published as `pi-codemode`; its settings namespace is `pi-codemode`.
+Code Mode is published as `@cfcluan/pi-code-mode`.

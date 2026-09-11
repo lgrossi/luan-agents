@@ -2,7 +2,7 @@
 	"files": [],
 	"references": [
 		{ "path": "harnesses/pi/agent/packages/pi-fileops" },
-		{ "path": "harnesses/pi/agent/packages/pi-codemode" },
+		{ "path": "harnesses/pi/agent/packages/pi-code-mode" },
 		{ "path": "harnesses/pi/agent/packages/pi-codex-native" },
 		{ "path": "harnesses/pi/agent/packages/pi-copy-mode" },
 		{ "path": "harnesses/pi/agent/packages/pi-developer-messages" },

@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { convertToLlm, type ToolDefinition } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-codemode/sdk";
+import { getCodeModeToolAdapterRegistry } from "@cfcluan/pi-code-mode/sdk";
 import { icon } from "pi-libtui";
 import {
 	getDeveloperMessageContributionRegistry,

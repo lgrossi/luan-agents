@@ -1,8 +1,8 @@
 import { afterEach, expect, test } from "bun:test";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-codemode/sdk";
-import { boundTraceResult } from "../../pi-codemode/src/runtime/trace-values.ts";
-import { renderCodeModeResult } from "../../pi-codemode/src/ui/presentation.ts";
+import { getCodeModeToolAdapterRegistry } from "@cfcluan/pi-code-mode/sdk";
+import { boundTraceResult } from "../../pi-code-mode/src/runtime/trace-values.ts";
+import { renderCodeModeResult } from "../../pi-code-mode/src/ui/presentation.ts";
 import { type CodeModeToolAdapter, registerCodeModeExecAdapters } from "../src/code-mode-adapters.ts";
 import execCommandExtension from "../src/extension.ts";
 import type { ExecSessionManager } from "../src/session-manager.ts";
@@ -11,7 +11,7 @@ import { TEST_EXEC_COMMAND_PREPARATION_RUNTIME } from "./exec-command-preparatio
 import type { ExecToolPresentationDetails } from "../src/tools/presentation.ts";
 import { createWriteStdinTool } from "../src/tools/write-stdin/definition.ts";
 
-const REGISTRY_SYMBOL = Symbol.for("pi-codemode/nested-tool-adapters/v2");
+const REGISTRY_SYMBOL = Symbol.for("pi-code-mode/nested-tool-adapters/v2");
 const theme = {
 	name: "code-mode-exec",
 	bold: (text: string) => text,
@@ -27,7 +27,7 @@ afterEach(() => {
 function installRegistry() {
 	const adapters = new Map<string, CodeModeToolAdapter>();
 	const registry = {
-		protocol: "pi-codemode/nested-tool-adapters/v2" as const,
+		protocol: "pi-code-mode/nested-tool-adapters/v2" as const,
 		version: 2 as const,
 		adapters,
 		claim() {},

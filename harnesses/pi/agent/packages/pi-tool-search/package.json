@@ -1,6 +1,6 @@
 {
   "name": "@cfcluan/pi-tool-search",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,12 +28,12 @@
     "@earendil-works/pi-tui": "*"
   },
   "dependencies": {
-    "pi-codemode": "workspace:*",
+    "@cfcluan/pi-code-mode": "workspace:*",
     "pi-libtui": "workspace:*",
     "pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-codemode",
+    "@cfcluan/pi-code-mode",
     "pi-libtui",
     "pi-xsettings"
   ],
