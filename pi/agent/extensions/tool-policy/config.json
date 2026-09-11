@@ -8,6 +8,11 @@
     "web_search"
   ],
   "directTools": [
+    "read",
+    "write",
+    "edit",
+    "find",
+    "search",
     "exec",
     "wait",
     "ask_user",
