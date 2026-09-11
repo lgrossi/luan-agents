@@ -60,6 +60,7 @@ jobs:
       - name: Check managed harness links
         run: |
           harness_home="$RUNNER_TEMP/agents-harness"
+          mkdir -p "$harness_home"
           cargo xtask harness setup --home "$harness_home"
           cargo xtask harness check --home "$harness_home"
 
