@@ -56,9 +56,9 @@
         "typebox": "*",
       },
     },
-    "harnesses/pi/agent/packages/pi-collapse": {
-      "name": "pi-collapse",
-      "version": "0.3.2",
+    "harnesses/pi/agent/packages/pi-collapse-transcript": {
+      "name": "pi-collapse-transcript",
+      "version": "0.3.4",
       "dependencies": {
         "pi-libtui": "workspace:*",
       },
@@ -252,9 +252,9 @@
         "@earendil-works/pi-tui": "*",
       },
     },
-    "harnesses/pi/agent/packages/pi-skills": {
-      "name": "pi-skills",
-      "version": "0.3.3",
+    "harnesses/pi/agent/packages/pi-skillful": {
+      "name": "pi-skillful",
+      "version": "0.3.4",
       "dependencies": {
         "@cfcluan/pi-code-mode": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -720,7 +720,7 @@
 
     "pi-codex-native": ["pi-codex-native@workspace:harnesses/pi/agent/packages/pi-codex-native"],
 
-    "pi-collapse": ["pi-collapse@workspace:harnesses/pi/agent/packages/pi-collapse"],
+    "pi-collapse-transcript": ["pi-collapse-transcript@workspace:harnesses/pi/agent/packages/pi-collapse-transcript"],
 
     "pi-copy-mode": ["pi-copy-mode@workspace:harnesses/pi/agent/packages/pi-copy-mode"],
 
@@ -742,7 +742,7 @@
 
     "pi-side": ["pi-side@workspace:harnesses/pi/agent/packages/pi-side"],
 
-    "pi-skills": ["pi-skills@workspace:harnesses/pi/agent/packages/pi-skills"],
+    "pi-skillful": ["pi-skillful@workspace:harnesses/pi/agent/packages/pi-skillful"],
 
     "pi-thinking-binding": ["pi-thinking-binding@workspace:harnesses/pi/agent/packages/pi-thinking-binding"],
 

@@ -19,7 +19,7 @@ const definitions = {
 	},
 } as const satisfies Record<string, SettingDefinitionInput>;
 
-const settings = createSettings({ namespace: "pi-skills", label: "Skills", definitions });
+const settings = createSettings({ namespace: "pi-skillful", label: "Skills", definitions });
 
 export type SkillsSettings = SettingsOf<typeof definitions>;
 export const DEFAULT_SKILLS_SETTINGS: SkillsSettings = { ...settings.defaults };

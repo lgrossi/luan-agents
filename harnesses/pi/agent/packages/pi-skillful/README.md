@@ -1,6 +1,6 @@
-# pi-skills
+# pi-skillful
 
-`pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
+`pi-skillful` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
 into the conversation by exact name, so the model can pull in detailed
 instructions only when a task needs them. The package also lists available
 skills in the developer prompt, autocompletes `$skill` references in the
@@ -8,14 +8,14 @@ editor, and shows loaded skills as compact rows in the transcript.
 
 ## Preview
 
-![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-skills.png)
+![pi-skillful in Bootty](https://github.com/luan/agents/releases/download/v0.3.4/pi-skillful.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-skills.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.4/pi-skillful.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-skills
+pi install npm:pi-skillful
 ```
 
 Code Mode is bundled. It requires a Rust toolchain (https://rustup.rs). The
@@ -60,7 +60,7 @@ Call the tool with the exact name:
 ```
 
 The tool reads the `SKILL.md`, removes YAML frontmatter, and sends the body to
-Pi as a steering message with custom type `pi-skills/loaded`:
+Pi as a steering message with custom type `pi-skillful/loaded`:
 
 ```xml
 <skill>
@@ -119,7 +119,7 @@ Skills flagged `disableModelInvocation` are omitted.
 
 ## Settings
 
-Namespace `pi-skills`. Edited via `/xsettings` when `pi-xsettings` is
+Namespace `pi-skillful`. Edited via `/xsettings` when `pi-xsettings` is
 installed; otherwise the default applies.
 
 | Key | Default | Meaning |
@@ -183,5 +183,5 @@ This package registers no keyboard actions.
 ## Develop
 
 Source: https://github.com/luan/agents, directory
-harnesses/pi/agent/packages/pi-skills. Run `bun run typecheck` and
+harnesses/pi/agent/packages/pi-skillful. Run `bun run typecheck` and
 `bun test test` in that directory.

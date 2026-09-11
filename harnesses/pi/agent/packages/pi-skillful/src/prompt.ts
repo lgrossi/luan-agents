@@ -2,7 +2,7 @@ import type { BuildSystemPromptOptions, Skill } from "@earendil-works/pi-coding-
 import { DEFAULT_SKILLS_SETTINGS, type SkillsSettings } from "./contributions/xsettings.ts";
 
 const REGISTRY_KEY = Symbol.for("pi-developer-messages/developer-messages/v1");
-const CONTRIBUTION_ID = "pi-skills/catalog";
+const CONTRIBUTION_ID = "pi-skillful/catalog";
 
 interface RenderContext {
 	systemPromptOptions: BuildSystemPromptOptions;

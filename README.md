@@ -39,11 +39,11 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 | [`@cfcluan/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
 | [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. |
 | [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. |
-| [`pi-collapse`](harnesses/pi/agent/packages/pi-collapse/README.md) | Collapsible tools and thinking sections with a live activity summary. |
+| [`pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. |
 | [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
 | [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. |
 | [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. |
-| [`pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. |
+| [`pi-skillful`](harnesses/pi/agent/packages/pi-skillful/README.md) | Exact-name skill loading through the `skill` tool. |
 | [`pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. |
 | [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. |
 | [`pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. |
