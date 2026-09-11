@@ -10,9 +10,9 @@ or image-generation tools.
 
 ## Preview
 
-![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.png)
+![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.mp4).
 
 ## Install
 
@@ -26,7 +26,7 @@ Optional companions:
   settings below and binds the package's actions to keys from
   `keybindings.json`. Without it, compiled defaults apply and no keys are
   bound.
-- `pi install npm:pi-code-mode` exposes `web__run` inside Code Mode
+- `pi install npm:pi-codemode` exposes `web__run` inside Code Mode
   scripts as well as directly. Without it, `web__run` is only a direct tool.
 
 ## Sign in and use

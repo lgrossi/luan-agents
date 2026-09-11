@@ -1,6 +1,6 @@
 {
   "name": "pi-prompt-storage",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-prompt-storage.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-prompt-storage.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-prompt-storage.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-prompt-storage.mp4"
   },
   "dependencies": {
     "pi-libtui": "workspace:*"

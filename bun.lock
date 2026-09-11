@@ -9,9 +9,9 @@
         "typescript": "6.0.3",
       },
     },
-    "harnesses/pi/agent/packages/pi-code-mode": {
-      "name": "pi-code-mode",
-      "version": "0.3.0",
+    "harnesses/pi/agent/packages/pi-codemode": {
+      "name": "pi-codemode",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -30,10 +30,10 @@
     },
     "harnesses/pi/agent/packages/pi-codex-native": {
       "name": "pi-codex-native",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "partial-json": "^0.1.7",
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -58,7 +58,7 @@
     },
     "harnesses/pi/agent/packages/pi-collapse": {
       "name": "pi-collapse",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libtui": "workspace:*",
       },
@@ -75,7 +75,7 @@
     },
     "harnesses/pi/agent/packages/pi-copy-mode": {
       "name": "pi-copy-mode",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -94,7 +94,7 @@
     },
     "harnesses/pi/agent/packages/pi-custom-editor": {
       "name": "pi-custom-editor",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -112,7 +112,7 @@
     },
     "harnesses/pi/agent/packages/pi-developer-messages": {
       "name": "pi-developer-messages",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -130,9 +130,9 @@
     },
     "harnesses/pi/agent/packages/pi-exec-command": {
       "name": "pi-exec-command",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -151,9 +151,9 @@
     },
     "harnesses/pi/agent/packages/pi-fileops": {
       "name": "pi-fileops",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libtui": "workspace:*",
       },
       "devDependencies": {
@@ -167,7 +167,7 @@
     },
     "harnesses/pi/agent/packages/pi-libactions": {
       "name": "pi-libactions",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "devDependencies": {
         "@earendil-works/pi-coding-agent": "0.84.2",
         "@earendil-works/pi-tui": "0.84.2",
@@ -181,7 +181,7 @@
     },
     "harnesses/pi/agent/packages/pi-libtui": {
       "name": "pi-libtui",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "@pierre/diffs": "1.3.5",
         "@xterm/headless": "6.0.0",
@@ -199,7 +199,7 @@
     },
     "harnesses/pi/agent/packages/pi-panels": {
       "name": "pi-panels",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -217,7 +217,7 @@
     },
     "harnesses/pi/agent/packages/pi-prompt-storage": {
       "name": "pi-prompt-storage",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libtui": "workspace:*",
       },
@@ -234,7 +234,7 @@
     },
     "harnesses/pi/agent/packages/pi-side": {
       "name": "pi-side",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -254,9 +254,9 @@
     },
     "harnesses/pi/agent/packages/pi-skills": {
       "name": "pi-skills",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
       },
@@ -273,9 +273,9 @@
     },
     "harnesses/pi/agent/packages/pi-subagents": {
       "name": "@cfcluan/pi-subagents",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
@@ -298,7 +298,7 @@
     },
     "harnesses/pi/agent/packages/pi-thinking-binding": {
       "name": "pi-thinking-binding",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "devDependencies": {
         "@earendil-works/pi-agent-core": "0.84.2",
         "@earendil-works/pi-coding-agent": "0.84.2",
@@ -312,9 +312,9 @@
     },
     "harnesses/pi/agent/packages/pi-tool-search": {
       "name": "@cfcluan/pi-tool-search",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libtui": "workspace:*",
         "pi-xsettings": "workspace:*",
       },
@@ -331,7 +331,7 @@
     },
     "harnesses/pi/agent/packages/pi-tuicr": {
       "name": "@cfcluan/pi-tuicr",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -349,9 +349,9 @@
     },
     "harnesses/pi/agent/packages/pi-view-image": {
       "name": "pi-view-image",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "pi-code-mode": "workspace:*",
+        "pi-codemode": "workspace:*",
         "pi-libtui": "workspace:*",
       },
       "devDependencies": {
@@ -366,7 +366,7 @@
     },
     "harnesses/pi/agent/packages/pi-xsettings": {
       "name": "pi-xsettings",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "pi-libactions": "workspace:*",
         "pi-libtui": "workspace:*",
@@ -716,7 +716,7 @@
 
     "path-scurry": ["path-scurry@2.0.2", "", { "dependencies": { "lru-cache": "^11.0.0", "minipass": "^7.1.2" } }, "sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg=="],
 
-    "pi-code-mode": ["pi-code-mode@workspace:harnesses/pi/agent/packages/pi-code-mode"],
+    "pi-codemode": ["pi-codemode@workspace:harnesses/pi/agent/packages/pi-codemode"],
 
     "pi-codex-native": ["pi-codex-native@workspace:harnesses/pi/agent/packages/pi-codex-native"],
 

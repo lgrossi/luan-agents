@@ -1,6 +1,6 @@
 {
   "name": "@cfcluan/pi-subagents",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,18 +20,18 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-subagents.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-subagents.mp4"
   },
   "dependencies": {
     "pi-libactions": "workspace:*",
     "pi-libtui": "workspace:*",
-    "pi-code-mode": "workspace:*",
+    "pi-codemode": "workspace:*",
     "pi-xsettings": "workspace:*",
     "typebox": "1.3.15"
   },
   "bundledDependencies": [
-    "pi-code-mode",
+    "pi-codemode",
     "pi-libactions",
     "pi-libtui",
     "pi-xsettings"

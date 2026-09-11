@@ -9,9 +9,9 @@ register through pi-libactions.
 
 ## Preview
 
-![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.png)
+![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-xsettings.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-xsettings.mp4).
 
 ## Install
 

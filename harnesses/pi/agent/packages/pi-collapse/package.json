@@ -1,6 +1,6 @@
 {
   "name": "pi-collapse",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-collapse.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-collapse.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.mp4"
   },
   "dependencies": {
     "pi-libtui": "workspace:*"
