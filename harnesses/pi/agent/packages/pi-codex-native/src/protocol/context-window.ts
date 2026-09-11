@@ -13,8 +13,8 @@ export function isContextWindowPreset(value: UntrustedContextWindowPreset): valu
 }
 
 // Keep the published capability identity so older bundled SDK copies still interoperate.
-export const CONTEXT_WINDOW_SOURCES_KEY = Symbol.for("pi-libcontext/sources/v1");
-export const CONTEXT_WINDOW_SOURCES_PROTOCOL = "pi-libcontext/sources/v1" as const;
+export const CONTEXT_WINDOW_SOURCES_KEY = Symbol.for("pi-codex-native/sources/v1");
+export const CONTEXT_WINDOW_SOURCES_PROTOCOL = "pi-codex-native/sources/v1" as const;
 
 export interface ContextWindowSource {
 	id: string;
@@ -28,7 +28,7 @@ export interface ContextWindowSourceRegistry {
 }
 
 type RegistryState = { sources: Map<ContextWindowSource, ContextWindowSource> };
-const STATE_KEY = Symbol.for("pi-libcontext/sources-state/v1");
+const STATE_KEY = Symbol.for("pi-codex-native/sources-state/v1");
 const states = new WeakMap<ContextWindowSourceRegistry, RegistryState>();
 
 // type-boundary: Symbol.for capabilities can be populated by another extension realm; this validator narrows the public methods.

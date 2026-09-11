@@ -11,9 +11,9 @@ installed the panel is empty. Tabs come from other packages, for example
 
 ## Preview
 
-![pi-panels in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-panels.png)
+![pi-panels in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-panels.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.mp4).
 
 ## Install
 
@@ -46,13 +46,13 @@ slash commands.
 
 | Action | Effect |
 | --- | --- |
-| `side-panel.toggle` | Show or hide the side panel |
-| `side-panel.focus` | Focus the side panel (showing it first if needed) |
-| `side-panel.main.focus` | Focus the main session |
-| `side-panel.focus.next` | Move focus to the other split pane |
-| `side-panel.zoom` | Expand the panel to the full width, or restore it |
-| `side-panel.tab.previous` | Select the previous tab |
-| `side-panel.tab.next` | Select the next tab |
+| `panels.toggle` | Show or hide the side panel |
+| `panels.focus` | Focus the side panel (showing it first if needed) |
+| `panels.main.focus` | Focus the main session |
+| `panels.focus.next` | Move focus to the other split pane |
+| `panels.zoom` | Expand the panel to the full width, or restore it |
+| `panels.tab.previous` | Select the previous tab |
+| `panels.tab.next` | Select the next tab |
 
 ## Keybindings
 
@@ -64,17 +64,17 @@ so reload after editing. An example that binds every action group:
 
 ```json
 {
-  "side-panel.toggle": "ctrl+shift+b",
-  "side-panel.zoom": "alt+shift+z",
-  "side-panel.focus.next": "alt+o",
-  "side-panel.tab.previous": "alt+h",
-  "side-panel.tab.next": "alt+l"
+  "panels.toggle": "ctrl+shift+b",
+  "panels.zoom": "alt+shift+z",
+  "panels.focus.next": "alt+o",
+  "panels.tab.previous": "alt+h",
+  "panels.tab.next": "alt+l"
 }
 ```
 
 While panel content has focus, the host checks the pressed key against the
-bindings for `side-panel.toggle`, `side-panel.zoom`, `side-panel.focus.next`,
-`side-panel.tab.previous`, and `side-panel.tab.next`, then for contributed
+bindings for `panels.toggle`, `panels.zoom`, `panels.focus.next`,
+`panels.tab.previous`, and `panels.tab.next`, then for contributed
 empty-state actions, then for the active tab's `inputActions`, before
 forwarding the key to the tab's component. A matching shortcut runs the action
 and is not passed on, so an embedded TUI cannot receive it. Header and
@@ -109,7 +109,7 @@ const dispose = registerSidePanelProvider(
 ```
 
 `registerSidePanelProvider` stores the provider in a process-wide registry
-keyed by `Symbol.for("pi-side-panel/registry/v1")`. When this host is present
+keyed by `Symbol.for("pi-panels/registry/v1")`. When this host is present
 it calls `attach` with a `SidePanelSession`, but only for providers whose
 `session` matches the current Pi session; the returned function runs when the
 provider is replaced, unregistered, or the session detaches. Registering a
@@ -145,7 +145,7 @@ providers must re-add their tabs (usually with `restoreTab`).
 
 | Responsibility | Owner |
 | --- | --- |
-| Contribution protocol, registry, content types | `pi-libtui` (`side-panel.ts`) |
+| Contribution protocol, registry, content types | `pi-libtui` (`panels.ts`) |
 | Pi registration, host install, top-right controls | `src/extension.ts` |
 | Panel lifecycle, tab bookkeeping, split-pane mount, zoom | `src/controller.ts` |
 | Persisted layout state and its parser | `src/state.ts` |
@@ -157,9 +157,3 @@ providers must re-add their tabs (usually with `restoreTab`).
 Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-panels. Run `bun run typecheck` and
 `bun test test` in that directory.
-
-## Migration from pi-side-panel
-
-The npm package is now `pi-panels`. Existing settings, action IDs,
-and versioned capability identifiers retain their names so existing configuration
-continues to work. Remove the old package before installing the replacement.

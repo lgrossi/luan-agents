@@ -232,7 +232,7 @@ test("sends AGENTS.md as one contextual user message before conversation history
 	expect(result).toEqual([
 		{
 			role: "custom",
-			customType: "pi-developer-prompt/agents-md",
+			customType: "pi-developer-messages/agents-md",
 			content: [
 				"# AGENTS.md instructions for /repo",
 				"",
@@ -301,12 +301,12 @@ test("persists role audit entries once, excludes them from model context, and ex
 	expect(result).toHaveLength(2);
 	expect(result[0]).toMatchObject({
 		role: "custom",
-		customType: "pi-developer-prompt/agents-md",
+		customType: "pi-developer-messages/agents-md",
 		display: false,
 	});
 	expect(result[1]).toEqual({ role: "user", content: "Work." });
 
-	const renderer = harness.entryRenderers.get("pi-developer-prompt/developer");
+	const renderer = harness.entryRenderers.get("pi-developer-messages/developer");
 	if (!renderer) throw new Error("developer audit entry renderer was not registered");
 	const agentIndexUrl = import.meta.resolve("@earendil-works/pi-coding-agent");
 	const { initTheme } = await import(new URL("./modes/interactive/theme/theme.js", agentIndexUrl).href);
@@ -323,7 +323,7 @@ test("persists role audit entries once, excludes them from model context, and ex
 			id: "audit-entry",
 			parentId: null,
 			timestamp: new Date().toISOString(),
-			customType: "pi-developer-prompt/developer",
+			customType: "pi-developer-messages/developer",
 			data: {
 				role: "developer",
 				id: "skills",
@@ -357,7 +357,7 @@ test("audit settings change persistence without changing the composed prompt", a
 	const registry = Reflect.get(globalThis, Symbol.for("pi-xsettings/registry/v1")) as {
 		publish(namespace: string, values: Record<string, string[]>): Promise<void>;
 	};
-	await registry.publish("pi-developer-prompt", { auditEntries: ["context-user"] });
+	await registry.publish("pi-developer-messages", { auditEntries: ["context-user"] });
 	const beforeStart = harness.handlers.get("before_agent_start");
 	const beforeRequest = harness.handlers.get("before_provider_request");
 	if (!beforeStart || !beforeRequest) throw new Error("prompt handlers were not registered");
@@ -374,7 +374,7 @@ test("audit settings change persistence without changing the composed prompt", a
 		prompt: "Owned prompt.",
 		input: [],
 	});
-	await registry.publish("pi-developer-prompt", {
+	await registry.publish("pi-developer-messages", {
 		auditEntries: ["developer", "context-user"],
 	});
 });
@@ -409,12 +409,12 @@ test("removes visible audit copies from Pi compaction and tree summaries", () =>
 	if (!beforeCompact || !beforeTree) throw new Error("summary handlers were not registered");
 	const developerAudit = {
 		role: "custom",
-		customType: "pi-developer-prompt/developer",
+		customType: "pi-developer-messages/developer",
 		content: "Developer audit.",
 	};
 	const contextAudit = {
 		role: "custom",
-		customType: "pi-developer-prompt/context-user",
+		customType: "pi-developer-messages/context-user",
 		content: "Context audit.",
 	};
 	const groupedAudit = {
@@ -451,7 +451,7 @@ test("replaces AGENTS.md context on every provider call without persisting dupli
 	const context = harness.context("one");
 	const stale = {
 		role: "custom",
-		customType: "pi-developer-prompt/agents-md",
+		customType: "pi-developer-messages/agents-md",
 		content: "Stale rules.",
 		display: false,
 		timestamp: 0,

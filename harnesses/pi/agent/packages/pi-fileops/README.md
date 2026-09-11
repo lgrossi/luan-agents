@@ -8,9 +8,9 @@ and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
 
 ## Preview
 
-![pi-fileops in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-fileops.png)
+![pi-fileops in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-fileops.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.mp4).
 
 ## Install
 
@@ -33,7 +33,7 @@ a Code Mode execution adapter. Code Mode alone decides which one the model
 sees:
 
 - Without Code Mode, or when `apply_patch` is not selected in Code Mode's
-  `pi-code-mode.tools` setting, the model calls the direct tool with
+  `pi-codemode.tools` setting, the model calls the direct tool with
   `{ "input": "...patch text..." }`.
 - When it is selected there and `exec` is active, it disappears from the direct
   tool list and becomes `tools.apply_patch("...patch text...")` inside `exec`.
@@ -163,9 +163,3 @@ add `result` (the native result); `partial_failure` adds
 Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-fileops. Run `bun run typecheck` and
 `bun test test` in that directory.
-
-## Migration from pi-apply-patch
-
-The npm package is now `pi-fileops`. Existing settings, action IDs,
-and versioned capability identifiers retain their names so existing configuration
-continues to work. Remove the old package before installing the replacement.

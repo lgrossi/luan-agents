@@ -1,7 +1,7 @@
 import type { BuildSystemPromptOptions, Skill } from "@earendil-works/pi-coding-agent";
 import { DEFAULT_SKILLS_SETTINGS, type SkillsSettings } from "./contributions/xsettings.ts";
 
-const REGISTRY_KEY = Symbol.for("pi-developer-prompt/developer-messages/v1");
+const REGISTRY_KEY = Symbol.for("pi-developer-messages/developer-messages/v1");
 const CONTRIBUTION_ID = "pi-skills/catalog";
 
 interface RenderContext {
@@ -17,7 +17,7 @@ interface Contribution {
 }
 
 interface ContributionRegistry extends Map<string, Contribution> {
-	protocol: "pi-developer-prompt/developer-messages/v1";
+	protocol: "pi-developer-messages/developer-messages/v1";
 	version: 1;
 }
 type ContributionGlobal = typeof globalThis & { [REGISTRY_KEY]?: ContributionRegistry };
@@ -29,7 +29,7 @@ export function registerSkillsPromptContribution(
 	const registry = isContributionRegistry(root[REGISTRY_KEY])
 		? root[REGISTRY_KEY]
 		: (Object.assign(new Map<string, Contribution>(), {
-				protocol: "pi-developer-prompt/developer-messages/v1" as const,
+				protocol: "pi-developer-messages/developer-messages/v1" as const,
 				version: 1 as const,
 			}) as ContributionRegistry);
 	root[REGISTRY_KEY] = registry;
@@ -87,7 +87,7 @@ function isContributionRegistry(value: unknown): value is ContributionRegistry {
 	if (!value || typeof value !== "object") return false;
 	const candidate = value as Partial<ContributionRegistry>;
 	return (
-		candidate.protocol === "pi-developer-prompt/developer-messages/v1" &&
+		candidate.protocol === "pi-developer-messages/developer-messages/v1" &&
 		candidate.version === 1 &&
 		typeof candidate.get === "function" &&
 		typeof candidate.set === "function" &&

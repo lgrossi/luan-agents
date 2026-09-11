@@ -1,4 +1,3 @@
-export { DEFAULT_REACTIONS, getReactions } from "./config/settings.ts";
 export {
 	annotationText,
 	parseEnvelope,

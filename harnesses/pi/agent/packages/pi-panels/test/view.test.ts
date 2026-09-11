@@ -58,7 +58,7 @@ test("runs a contributed panel action instead of forwarding its shortcut to the 
 		runAction: (id) => actions.push(id),
 		tabs: () => [active],
 		activeTab: () => active,
-		emptyActions: () => [{ id: "review", label: "Review", actionId: "side-panel.tuicr.open" }],
+		emptyActions: () => [{ id: "review", label: "Review", actionId: "panels.tuicr.open" }],
 		activate() {},
 		close() {},
 		move() {},
@@ -72,11 +72,11 @@ test("runs a contributed panel action instead of forwarding its shortcut to the 
 		isFocused: () => true,
 	} as never as SplitPaneHost;
 	const view = new SidePanelView(model, host, {} as Theme, {
-		"side-panel.tuicr.open": ["g"],
+		"panels.tuicr.open": ["g"],
 	});
 
 	view.handleInput("g");
 
-	expect(actions).toEqual(["side-panel.tuicr.open"]);
+	expect(actions).toEqual(["panels.tuicr.open"]);
 	expect(childInput).toEqual([]);
 });

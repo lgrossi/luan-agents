@@ -12,9 +12,9 @@ available inside `exec` through the SDK described below.
 
 ## Preview
 
-![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-codemode.png)
+![pi-codemode in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-codemode.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-codemode.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-codemode.mp4).
 
 ## Install
 
@@ -36,9 +36,9 @@ apply.
 Code Mode is the only component that decides whether a tool is direct or lives
 under `exec`. At session start it lifts a tool only when all of these hold:
 
-1. `pi-code-mode.enabled` is true.
+1. `pi-codemode.enabled` is true.
 2. `exec` is active. A strict `--tools` list must include `exec`.
-3. The tool is active, registered, selected in `pi-code-mode.tools`, and has a
+3. The tool is active, registered, selected in `pi-codemode.tools`, and has a
    Code Mode adapter (registered through the SDK).
 
 Lifted tools disappear from Pi's direct tool list and become methods on
@@ -138,7 +138,7 @@ output bounds, errors, and bounded nested call traces.
 
 Depend on `pi-codemode` and import from `pi-codemode/sdk`
 (UI-free). Registering an adapter makes a tool eligible for lifting; the user
-still selects it in `pi-code-mode.tools`.
+still selects it in `pi-codemode.tools`.
 
 An ordinary Pi function tool registers with `registerCodeModeFunctionTool`.
 The bridge reuses the tool's `execute`, `prepareArguments`, `renderCall`, and
@@ -217,6 +217,3 @@ toolCallId, extensionContext, signal }` and may return `{ block: true, reason }`
 Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-codemode. Run `bun run typecheck` and
 `bun test test` in that directory.
-
-The npm name is `pi-codemode`. Existing `pi-code-mode` settings and versioned
-capability identifiers retain their names for compatibility.

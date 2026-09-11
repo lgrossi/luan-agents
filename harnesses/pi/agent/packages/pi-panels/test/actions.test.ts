@@ -17,13 +17,13 @@ test("registers panel actions that invoke the panel", async () => {
 	const dispose = registerSidePanelActions(panel);
 	const registry = ensureActionsRegistry();
 	for (const id of [
-		"side-panel.toggle",
-		"side-panel.main.focus",
-		"side-panel.focus",
-		"side-panel.focus.next",
-		"side-panel.zoom",
-		"side-panel.tab.previous",
-		"side-panel.tab.next",
+		"panels.toggle",
+		"panels.main.focus",
+		"panels.focus",
+		"panels.focus.next",
+		"panels.zoom",
+		"panels.tab.previous",
+		"panels.tab.next",
 	])
 		await registry.find(id)?.run({} as never);
 	expect(calls).toEqual(["toggle", "main", "focus", "next", "zoom", "previous", "next-tab"]);

@@ -5,12 +5,9 @@ import { ToolActivity } from "pi-libtui/tool";
 import type { PromptAuditRole } from "./contributions/xsettings.ts";
 import type { PromptEnvelope } from "./prompt-envelope.ts";
 
-export const DEVELOPER_AUDIT_ENTRY_TYPE = "pi-developer-prompt/developer";
-export const CONTEXT_USER_AUDIT_ENTRY_TYPE = "pi-developer-prompt/context-user";
-export const PROMPT_AUDIT_GROUP_ENTRY_TYPE = "pi-developer-prompt/group";
-
-const LEGACY_DEVELOPER_AUDIT_MESSAGE_TYPES = ["pi-system-prompt/developer"];
-const LEGACY_CONTEXT_USER_AUDIT_MESSAGE_TYPES = ["pi-system-prompt/context-user"];
+export const DEVELOPER_AUDIT_ENTRY_TYPE = "pi-developer-messages/developer";
+export const CONTEXT_USER_AUDIT_ENTRY_TYPE = "pi-developer-messages/context-user";
+export const PROMPT_AUDIT_GROUP_ENTRY_TYPE = "pi-developer-messages/group";
 
 interface SessionEntryLike {
 	type?: string;
@@ -69,27 +66,21 @@ export function publishPromptAuditEntries(
 	}
 }
 
-export function removeLegacyPromptAuditMessages<T extends AgentMessageLike>(messages: readonly T[]): T[] | undefined {
-	const filtered = messages.filter(
-		(message) => message.role !== "custom" || !isLegacyPromptAuditType(message.customType),
-	);
+export function removePromptAuditMessages<T extends AgentMessageLike>(messages: readonly T[]): T[] | undefined {
+	const filtered = messages.filter((message) => message.role !== "custom" || !isPromptAuditType(message.customType));
 	return filtered.length === messages.length ? undefined : filtered;
 }
 
-export function removeLegacyPromptAuditEntries<T extends SessionEntryLike>(entries: readonly T[]): T[] | undefined {
-	const filtered = entries.filter(
-		(entry) => entry.type !== "custom_message" || !isLegacyPromptAuditType(entry.customType),
-	);
+export function removePromptAuditEntries<T extends SessionEntryLike>(entries: readonly T[]): T[] | undefined {
+	const filtered = entries.filter((entry) => entry.type !== "custom_message" || !isPromptAuditType(entry.customType));
 	return filtered.length === entries.length ? undefined : filtered;
 }
 
-function isLegacyPromptAuditType(customType: unknown): boolean {
+function isPromptAuditType(customType: string | undefined): boolean {
 	return (
 		customType === DEVELOPER_AUDIT_ENTRY_TYPE ||
 		customType === CONTEXT_USER_AUDIT_ENTRY_TYPE ||
-		customType === PROMPT_AUDIT_GROUP_ENTRY_TYPE ||
-		LEGACY_DEVELOPER_AUDIT_MESSAGE_TYPES.includes(customType as string) ||
-		LEGACY_CONTEXT_USER_AUDIT_MESSAGE_TYPES.includes(customType as string)
+		customType === PROMPT_AUDIT_GROUP_ENTRY_TYPE
 	);
 }
 

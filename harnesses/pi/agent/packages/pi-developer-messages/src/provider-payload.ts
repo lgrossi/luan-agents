@@ -1,4 +1,4 @@
-export const SYSTEM_PROMPT_PAYLOAD_ADAPTERS_KEY = "pi-developer-prompt/provider-payload-adapters/v1";
+export const SYSTEM_PROMPT_PAYLOAD_ADAPTERS_KEY = "pi-developer-messages/provider-payload-adapters/v1";
 export const SYSTEM_PROMPT_PAYLOAD_ADAPTERS = Symbol.for(SYSTEM_PROMPT_PAYLOAD_ADAPTERS_KEY);
 
 export interface ProviderDeveloperMessage {

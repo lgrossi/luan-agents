@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { basename } from "node:path";
 import type { BuildSystemPromptOptions } from "@earendil-works/pi-coding-agent";
 
-export const DEVELOPER_MESSAGE_CONTRIBUTIONS_KEY = "pi-developer-prompt/developer-messages/v1";
+export const DEVELOPER_MESSAGE_CONTRIBUTIONS_KEY = "pi-developer-messages/developer-messages/v1";
 export const DEVELOPER_MESSAGE_CONTRIBUTIONS = Symbol.for(DEVELOPER_MESSAGE_CONTRIBUTIONS_KEY);
 
 export interface DeveloperMessageRenderContext {

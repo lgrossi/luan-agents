@@ -1,6 +1,6 @@
 {
   "name": "pi-libtui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -30,8 +30,8 @@
     "themes": [
       "./themes"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-libtui.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-libtui.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

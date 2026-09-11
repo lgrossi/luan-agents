@@ -5,8 +5,8 @@ import {
 	registerAnnotationDeveloperPrompt,
 } from "../../src/annotations/contributions/developer-prompt.ts";
 
-const CONTRIBUTIONS = Symbol.for("pi-developer-prompt/developer-messages/v1");
-const ENVELOPE_SERVICE = Symbol.for("pi-developer-prompt/envelope-service/v1");
+const CONTRIBUTIONS = Symbol.for("pi-developer-messages/developer-messages/v1");
+const ENVELOPE_SERVICE = Symbol.for("pi-developer-messages/envelope-service/v1");
 
 interface Contribution {
 	content(context: { prompt?: string }): string | undefined;
@@ -24,7 +24,7 @@ test("contributes guidance only for annotation envelopes", () => {
 	const remove = registerAnnotationDeveloperPrompt();
 	const root = globalThis as TestGlobals;
 	const registry = root[CONTRIBUTIONS] as Map<string, Contribution>;
-	const contribution = registry.get("pi-annotations/directives");
+	const contribution = registry.get("pi-copy-mode/annotations/directives");
 	if (!contribution) throw new Error("annotation contribution was not registered");
 
 	expect(contribution.content({ prompt: "Ordinary request." })).toBeUndefined();
@@ -44,7 +44,7 @@ test("contributes guidance only for annotation envelopes", () => {
 	).toBe(ANNOTATION_SYSTEM_GUIDANCE);
 
 	remove();
-	expect(registry.has("pi-annotations/directives")).toBeFalse();
+	expect(registry.has("pi-copy-mode/annotations/directives")).toBeFalse();
 });
 
 test("uses the developer-message path when its host is installed", () => {

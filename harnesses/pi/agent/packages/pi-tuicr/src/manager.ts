@@ -52,7 +52,7 @@ export class TuicrManager {
 		this.removeEmptyAction = panel.registerEmptyAction({
 			id: "tuicr.open",
 			label: "Review",
-			actionId: "side-panel.tuicr.open",
+			actionId: "panels.tuicr.open",
 		});
 		return () => {
 			this.removeEmptyAction?.();
@@ -138,8 +138,8 @@ export class TuicrManager {
 			id,
 			label: this.reviews.size === 1 ? "Review" : `Review ${id.slice("tuicr:".length)}`,
 			icon: { glyph: "" },
-			headerAction: { label: state.target?.label ?? "Review target", actionId: "side-panel.tuicr.open" },
-			inputActions: ["side-panel.tuicr.open"],
+			headerAction: { label: state.target?.label ?? "Review target", actionId: "panels.tuicr.open" },
+			inputActions: ["panels.tuicr.open"],
 			create: (host, theme) => this.createContent(id, host, theme),
 			onClose: () => this.close(id),
 		};

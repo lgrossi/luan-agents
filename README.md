@@ -88,7 +88,7 @@ spawn supplies direct overrides.
 Tool visibility has three separate controls:
 
 - `pi.defaultTools` selects direct tools.
-- `pi-code-mode.tools` moves selected active tools under `exec`.
+- `pi-codemode.tools` moves selected active tools under `exec`.
 - `pi-tool-search.tools` defers selected tools within the scope where `tool_search` runs.
 
 Code Mode alone changes tool hierarchy. Tool Search only controls deferred membership; a disabled tool is not silently made deferred.
@@ -122,7 +122,7 @@ bun run test:pi
 cargo nextest run --locked
 ```
 
-See [the 0.3.1 package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
+See [the 0.3.2 package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
 
 ## Release
 
@@ -131,7 +131,7 @@ Pi packages publish under their unscoped names, except `@cfcluan/pi-subagents`,
 package version, commit, then tag and push:
 
 ```sh
-git tag v0.3.1 && git push origin main v0.3.1
+git tag v0.3.2 && git push origin main v0.3.2
 ```
 
 `.github/workflows/publish.yml` publishes each package whose version matches the

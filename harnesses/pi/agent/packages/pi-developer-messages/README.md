@@ -8,9 +8,9 @@ commands, and it does not decide how a provider serializes its request.
 
 ## Preview
 
-![pi-developer-messages in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-developer-messages.png)
+![pi-developer-messages in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-developer-messages.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.mp4).
 
 ## Install
 
@@ -58,7 +58,7 @@ On every `before_agent_start`, the extension composes three separate parts:
    (`bash.exe` on Windows).
 3. **Contextual user instructions.** Pi's discovered context files
    (`AGENTS.md`, `CLAUDE.md`, and similar) are combined into one hidden custom
-   message of type `pi-developer-prompt/agents-md`, inserted before the
+   message of type `pi-developer-messages/agents-md`, inserted before the
    conversation history in the `context` hook. If the first file lives in Pi's
    agent directory (global instructions), it is separated from project files
    with a `--- project-doc ---` divider. Context files are never mapped to a
@@ -66,9 +66,8 @@ On every `before_agent_start`, the extension composes three separate parts:
 
 The envelope is remembered per session so compaction and provider retries can
 rebuild it. If building fails, the extension notifies the UI and reuses the
-last good prompt for the same provider. Audit copies (current types and legacy
-`pi-system-prompt/*` types) are removed from the model context, compaction
-input, and tree-summary input.
+last good prompt for the same provider. Audit copies are removed from the model context,
+compaction input, and tree-summary input.
 
 ## Add a developer contribution
 
@@ -99,19 +98,19 @@ const unregister = registerDeveloperMessageContribution({
 
 ### Registering without importing the package
 
-The registry lives on `globalThis` under `Symbol.for("pi-developer-prompt/developer-messages/v1")`:
+The registry lives on `globalThis` under `Symbol.for("pi-developer-messages/developer-messages/v1")`:
 a `Map<id, contribution>` with `protocol` set to that same string and
 `version: 1`. An extension without a hard dependency can create the map with
 those two fields if it is missing and `set` its contribution directly; this
 package adopts a pre-existing registry when it loads, and reads it on every
 envelope build, so load order does not matter. Detect that this package is
-active by checking `globalThis[Symbol.for("pi-developer-prompt/envelope-service/v1")]`.
+active by checking `globalThis[Symbol.for("pi-developer-messages/envelope-service/v1")]`.
 
 ## Provider adapters
 
 Provider packages register an adapter through
 `registerSystemPromptPayloadAdapter` (registry symbol
-`pi-developer-prompt/provider-payload-adapters/v1`, same `Map` + `protocol` +
+`pi-developer-messages/provider-payload-adapters/v1`, same `Map` + `protocol` +
 `version: 1` shape as above, keyed by provider id):
 
 ```ts
@@ -143,7 +142,7 @@ extension never turns a developer message into a user message.
 
 ## Settings
 
-Settings use the `pi-developer-prompt` namespace and are edited with
+Settings use the `pi-developer-messages` namespace and are edited with
 `/xsettings` when `pi-xsettings` is installed; otherwise the defaults
 apply.
 
@@ -155,11 +154,11 @@ In `~/.pi/agent/xsettings.toml` this is stored as:
 
 ```toml
 [appearance]
-pi-developer-prompt.auditEntries = ["developer", "context-user"]
+pi-developer-messages.auditEntries = ["developer", "context-user"]
 ```
 
 Set it to `[]`, `["developer"]`, or `["context-user"]` to reduce what is
-persisted. Audit entries are stored as one `pi-developer-prompt/group` custom
+persisted. Audit entries are stored as one `pi-developer-messages/group` custom
 entry per envelope (skipped when identical to the latest group) and rendered as
 collapsible rows. They only affect the transcript; the model request is
 unchanged.
@@ -172,7 +171,7 @@ unchanged.
 - A provider still receives the old prompt: no adapter is registered for that
   provider id, or `readSystemPrompt` did not return Pi's original prompt.
 - `AGENTS.md` appears twice after compaction: inspect custom messages of type
-  `pi-developer-prompt/agents-md`; current and legacy copies are removed before
+  `pi-developer-messages/agents-md`; existing copies are removed before
   re-injection.
 - Audit entries are not visible: include `developer` or `context-user` in
   `auditEntries`, then expand the custom session entries.
@@ -195,9 +194,3 @@ unchanged.
 Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-developer-messages. Run `bun run typecheck` and
 `bun test test` in that directory.
-
-## Migration from pi-developer-prompt
-
-The npm package is now `pi-developer-messages`. Existing settings, action IDs,
-and versioned capability identifiers retain their names so existing configuration
-continues to work. Remove the old package before installing the replacement.

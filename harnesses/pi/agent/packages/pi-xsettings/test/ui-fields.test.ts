@@ -205,13 +205,13 @@ describe("settings screen fields", () => {
 			minItems: 1,
 		};
 		const registration: SettingRegistration = {
-			namespace: "pi-annotations",
+			namespace: "pi-copy-mode",
 			label: "Annotations",
 			definitions: [definition],
 		};
 
 		const field = toUiField(
-			{ interaction: { "pi-annotations": { reactions: ["✅ Approved", "❓ Clarify"] } } },
+			{ interaction: { "pi-copy-mode": { reactions: ["✅ Approved", "❓ Clarify"] } } },
 			registration,
 			definition,
 		);

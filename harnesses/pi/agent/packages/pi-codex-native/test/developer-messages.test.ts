@@ -5,8 +5,8 @@ import { registerSkillsPromptContribution } from "../../pi-skills/src/prompt.ts"
 import { registerCodexPromptPayloadAdapter } from "../src/prompt-payload-adapter.ts";
 import { buildRequestBody } from "../src/provider/request-body.ts";
 
-const CONTRIBUTIONS_KEY = Symbol.for("pi-developer-prompt/developer-messages/v1");
-const PAYLOAD_ADAPTERS_KEY = Symbol.for("pi-developer-prompt/provider-payload-adapters/v1");
+const CONTRIBUTIONS_KEY = Symbol.for("pi-developer-messages/developer-messages/v1");
+const PAYLOAD_ADAPTERS_KEY = Symbol.for("pi-developer-messages/provider-payload-adapters/v1");
 const slots = globalThis as typeof globalThis & Record<symbol, unknown>;
 let previousRegistry: unknown;
 let previousPayloadAdapters: unknown;

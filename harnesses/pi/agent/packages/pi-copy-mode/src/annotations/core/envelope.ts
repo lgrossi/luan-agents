@@ -54,12 +54,9 @@ export function projectEnvelope(
 	if (!parsed) return text;
 	const blocks = parsed.annotations.map((annotation, offset) => {
 		const header = renderHeader?.(annotation, offset + 1);
-		return `${header ?? `[annotation #${offset + 1}]`}\nSelected text: “${annotation.text}”\nComment: ${legacyAnnotationText(annotation.annotation)}`;
+		return `${header ?? `[annotation #${offset + 1}]`}\nSelected text: “${annotation.text}”\nComment: ${annotation.annotation}`;
 	});
 	return [projectRequest(parsed.request), ...blocks].filter((part) => part.length > 0).join("\n\n");
 }
 
 /** Read envelopes written before reactions became a creation shortcut. */
-export function legacyAnnotationText(text: string): string {
-	return text.match(/^Reaction: “(.+)”\nReaction \d+$/s)?.[1] ?? text;
-}

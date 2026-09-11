@@ -13,9 +13,9 @@ model-visible content are never rewritten.
 
 ## Preview
 
-![pi-collapse in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.png)
+![pi-collapse in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-collapse.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-collapse.mp4).
 
 ## Install
 
@@ -38,7 +38,7 @@ defaults apply.
 There are no commands, tools, actions, or side-panel tabs. The extension does
 its work on `session_start`:
 
-- In interactive TUI mode it installs a hidden widget (`pi-transcript.host`)
+- In interactive TUI mode it installs a hidden widget (`pi-collapse.host`)
   that mounts a transcript projection over Pi's chat container.
 - In fullscreen mode, consecutive `thinking` and tool entries become one
   `ActivitySection`. Its header row shows the summary, a `N steps` count, and
@@ -120,9 +120,3 @@ Source: https://github.com/luan/agents, directory
 `AssistantMessageComponent` and `ToolExecutionComponent` instances and checks
 collapse, click expansion, streaming updates, failure counts, unmount
 behaviour, and summary sanitisation.
-
-## Migration from pi-transcript
-
-The npm package is now `pi-collapse`. Existing settings, action IDs,
-and versioned capability identifiers retain their names so existing configuration
-continues to work. Remove the old package before installing the replacement.

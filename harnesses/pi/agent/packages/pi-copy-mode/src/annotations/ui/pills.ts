@@ -13,7 +13,6 @@ import {
 
 export { decorateDetailCard, overlayTotalWidth } from "pi-libtui";
 
-import { legacyAnnotationText } from "../core/envelope.ts";
 import type { DraftAnnotation, ResponseAnnotation } from "../core/types.ts";
 
 export type PillSurface = "base" | "user";
@@ -96,7 +95,7 @@ export function responseAnnotationDetailLines(
 		theme,
 		{
 			title: `Annotation #${index}`,
-			rows: [`Selected: ${annotation.text}`, `Comment: ${legacyAnnotationText(annotation.annotation)}`],
+			rows: [`Selected: ${annotation.text}`, `Comment: ${annotation.annotation}`],
 		},
 		availableWidth,
 	);

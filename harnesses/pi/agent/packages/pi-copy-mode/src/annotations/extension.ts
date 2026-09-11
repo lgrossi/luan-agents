@@ -3,7 +3,6 @@ import { sliceByColumn, stripTerminalSequences, visibleWidth } from "@earendil-w
 import { removeUnmarkedEditorCursor, subscribeTuiAppearance } from "pi-libtui";
 import { ensureMouseRegistry } from "pi-libtui/mouse";
 import { ensureSelectionRegistry, type SelectionActionRequest } from "pi-libtui/selection";
-import { registerAnnotationSettings } from "./config/settings.ts";
 import {
 	ANNOTATION_SYSTEM_GUIDANCE,
 	hasDeveloperPromptHost,
@@ -24,8 +23,8 @@ import {
 	shouldDecorateAnnotationMarkers,
 } from "./ui/screen-markers.ts";
 
-const STATUS_KEY = "pi-annotations.drafts";
-const WIDGET_KEY = "pi-annotations.render-host";
+const STATUS_KEY = "pi-copy-mode.annotations.drafts";
+const WIDGET_KEY = "pi-copy-mode.annotations.render-host";
 type EditorFactory = NonNullable<ReturnType<ExtensionContext["ui"]["getEditorComponent"]>>;
 
 function status(drafts: readonly DraftAnnotation[]): string | undefined {
@@ -51,7 +50,6 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 	let installedEditorFactory: EditorFactory | undefined;
 	let requestRender = (): void => {};
 	let composerHover: { draftId: string; anchor: { row: number; col: number } } | undefined;
-	const unregisterSettings = registerAnnotationSettings();
 	const unregisterDeveloperPrompt = registerAnnotationDeveloperPrompt();
 	const setOverlayActive = (active: boolean): void => {
 		overlayActive = active;
@@ -143,7 +141,7 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 		});
 		removeReferenceCleanupDecorator?.();
 		removeReferenceCleanupDecorator = registry.registerScreenDecorator({
-			id: "pi-annotations.selection-marker-cleanup",
+			id: "pi-copy-mode.annotations.selection-marker-cleanup",
 			// Remove inert APC wrappers before any later decorator can insert
 			// styling or cursor cells inside the wrapper. Those control sequences
 			// are identity metadata, never part of the rendered screen.
@@ -160,7 +158,7 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 		});
 		removeDecorator?.();
 		removeDecorator = registry.registerScreenDecorator({
-			id: "pi-annotations.draft-markers",
+			id: "pi-copy-mode.annotations.draft-markers",
 			// Higher priorities run first. Rebuild pills after copy-mode's cursor
 			// decorator so cursor paint cannot leak through their rounded caps.
 			priority: 5,
@@ -217,7 +215,7 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 		});
 		removeMarkerRegion?.();
 		removeMarkerRegion = registry.registerOverlayRegion({
-			id: "pi-annotations.transcript-handles",
+			id: "pi-copy-mode.annotations.transcript-handles",
 			priority: 5_000,
 			getRect: () => markers.getBounds(),
 			onMouse(event) {
@@ -237,7 +235,7 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 		});
 		removeReferenceRegion?.();
 		removeReferenceRegion = registry.registerOverlayRegion({
-			id: "pi-annotations.reference-hover",
+			id: "pi-copy-mode.annotations.reference-hover",
 			priority: 4_000,
 			getRect: () => references.getBounds(),
 			onMouse: (event) => handleReferencePillMouse(references, event, requestRender),
@@ -305,7 +303,6 @@ export default function annotationExtension(pi: ExtensionAPI): void {
 		installedEditorFactory = undefined;
 		if (event.reason === "reload" || event.reason === "quit") {
 			unregisterDeveloperPrompt();
-			unregisterSettings();
 		}
 	});
 }

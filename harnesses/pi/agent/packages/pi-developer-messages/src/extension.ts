@@ -2,8 +2,8 @@ import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-a
 import {
 	publishPromptAuditEntries,
 	registerPromptAuditEntryRenderers,
-	removeLegacyPromptAuditEntries,
-	removeLegacyPromptAuditMessages,
+	removePromptAuditEntries,
+	removePromptAuditMessages,
 } from "./audit-entries.ts";
 import { AGENTS_CONTEXT_MESSAGE_ID, injectAgentsContext, renderAgentsContext } from "./context-messages.ts";
 import { composeDeveloperMessages, type DeveloperMessage } from "./developer-messages.ts";
@@ -120,7 +120,7 @@ export function registerDeveloperPromptExtension(pi: ExtensionAPI): void {
 	});
 
 	pi.on("context", (event, ctx) => {
-		const filteredAudit = removeLegacyPromptAuditMessages(event.messages);
+		const filteredAudit = removePromptAuditMessages(event.messages);
 		const withoutAudit = filteredAudit ?? event.messages;
 		const messages = injectAgentsContext(withoutAudit, sessionState(sessions, ctx).agentsContext) ?? filteredAudit;
 		return messages ? { messages } : undefined;
@@ -129,19 +129,13 @@ export function registerDeveloperPromptExtension(pi: ExtensionAPI): void {
 	pi.on("session_before_compact", (event) => {
 		replaceArray(
 			event.preparation.messagesToSummarize,
-			removeLegacyPromptAuditMessages(event.preparation.messagesToSummarize),
+			removePromptAuditMessages(event.preparation.messagesToSummarize),
 		);
-		replaceArray(
-			event.preparation.turnPrefixMessages,
-			removeLegacyPromptAuditMessages(event.preparation.turnPrefixMessages),
-		);
+		replaceArray(event.preparation.turnPrefixMessages, removePromptAuditMessages(event.preparation.turnPrefixMessages));
 	});
 
 	pi.on("session_before_tree", (event) => {
-		replaceArray(
-			event.preparation.entriesToSummarize,
-			removeLegacyPromptAuditEntries(event.preparation.entriesToSummarize),
-		);
+		replaceArray(event.preparation.entriesToSummarize, removePromptAuditEntries(event.preparation.entriesToSummarize));
 	});
 
 	pi.on("before_provider_request", (event, ctx) => {

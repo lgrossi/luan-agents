@@ -24,7 +24,7 @@ test("keeps sessionless child sessions out of the working directory", () => {
 		},
 	} as never;
 
-	expect(sideChatSessionRoot(context)).toBe(join(tmpdir(), "pi-side-chat", "sessionless-root"));
+	expect(sideChatSessionRoot(context)).toBe(join(tmpdir(), "pi-side", "sessionless-root"));
 });
 
 test("keeps persistent child sessions under Pi's session directory", () => {
@@ -44,7 +44,7 @@ test("defers projecting the parent branch until a new side chat is prepared", ()
 		cwd: "/tmp/project",
 		ui: { theme: { name: "test" } },
 		sessionManager: {
-			getSessionDir: () => "/tmp/pi-side-chat",
+			getSessionDir: () => "/tmp/pi-side",
 			getSessionFile: () => "/tmp/pi-parent.jsonl",
 			getBranch: () => {
 				branchReads += 1;
@@ -66,7 +66,7 @@ test("defers projecting the parent branch until a new side chat is prepared", ()
 
 test("new side chats always create unique exact sessions", () => {
 	const writes: SideChatSessionWrite[] = [];
-	const root = "/tmp/pi-side-chat";
+	const root = "/tmp/pi-side";
 	const runtime = {
 		cwd: "/tmp/project",
 		sessionRoot: root,
@@ -102,7 +102,7 @@ test("new side chats always create unique exact sessions", () => {
 });
 
 test("writes inherited history followed by Codex's hidden side-conversation boundary", () => {
-	const root = mkdtempSync(join(tmpdir(), "pi-side-chat-"));
+	const root = mkdtempSync(join(tmpdir(), "pi-side-"));
 	try {
 		const sessionDir = join(root, "side-chat");
 		const inheritedEntry = {
@@ -138,7 +138,7 @@ test("writes inherited history followed by Codex's hidden side-conversation boun
 		expect(inherited).toEqual({ ...inheritedEntry, parentId: sessionInfo.id });
 		expect(boundary).toMatchObject({
 			type: "custom_message",
-			customType: "pi-side-chat-boundary",
+			customType: "pi-side-boundary",
 			content: SIDE_CONVERSATION_BOUNDARY,
 			display: false,
 			parentId: inherited.id,

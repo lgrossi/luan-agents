@@ -1,6 +1,23 @@
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import { createSettings, stringListSetting, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+
+export const DEFAULT_REACTIONS = [
+	"👍 Looks good",
+	"🚫 Rejected",
+	"✅ Approved",
+	"❓ Clarify",
+	"🧬 Match existing patterns",
+	"🔄 Consider alternatives",
+	"🔍 Verify",
+] as const;
 
 const definitions = {
+	reactions: stringListSetting({
+		label: "Reactions",
+		description: "Ordered reaction choices shown when annotating a selection.",
+		category: "interaction",
+		default: DEFAULT_REACTIONS,
+		minItems: 0,
+	}),
 	copyOnSelect: {
 		category: "interaction",
 		section: "Copy mode",

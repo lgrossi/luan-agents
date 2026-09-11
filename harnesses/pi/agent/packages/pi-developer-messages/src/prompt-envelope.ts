@@ -1,8 +1,8 @@
 import type { BuildSystemPromptOptions } from "@earendil-works/pi-coding-agent";
 import type { DeveloperMessage } from "./developer-messages.ts";
 
-const PROMPT_ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-prompt/envelope-service/v1");
-const PROMPT_ENVELOPE_REQUESTS_KEY = Symbol.for("pi-developer-prompt/envelope-requests/v1");
+const PROMPT_ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-messages/envelope-service/v1");
+const PROMPT_ENVELOPE_REQUESTS_KEY = Symbol.for("pi-developer-messages/envelope-requests/v1");
 
 export interface PromptEnvelopeRequest {
 	provider?: string;
@@ -30,7 +30,7 @@ export interface PromptEnvelopeService {
 }
 
 export interface PromptEnvelopeRequestStore {
-	readonly protocol: "pi-developer-prompt/envelope-requests/v1";
+	readonly protocol: "pi-developer-messages/envelope-requests/v1";
 	readonly version: 1;
 	get(sessionId: string): PromptEnvelopeRequest | undefined;
 	set(sessionId: string, request: PromptEnvelopeRequest): void;
@@ -44,7 +44,7 @@ export function promptEnvelopeRequests(): PromptEnvelopeRequestStore {
 	if (isRequestStore(current)) return current;
 	const values = new Map<string, PromptEnvelopeRequest>();
 	const requests: PromptEnvelopeRequestStore = {
-		protocol: "pi-developer-prompt/envelope-requests/v1",
+		protocol: "pi-developer-messages/envelope-requests/v1",
 		version: 1,
 		get: (sessionId) => values.get(sessionId),
 		set: (sessionId, request) => {
@@ -87,7 +87,7 @@ function isRequestStore(value: unknown): value is PromptEnvelopeRequestStore {
 	if (!value || typeof value !== "object") return false;
 	const candidate = value as Partial<PromptEnvelopeRequestStore>;
 	return (
-		candidate.protocol === "pi-developer-prompt/envelope-requests/v1" &&
+		candidate.protocol === "pi-developer-messages/envelope-requests/v1" &&
 		candidate.version === 1 &&
 		typeof candidate.get === "function" &&
 		typeof candidate.set === "function" &&

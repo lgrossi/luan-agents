@@ -58,7 +58,7 @@ export default function tuicrExtension(pi: ExtensionAPI): void {
 		activeSession = nextContext.sessionManager;
 		unregisterAction?.();
 		unregisterAction = registerAction({
-			id: "side-panel.tuicr.open",
+			id: "panels.tuicr.open",
 			description: "Review changes with tuicr",
 			run: () => manager?.open(),
 		});

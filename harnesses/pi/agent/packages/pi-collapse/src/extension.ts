@@ -8,7 +8,7 @@ export default function transcriptExtension(pi: ExtensionAPI): void {
 		unmount?.();
 		unmount = undefined;
 		if (!ctx.hasUI || ctx.mode !== "tui") return;
-		ctx.ui.setWidget("pi-transcript.host", (tui, theme) => {
+		ctx.ui.setWidget("pi-collapse.host", (tui, theme) => {
 			unmount?.();
 			const release = mountTranscriptProjection(
 				tui,
@@ -28,6 +28,6 @@ export default function transcriptExtension(pi: ExtensionAPI): void {
 	pi.on("session_shutdown", (_event, ctx) => {
 		unmount?.();
 		unmount = undefined;
-		if (ctx.hasUI && ctx.mode === "tui") ctx.ui.setWidget("pi-transcript.host", undefined);
+		if (ctx.hasUI && ctx.mode === "tui") ctx.ui.setWidget("pi-collapse.host", undefined);
 	});
 }

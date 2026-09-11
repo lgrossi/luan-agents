@@ -3,8 +3,8 @@ import { getSubagentConfig, type SubagentConfig } from "../config/settings.ts";
 import { multiAgentModeInstructions, multiAgentRoleInstructions } from "../core/instructions.ts";
 import { getCoordinatorForSession } from "../runtime/coordinator.ts";
 
-const REGISTRY_KEY = Symbol.for("pi-developer-prompt/developer-messages/v1");
-const ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-prompt/envelope-service/v1");
+const REGISTRY_KEY = Symbol.for("pi-developer-messages/developer-messages/v1");
+const ENVELOPE_SERVICE_KEY = Symbol.for("pi-developer-messages/envelope-service/v1");
 const REGISTRATION_STATE_KEY = Symbol.for("pi-subagents/developer-prompt-registration/v1");
 
 interface RenderContext {
@@ -21,7 +21,7 @@ interface Contribution {
 }
 
 interface ContributionRegistry extends Map<string, Contribution> {
-	protocol: "pi-developer-prompt/developer-messages/v1";
+	protocol: "pi-developer-messages/developer-messages/v1";
 	version: 1;
 }
 
@@ -95,7 +95,7 @@ function contributionRegistry(): ContributionRegistry {
 	const existing = root[REGISTRY_KEY];
 	if (isContributionRegistry(existing)) return existing;
 	const registry = Object.assign(new Map<string, Contribution>(), {
-		protocol: "pi-developer-prompt/developer-messages/v1" as const,
+		protocol: "pi-developer-messages/developer-messages/v1" as const,
 		version: 1 as const,
 	}) as ContributionRegistry;
 	root[REGISTRY_KEY] = registry;
@@ -110,7 +110,7 @@ function isContributionRegistry(value: UntrustedContributionRegistry): value is 
 	if (!value || typeof value !== "object") return false;
 	const candidate = value as Partial<ContributionRegistry>;
 	return (
-		candidate.protocol === "pi-developer-prompt/developer-messages/v1" &&
+		candidate.protocol === "pi-developer-messages/developer-messages/v1" &&
 		candidate.version === 1 &&
 		typeof candidate.get === "function" &&
 		typeof candidate.set === "function" &&

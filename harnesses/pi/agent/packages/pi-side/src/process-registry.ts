@@ -1,6 +1,6 @@
 import type { PtyProcess } from "pi-libtui";
 
-const PROCESS_REGISTRY_KEY = Symbol.for("pi-side-chat/process-registry/v1");
+const PROCESS_REGISTRY_KEY = Symbol.for("pi-side/process-registry/v1");
 
 interface ProcessRegistry {
 	readonly version: 1;

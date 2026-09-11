@@ -8,15 +8,15 @@ history is reference only. Use it to ask questions or explore without
 disturbing the main thread.
 
 It is a Pi extension, not a model-facing tool. It registers one command
-(`/side`), one action (`side-panel.chat.new`), and a side-panel provider.
+(`/side`), one action (`panels.chat.new`), and a side-panel provider.
 
 ## Preview
 
 Independent side conversation beside the main Pi session.
 
-![pi-side in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-side.png)
+![pi-side in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-side.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.mp4).
 
 ## Install
 
@@ -45,7 +45,7 @@ Set `PI_TERMINAL_BRIDGE_BINARY` to use a prebuilt binary.
 | `/side` | Start a new side chat |
 | `/side <prompt>` | Start a new side chat and send `<prompt>` as its first message |
 | `/side close` | Close the active side-chat tab (side-panel host only) |
-| action `side-panel.chat.new` | Same as `/side` with no prompt |
+| action `panels.chat.new` | Same as `/side` with no prompt |
 
 Every side chat is new. The command never resumes an existing chat by name.
 Each child gets a fresh UUID session id and a label of the form `Side N`,
@@ -59,7 +59,7 @@ two surfaces are distinguishable. The environment variable
 Child sessions are stored in `side-chats/<uuid>/` under the parent's session
 directory, together with the generated theme file
 `side-chat-<uuid>.json`. When the parent runs without a session file
-(`--no-session`), they go under `pi-side-chat/<parent-session-id>/` in the OS
+(`--no-session`), they go under `pi-side/<parent-session-id>/` in the OS
 temporary directory instead.
 
 ### Inherited history
@@ -101,14 +101,14 @@ session location from the parent Pi context.
 
 ## Keybindings
 
-The `side-panel.chat.new` action has no default key. To bind one, add it to
+The `panels.chat.new` action has no default key. To bind one, add it to
 `keybindings.json` in Pi's agent directory (normally
 `~/.pi/agent/keybindings.json`). Each property name is an action ID and each
 value is a key ID string or an array of them:
 
 ```json
 {
-  "side-panel.chat.new": "ctrl+shift+n"
+  "panels.chat.new": "ctrl+shift+n"
 }
 ```
 
@@ -122,7 +122,7 @@ any binding.
 
 | Responsibility | File |
 | --- | --- |
-| `/side` command, `side-panel.chat.new` action, side-panel provider, session hooks | `src/extension.ts` |
+| `/side` command, `panels.chat.new` action, side-panel provider, session hooks | `src/extension.ts` |
 | Child session creation, inherited history, boundary message, `pi` command line | `src/session.ts` |
 | PTY processes, panel tabs, overlay fallback, close and dispose | `src/manager.ts` |
 | Persisted tab state (`side-chat:tabs-v1`) and validation | `src/state.ts` |
@@ -134,9 +134,3 @@ any binding.
 Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-side. Run `bun run typecheck` and
 `bun test test` in that directory.
-
-## Migration from pi-side-chat
-
-The npm package is now `pi-side`. Existing settings, action IDs,
-and versioned capability identifiers retain their names so existing configuration
-continues to work. Remove the old package before installing the replacement.

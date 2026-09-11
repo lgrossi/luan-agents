@@ -21,7 +21,7 @@ const definitions = {
 } as const satisfies Record<string, SettingDefinitionInput>;
 
 const settings = createSettings({
-	namespace: "pi-developer-prompt",
+	namespace: "pi-developer-messages",
 	label: "Developer Prompt",
 	definitions,
 });

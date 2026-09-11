@@ -1,4 +1,4 @@
-export const CODE_MODE_HIERARCHY_PROTOCOL = "pi-code-mode/tool-hierarchy/v2" as const;
+export const CODE_MODE_HIERARCHY_PROTOCOL = "pi-codemode/tool-hierarchy/v2" as const;
 export const CODE_MODE_HIERARCHY = Symbol.for(CODE_MODE_HIERARCHY_PROTOCOL);
 
 interface CodeModeHierarchy {

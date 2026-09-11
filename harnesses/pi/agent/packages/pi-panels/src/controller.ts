@@ -13,7 +13,7 @@ export interface SidePanelRuntime {
 
 /** Owns one session's generic side-panel layout and contributed content. */
 export class SidePanelController implements SidePanelSession, SidePanelViewModel {
-	readonly protocol = "pi-side-panel/registry/v1" as const;
+	readonly protocol = "pi-panels/registry/v1" as const;
 	readonly version = 1 as const;
 	private state: SidePanelLayoutState;
 	private readonly tabMap = new Map<string, SidePanelTab>();
@@ -242,7 +242,7 @@ export class SidePanelController implements SidePanelSession, SidePanelViewModel
 		}
 		this.unmount = mountSplitPane(
 			{
-				id: "pi-side-panel.host",
+				id: "pi-panels.host",
 				position: "right",
 				size: this.zoomed ? Number.MAX_SAFE_INTEGER : (this.state.width ?? 1),
 				...(!this.zoomed && this.state.width === undefined ? { initialRatio: 0.5 } : {}),

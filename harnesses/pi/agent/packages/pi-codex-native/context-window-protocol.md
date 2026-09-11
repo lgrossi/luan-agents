@@ -3,7 +3,7 @@
 The Codex provider owns this UI-free protocol. Import its public helpers from
 `pi-codex-native/context-window`, or contribute through the versioned
 structural registry without a runtime dependency on the provider. The original
-`pi-libcontext/sources/v1` identity is retained so older SDK copies continue to
+`pi-codex-native/sources/v1` identity is retained so older SDK copies continue to
 interoperate.
 
 ## Presets
@@ -74,12 +74,12 @@ and any stronger provider-side override.
 
 ## Registry details
 
-The registry lives on `globalThis` under `Symbol.for("pi-libcontext/sources/v1")`
+The registry lives on `globalThis` under `Symbol.for("pi-codex-native/sources/v1")`
 (exported as `CONTEXT_WINDOW_SOURCES_KEY`). It exposes:
 
 | Member | Value |
 | --- | --- |
-| `protocol` | `"pi-libcontext/sources/v1"` (`CONTEXT_WINDOW_SOURCES_PROTOCOL`) |
+| `protocol` | `"pi-codex-native/sources/v1"` (`CONTEXT_WINDOW_SOURCES_PROTOCOL`) |
 | `version` | `1` |
 | `register(source)` | returns a disposer function |
 

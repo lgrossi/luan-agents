@@ -12,7 +12,7 @@ import {
 } from "../src/contributions/xsettings.ts";
 
 const ACTIONS_KEY = Symbol.for("pi-libactions/registry/v1");
-const SOURCES_KEY = Symbol.for("pi-libcontext/sources/v1");
+const SOURCES_KEY = Symbol.for("pi-codex-native/sources/v1");
 const XSETTINGS_KEY = Symbol.for("pi-xsettings/registry/v1");
 type TestEvent = { reason?: string; toolResults?: readonly object[] };
 type Handler = (event: TestEvent, ctx: ExtensionContext) => unknown;

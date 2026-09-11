@@ -1,10 +1,10 @@
-const PAYLOAD_ADAPTERS_KEY = Symbol.for("pi-developer-prompt/provider-payload-adapters/v1");
+const PAYLOAD_ADAPTERS_KEY = Symbol.for("pi-developer-messages/provider-payload-adapters/v1");
 const CODEX_PROVIDER = "openai-codex";
 const MANAGED_DEVELOPER_MESSAGE_START = '<pi_developer_prompt_message id="';
 const MANAGED_DEVELOPER_MESSAGE_END = "</pi_developer_prompt_message>";
 const LEGACY_DEVELOPER_MESSAGE_START = '<pi_system_prompt_developer_message id="';
 const LEGACY_DEVELOPER_MESSAGE_END = "</pi_system_prompt_developer_message>";
-const PAYLOAD_ADAPTER_PROTOCOL = "pi-developer-prompt/provider-payload-adapters/v1" as const;
+const PAYLOAD_ADAPTER_PROTOCOL = "pi-developer-messages/provider-payload-adapters/v1" as const;
 
 interface SystemPromptPayloadAdapter {
 	provider: string;

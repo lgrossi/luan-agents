@@ -68,20 +68,4 @@ describe("response annotation envelope", () => {
 		expect(parseEnvelope("# Response annotations:\nnope")).toBeUndefined();
 		expect(projectEnvelope("ordinary")).toBe("ordinary");
 	});
-
-	test("projects the legacy reaction spelling as an ordinary annotation", () => {
-		const legacy = [
-			"# Response annotations:",
-			"Each item contains text selected from an earlier response and may include a user comment.",
-			"<response-annotations>",
-			JSON.stringify([{ text: "selected", annotation: "Reaction: “👍 Looks good”\nReaction 4" }]),
-			"</response-annotations>",
-			"",
-			"## My request:",
-			"request",
-		].join("\n");
-		expect(projectEnvelope(legacy)).toBe(
-			"request\n\n[annotation #1]\nSelected text: “selected”\nComment: 👍 Looks good",
-		);
-	});
 });

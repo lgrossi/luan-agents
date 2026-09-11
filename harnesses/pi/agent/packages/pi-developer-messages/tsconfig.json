@@ -6,7 +6,7 @@
     "strict": true,
     "noEmit": true,
     "incremental": true,
-    "tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-developer-prompt.tsbuildinfo",
+    "tsBuildInfoFile": "../../../../../target/tsbuildinfo/pi-developer-messages.tsbuildinfo",
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

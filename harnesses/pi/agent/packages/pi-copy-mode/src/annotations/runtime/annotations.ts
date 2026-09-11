@@ -3,7 +3,7 @@ import { visibleWidth } from "@earendil-works/pi-tui";
 import type { SelectionActionRequest } from "pi-libtui/selection";
 import type { AnnotationSelection, DraftAnnotation, ResponseAnnotation } from "../core/types.ts";
 import { removeTokenAtom, tokenInsertion, type AnnotationStore } from "../core/store.ts";
-import { getReactions } from "../config/settings.ts";
+import { getCopyModeSettings } from "../../config/settings.ts";
 import { showCommentOverlay, showReactionOverlay } from "../ui/composer-overlays.ts";
 import type { MouseRegistry } from "pi-libtui/mouse";
 import type { SelectionPoint } from "pi-libtui/selection";
@@ -107,7 +107,7 @@ export async function composeAnnotation(
 	const selection = resolveSelection(request, ctx);
 	const actionAnchor = selectionOverlayAnchor(request);
 	if (request.action === "selection.reaction") {
-		const reactions = getReactions();
+		const reactions = getCopyModeSettings().reactions;
 		if (reactions.length === 0) {
 			ctx.ui.notify("Configure at least one annotation reaction first.", "warning");
 			return false;
