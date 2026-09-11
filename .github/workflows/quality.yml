@@ -36,6 +36,9 @@ jobs:
         with:
           components: rustfmt, clippy
 
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
