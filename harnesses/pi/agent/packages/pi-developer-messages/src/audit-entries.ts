@@ -58,9 +58,10 @@ export function publishPromptAuditEntries(
 		for (const message of envelope.contextualUserMessages)
 			auditEntries.push({ role: "user", id: message.id, content: message.content });
 	}
-	if (auditEntries.length === 0 || isCurrentAuditGroup(entries, auditEntries)) return;
+	const changedEntries = auditEntries.filter((item) => !isCurrentAuditEntry(entries, item));
+	if (changedEntries.length === 0) return;
 	try {
-		pi.appendEntry(PROMPT_AUDIT_GROUP_ENTRY_TYPE, { entries: auditEntries });
+		pi.appendEntry(PROMPT_AUDIT_GROUP_ENTRY_TYPE, { entries: changedEntries });
 	} catch {
 		// Audit persistence must not change the model request.
 	}
@@ -84,22 +85,18 @@ function isPromptAuditType(customType: string | undefined): boolean {
 	);
 }
 
-function isCurrentAuditGroup(entries: readonly SessionEntryLike[], expected: readonly PromptAuditData[]): boolean {
+function isCurrentAuditEntry(entries: readonly SessionEntryLike[], expected: PromptAuditData): boolean {
 	for (let index = entries.length - 1; index >= 0; index -= 1) {
 		const entry = entries[index];
-		if (entry?.type !== "custom" || entry.customType !== PROMPT_AUDIT_GROUP_ENTRY_TYPE) continue;
-		const data = promptAuditGroupData(entry.data);
-		if (!data) continue;
-		return (
-			data.entries.length === expected.length &&
-			data.entries.every((item, itemIndex) => sameAuditData(item, expected[itemIndex]))
-		);
+		if (entry?.type !== "custom" || !isPromptAuditType(entry.customType)) continue;
+		const candidates =
+			entry.customType === PROMPT_AUDIT_GROUP_ENTRY_TYPE
+				? (promptAuditGroupData(entry.data)?.entries ?? [])
+				: [promptAuditData(entry.data)];
+		const previous = candidates.find((item) => item?.role === expected.role && item.id === expected.id);
+		if (previous) return previous.content === expected.content;
 	}
 	return false;
-}
-
-function sameAuditData(left: PromptAuditData, right: PromptAuditData | undefined): boolean {
-	return right !== undefined && left.role === right.role && left.id === right.id && left.content === right.content;
 }
 
 function renderAuditRow(data: PromptAuditData, theme: Theme, expanded: boolean): Component {

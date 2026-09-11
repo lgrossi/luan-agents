@@ -383,6 +383,39 @@ function stripAnsi(value: string): string {
 	return value.replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, "");
 }
 
+test("audits only new or changed instructions across turns and reloads", () => {
+	const harness = extensionHarness();
+	const beforeStart = harness.handlers.get("before_agent_start");
+	if (!beforeStart) throw new Error("before_agent_start was not registered");
+	const context = harness.context("audit-deltas");
+	const event = startEvent("Pi base", "/repo", [{ path: "/repo/AGENTS.md", content: "Rules." }]);
+	registerDeveloperMessageContribution({ id: "skills", content: "Catalogue A." });
+	beforeStart(event, context);
+	const removeAnnotation = registerDeveloperMessageContribution({ id: "annotation", content: "Annotation guidance." });
+	beforeStart(event, context);
+	removeAnnotation();
+	beforeStart(event, context);
+	registerDeveloperMessageContribution({ id: "annotation", content: "Annotation guidance." });
+	beforeStart(event, context);
+	registerDeveloperMessageContribution({ id: "skills", content: "Catalogue B." });
+	beforeStart(event, context);
+
+	expect(harness.auditEntries.map(({ data }) => data.entries)).toEqual([
+		[
+			{ role: "developer", id: "skills", content: "Catalogue A." },
+			{ role: "developer", id: "environment", content: expect.stringContaining("<environment_context>") },
+			{ role: "user", id: "agents-md", content: expect.stringContaining("Rules.") },
+		],
+		[{ role: "developer", id: "annotation", content: "Annotation guidance." }],
+		[{ role: "developer", id: "skills", content: "Catalogue B." }],
+	]);
+	const resumed = extensionHarness();
+	const resumedStart = resumed.handlers.get("before_agent_start");
+	if (!resumedStart) throw new Error("before_agent_start was not registered");
+	resumedStart(event, context);
+	expect(resumed.auditEntries).toEqual([]);
+});
+
 test("records a prompt value again after it changes away and back", () => {
 	const harness = extensionHarness();
 	const beforeStart = harness.handlers.get("before_agent_start");

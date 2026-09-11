@@ -161,8 +161,9 @@ pi-developer-messages.auditEntries = ["developer", "context-user"]
 
 Set it to `[]`, `["developer"]`, or `["context-user"]` to reduce what is
 persisted. Audit entries are stored as one `pi-developer-messages/group` custom
-entry per envelope (skipped when identical to the latest group) and rendered as
-collapsible rows. They only affect the transcript; the model request is
+entry containing only new or changed instructions, rendered as collapsible rows.
+Each instruction is compared with its latest audit on the current session branch,
+including after resume. Changes to one instruction do not repeat the others. They only affect the transcript; the model request is
 unchanged.
 
 ## Troubleshooting
