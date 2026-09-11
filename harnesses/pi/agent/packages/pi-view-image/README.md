@@ -1,9 +1,13 @@
 # pi-view-image
 
-`pi-view-image` adds a Codex-compatible `view_image` tool. A Rust bridge reads
-and validates a local PNG, JPEG, GIF, or WebP file and returns a native Pi image
-content block. GIF input is normalized to a PNG frame; the other supported
-formats retain their original bytes.
+`@luan-pi/pi-view-image` adds a Codex-compatible `view_image` tool to Pi. A
+native Rust binary reads and validates a local PNG, JPEG, GIF, or WebP file and
+returns it as a Pi image content block, so any vision-capable model can look at
+a file that is already on disk. The same package makes pasted image paths in the
+Pi editor attach as images and labels image attachments in the Codex format
+before they reach the provider.
+
+Upstream attribution: see `UPSTREAM.md`.
 
 ## Install
 
@@ -11,71 +15,122 @@ formats retain their original bytes.
 pi install npm:@luan-pi/pi-view-image
 ```
 
-The native `view_image` binary builds itself on first use with `cargo`, so a
-Rust toolchain (<https://rustup.rs>) is the only requirement. In a checkout of
-this repository the package uses `target/` instead. `PI_VIEW_IMAGE_BIN`
-overrides both; it must point to an executable file.
+Requires a Rust toolchain (https://rustup.rs). The `view_image` binary builds
+itself on first use under Pi's agent directory (`native/view-image/<version>/`).
+Set `PI_VIEW_IMAGE_BIN` to use a prebuilt binary; it must point to an
+executable file. Pi shows an info notification while the first build runs.
 
-## Usage
+Code Mode support is bundled. If `@luan-pi/pi-code-mode` is also installed
+(`pi install npm:@luan-pi/pi-code-mode`), `view_image` is callable from inside
+Code Mode scripts as described below; without it the tool is still available as
+a normal Pi tool.
 
-Pass a path relative to the Pi session directory or an absolute path:
+## The `view_image` tool
+
+Parameters:
+
+| Name | Type | Notes |
+| --- | --- | --- |
+| `path` | string, required | Absolute path or a path relative to the Pi session's working directory. A leading `@` is stripped. `file_path` and `image_path` are accepted as aliases. |
+| `detail` | `"high"` or `"original"`, optional | Defaults to `high`. |
+
+Example call:
 
 ```json
-{ "path": "screenshots/current.png" }
+{ "path": "screenshots/current.png", "detail": "original" }
 ```
 
-An optional leading `@` is removed. `file_path` and `image_path` are accepted as
-argument aliases before schema validation. `detail` defaults to `high`, which
-resizes images larger than 2048 pixels on either axis. Use `original` to retain
-the source dimensions and bytes.
+Behaviour:
 
-The package registers the tool directly and through `pi-code-mode/sdk`. Inside
-Code Mode, the shared adapter reuses the same tool execution and presentation,
-then returns `{ image_url, detail }`; forward that value with `image(result)`.
+- `high` resizes images larger than 2048 pixels on either axis. Resized
+  images and GIF input are re-encoded as PNG; PNG, JPEG, and WebP files that
+  are not resized keep their original bytes and MIME type.
+- `original` keeps the source dimensions and bytes.
+- The `detail` parameter is only exposed to models that support it. For the
+  `openai-codex` provider it requires the model's `compat.supportsImageDetailOriginal`
+  flag; every other provider with image input gets it. When a model does not
+  support it, a requested `original` silently falls back to `high`.
+- Any Pi model that declares `image` in its `input` capabilities can use the
+  tool. Other models get the error
+  `view_image is not allowed because the current model does not support image inputs`
+  before the file is read.
+- The tool result contains one image content block. Its `details` record the
+  input, the resolved path, MIME type, width, height, byte size, and duration in
+  milliseconds.
+- Errors from the binary (missing file, unsupported format, decode failure) are
+  surfaced as the tool error message, truncated to 8192 characters.
 
-Pi's native `@image` path initially creates a `<file>` wrapper followed by an
-image block. Before provider serialization, this package rewrites that content
-to Codex's labeled sequence: `<image name=[Image #N] path="...">`, the image at
-high detail, `</image>`, then the user's text. The context hook is
-provider-neutral, so the same message reaches every vision-capable provider.
+### Inside Code Mode
 
-Native clipboard image paste and terminal-native path paste share the same
-attachment path. Pi saves clipboard bitmap data to a temporary image file; the
-package recognizes that inserted path, replaces it inline with `[Image #N]`,
-rendered from a private atomic editor token, and carries the image into the
-submitted input. Bracketed pastes from macOS
-Command-V are handled the same way when the terminal supplies an image path.
-Ordinary paths and non-image pastes keep Pi's normal editor behavior.
+The tool is also registered through `@luan-pi/pi-code-mode/sdk`. In a Code Mode
+script, `view_image` returns `{ image_url, detail }`, where `image_url` is a
+base64 `data:` URL. Forward it with `image(result)` so the model sees the image:
 
-The capability check is provider-neutral: any Pi model that advertises `image`
-input is supported, including Anthropic vision models. Models without that
-declared capability fail before the file is read.
+```js
+const result = await tools.view_image({ path: "screenshots/current.png" });
+image(result);
+```
 
-## Architecture
+## Pasting image paths into the editor
 
-| Concern | Owner |
+In the TUI, when a paste contains a single path to an existing PNG, JPEG, GIF,
+or WebP file (checked by file signature, not just extension), the path is
+replaced inline with an `[Image #N]` pill. Accepted forms: absolute paths,
+paths relative to the working directory, `~/` paths, `file://` URLs, quoted
+paths, and shell-escaped paths. This covers Pi's clipboard image paste (Pi
+writes the bitmap to a temporary file and inserts its path) and terminals that
+paste a file path on Command-V. Ordinary text and non-image paths are left
+alone.
+
+When the prompt is submitted, each pending pill is loaded through the native
+binary at `original` detail, attached as an image, and its text becomes a
+`<file name="..."></file>` tag. If a file cannot be loaded, the pill reverts to
+the plain path and Pi shows a warning `Could not attach <path>: <message>`.
+Pending pills are cleared on session start and shutdown.
+
+## Codex-style image labels
+
+Before each request is sent to the provider, user messages whose first text
+block contains `<file name="...">` tags with image extensions (`bmp`, `gif`,
+`jpg`, `jpeg`, `png`, `webp`) and a matching number of image blocks are
+rewritten. Each image tag becomes:
+
+```
+<image name=[Image #N] path="...">
+<the image block, detail high>
+</image>
+```
+
+followed by the rest of the user's text. Tags are only rewritten when the count
+of image tags equals the count of image blocks; otherwise the message is left
+unchanged. This applies to Pi's own `@image` attachments and to pastes handled
+by this package, and is provider-neutral.
+
+## Configuration
+
+The package has no settings. The only configuration is the
+`PI_VIEW_IMAGE_BIN` environment variable described under Install. It
+registers no keybindings; pasting uses the editor's normal paste path.
+
+## Layout
+
+| Responsibility | File |
 | --- | --- |
 | Pi registration and lifecycle | `src/extension.ts` |
-| Native attachment labeling | `src/native-attachments.ts` |
-| Clipboard/path attachment state | `src/core/attachments.ts` and `src/runtime/attachments.ts` |
-| Atomic editor paste and rendering | `src/runtime/editor-attachments.ts` via `pi-libtui/editor` |
-| Tool schema and model support check | `src/tools/view-image/definition.ts` |
-| Execution owner | `src/native/view-image.ts` and `crates/view-image` |
-| Native binary discovery | `src/native/binary.ts` |
-| Result/details model | `src/tools/view-image/result.ts` |
-| Presentation owner | Pi default `ToolExecutionComponent` |
-| Code Mode adapter | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
+| Tool schema, aliases, model capability checks | `src/tools/view-image/definition.ts` |
+| Tool result and details shape | `src/tools/view-image/result.ts` |
+| Tool call and result rendering | `src/tools/view-image/presentation.ts` |
+| Native binary discovery and build | `src/native/binary.ts` |
+| Running the binary and parsing its JSON | `src/native/view-image.ts` |
+| Codex-style `<image>` labeling in the context hook | `src/native-attachments.ts` |
+| Pasted image path detection and pending attachment tokens | `src/core/attachments.ts` |
+| Turning pending tokens into attached images on submit | `src/runtime/attachments.ts` |
+| Editor paste handler and pill rendering | `src/runtime/editor-attachments.ts` |
+| Code Mode adapter | `src/code-mode-adapter.ts` |
+| Icon and pill appearance | `src/core/appearance.ts` |
 
-Image loading and direct tool execution do not depend on another feature
-extension. The package uses the UI-free `pi-code-mode/sdk` entry point to make
-the same tool available inside Code Mode; the package dependency installs that
-public registration surface with it.
+## Develop
 
-## Validation
-
-```sh
-cargo nextest run -p view-image
-bun run --cwd=harnesses/pi/agent/packages/pi-view-image typecheck
-bun test --cwd=harnesses/pi/agent/packages/pi-view-image
-just pi-install-check harnesses/pi/agent/packages/pi-view-image
-```
+Source: https://github.com/luan/agents, directory
+`harnesses/pi/agent/packages/pi-view-image`. Run `bun run typecheck` and
+`bun test test` in that directory.

@@ -1,8 +1,8 @@
 # pi-tool-search
 
-`pi-tool-search` adds `tool_search`, a normal Pi tool that finds and activates
-tools which are currently inactive. It searches only the scope assigned to it.
-It does not inspect or modify the global tool hierarchy.
+`@luan-pi/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
+activates tools which are currently inactive. It searches only the scope
+assigned to it. It does not inspect or modify the global tool hierarchy.
 
 ## Install
 
@@ -10,19 +10,22 @@ It does not inspect or modify the global tool hierarchy.
 pi install npm:@luan-pi/pi-tool-search
 ```
 
-From a checkout of this repository:
+Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
+builds itself on first use under Pi's agent directory
+(`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
+prebuilt binary.
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-tool-search
-```
+Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the
+`/xsettings` editor for the deferred-tool picker described below; without it
+the default (no deferred tools) applies.
 
-There is no native binary. The package uses Pi's dynamic tool APIs and the
-UI-free `pi-xsettings/sdk` and `pi-code-mode/sdk` contracts.
+The package registers no keybindings and no commands. It uses Pi's dynamic
+tool APIs (`getAllTools`, `getActiveTools`, `setActiveTools`).
 
 ## Direct use and use under `exec`
 
-`pi-code-mode` owns placement. `pi-tool-search` never decides whether
-`tool_search` is direct or under `exec`.
+Code Mode owns placement. `pi-tool-search` never decides whether `tool_search`
+is direct or under `exec`.
 
 - When `tool_search` is direct, its assigned scope is the other tools that
   were active in Pi at session start. Loading a match calls
@@ -40,7 +43,7 @@ Tool Search receives about Code Mode.
 ## Deferred scope
 
 All tools remain registered with Pi, but checked tools start inactive. At
-session start, the package builds the xsettings picker from its assigned
+session start, the package builds the deferred-tool picker from its assigned
 scope. It does not use every tool returned by `pi.getAllTools()` as a global
 search index.
 
@@ -60,32 +63,41 @@ active and only the matching tools are added. A no-match query changes
 nothing. Loaded tools stay active for the rest of the session unless another
 owner changes the scope.
 
-## Configure
+## Settings
 
-`pi-xsettings` stores the selection in `~/.pi/agent/xsettings.toml`:
+Settings live in the `pi-tool-search` namespace (label "Tool Search",
+category `tools`). Edit them with `/xsettings` when `@luan-pi/pi-xsettings` is
+installed; otherwise the defaults apply.
+
+| Key | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `tools` | unordered multi-select | `[]` | Checked tools are hidden until `tool_search` loads them. |
+
+The selection is stored in `~/.pi/agent/xsettings.toml`:
 
 ```toml
 [tools]
 pi-tool-search.tools = ["exec_command", "web__run"]
 ```
 
-`tools` is an unordered multi-select. Its options are rebuilt from the
-assigned scope at session start and include each tool's name and description.
-Reopen the session after changing the selection so the initial deferred set is
-applied. The setting does not create or enable a tool that Pi did not already
-make available.
+The options are rebuilt from the assigned scope at session start and include
+each tool's name and description. Reopen the session after changing the
+selection so the initial deferred set is applied. The setting does not create
+or enable a tool that Pi did not already make available.
 
 ## Use the tool
 
-The input is an object with a required query and an optional result limit:
+The input is an object with a required query and an optional result limit
+(integer, 1 to 8):
 
 ```json
 {"query":"search the web","limit":3}
 ```
 
 Search covers tool names, descriptions, parameter names, and parameter
-descriptions. It returns at most eight ranked matches. A successful result
-reports the ranked matches and the names it added; a no-match result reports
+descriptions, ranked with BM25 over stemmed tokens with prefix matching for
+terms of three or more characters. It returns at most eight ranked matches.
+A successful result reports `Loaded tools: ...`; a no-match result reports
 that no inactive tool matched. Tool Search activates matches on the next model
 request, using Pi's normal dynamic-tool loading behavior.
 
@@ -103,10 +115,10 @@ independent nested tools from `exec`.
 
 ## API contract
 
-The package's Pi entry point is the default export from `src/index.ts`.
-`createToolSearchResult` is also exported for consumers that need to build the
-same model-visible result shape. `ToolSearchDetails` and
-`ToolSearchRankedMatch` are the stable result types.
+The package's Pi entry point is `src/extension.ts`. The module entry
+(`src/index.ts`) exports `createToolSearchResult` for consumers that need to
+build the same model-visible result shape, plus the stable result types
+`ToolSearchDetails` and `ToolSearchRankedMatch`.
 
 The result details are JSON-serializable and versioned:
 
@@ -123,8 +135,7 @@ type ToolSearchDetails = {
 };
 ```
 
-Extensions that provide their own searchable scope should pass a scope with
-these operations:
+A scope passed to the tool has these operations:
 
 ```ts
 type ToolSearchScope = {
@@ -137,18 +148,6 @@ type ToolSearchScope = {
 The scope owner remains responsible for deciding which names are available.
 Tool Search only ranks inactive entries and asks that owner to add matches.
 
-## Architecture map
-
-| Role | Owner |
-| --- | --- |
-| Tool definition | `src/tools/tool-search/definition.ts` |
-| Search and ranking | `src/search.ts` |
-| Scope and deferred membership | `src/extension.ts` and the assigned scope owner |
-| Execution bridge | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
-| Native boundary | None |
-| Presentation owner | `src/tools/tool-search/presentation.ts` maps search semantics onto `pi-libtui` activities |
-| Public capabilities | `tool_search`, `createToolSearchResult`, and result types |
-
 ## Troubleshooting
 
 - **A tool is not in the picker:** it was inactive before Tool Search built its
@@ -156,7 +155,7 @@ Tool Search only ranks inactive entries and asks that owner to add matches.
   set, or has not been registered yet. Tool Search does not make it deferred.
 - **A checked tool still appears direct:** confirm `tool_search` is direct or
   under `exec` as intended, then restart the session. Placement belongs to
-  `pi-code-mode`; Tool Search cannot change it.
+  Code Mode; Tool Search cannot change it.
 - **A nested search cannot find a direct tool:** that is expected. A nested
   Tool Search can see only its sibling tools under `exec`.
 - **A direct search cannot load a tool under `exec`:** that is also expected.
@@ -164,12 +163,21 @@ Tool Search only ranks inactive entries and asks that owner to add matches.
 - **A query returns no matches:** search is limited to inactive tools in the
   assigned scope. Check the exact name and description exposed by the picker.
 
-## Validation
+## Layout
 
-```sh
-bun run --cwd=harnesses/pi/agent/packages/pi-tool-search typecheck
-bun test --cwd=harnesses/pi/agent/packages/pi-tool-search
-```
+| Responsibility | File |
+| --- | --- |
+| Extension entry, scope selection, deferred activation | `src/extension.ts` |
+| Tool definition and execution | `src/tools/tool-search/definition.ts` |
+| Result shape (`createToolSearchResult`) | `src/tools/tool-search/result.ts` |
+| Transcript rendering | `src/tools/tool-search/presentation.ts` |
+| Search and ranking | `src/search.ts` |
+| Code Mode execution bridge | `src/code-mode-adapter.ts` |
+| Settings definitions | `src/contributions/xsettings.ts` |
+| Module exports | `src/index.ts` |
 
-From the repository root, `just check` runs the aggregate TypeScript, Rust,
-and harness checks.
+## Develop
+
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-tool-search. Run `bun run typecheck` and
+`bun test test` in that directory.

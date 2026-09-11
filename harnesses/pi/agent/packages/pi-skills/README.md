@@ -1,10 +1,10 @@
-# pi-skills
+# @luan-pi/pi-skills
 
-`pi-skills` adds the `skill` tool. It loads a skill's `SKILL.md` into the
-conversation after Pi has discovered that skill. As a fallback for Pi command
-discovery, it also scans project `.agents/skills/` locations and trusted-project
-`.pi/skills/` locations using Pi's documented rules. It does not register
-resource URIs.
+`pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
+into the conversation by exact name, so the model can pull in detailed
+instructions only when a task needs them. The package also lists available
+skills in the developer prompt, autocompletes `$skill` references in the
+editor, and shows loaded skills as compact rows in the transcript.
 
 ## Install
 
@@ -12,146 +12,170 @@ resource URIs.
 pi install npm:@luan-pi/pi-skills
 ```
 
-From a checkout of this repository:
+Code Mode is bundled. It requires a Rust toolchain (https://rustup.rs). The
+`code-mode-host` binary builds itself on first use under Pi's agent directory
+(`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
+prebuilt binary.
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-skills
-```
+Optional companions:
 
-The package can register its tool directly and also exposes the same execution
-through the `pi-code-mode/sdk` adapter. Code Mode owns whether the tool is
-direct or under `exec`.
+- `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings` editor for the
+  setting listed below; without it the default applies.
+- `pi install npm:@luan-pi/pi-developer-prompt` renders the skill catalogue
+  into the developer prompt; without it the catalogue contribution is
+  registered but nothing displays it.
+- `pi install npm:@luan-pi/pi-custom-editor` renders known `$skill` references
+  in the editor as pills; without it they stay plain text while typing.
 
-## Discover and load a skill
+## How skills are discovered
 
-Pi supplies loaded skills as commands named `skill:<name>`. `pi-skills` keeps
-the exact suffix as the tool name and records the command's source path. It
-uses only commands whose source is `skill` and whose name starts with
-`skill:`. It does not search the filesystem for additional skills.
+At session start the package builds a map of skill name to `SKILL.md` path from
+three sources, first match per name wins:
+
+1. Skills Pi has already loaded. Pi exposes each as a command named
+   `skill:<name>` with source `skill`; the suffix becomes the tool name.
+2. `.pi/skills/` under the current directory, only when the project is trusted.
+3. `.agents/skills/` in the current directory and every ancestor up to the
+   first directory containing `.git` (or the filesystem root). Each
+   `.agents/skills/` tree is walked recursively; a directory containing
+   `SKILL.md` is a skill. Hidden entries and `node_modules` are skipped;
+   symlinked directories are followed once. Only `SKILL.md` files count here,
+   not loose Markdown files.
+
+The tool cannot load a skill by arbitrary path. If the name is not in the map,
+the call fails with `Unknown skill "<name>"`.
+
+## Load a skill
 
 Call the tool with the exact name:
 
 ```json
-{
-  "name": "writing-for-agents"
-}
+{ "name": "writing-for-agents" }
 ```
 
-The tool reads the corresponding `SKILL.md` and sends this contextual message
-to Pi as a steering message:
+The tool reads the `SKILL.md`, removes YAML frontmatter, and sends the body to
+Pi as a steering message with custom type `pi-skills/loaded`:
 
 ```xml
 <skill>
 <name>writing-for-agents</name>
 <path>/absolute/path/to/SKILL.md</path>
-<!-- frontmatter-free SKILL.md body -->
+<!-- SKILL.md body without frontmatter -->
 </skill>
 ```
 
-The model receives that message as user context. The tool result is the short
-confirmation `Loaded skill "<name>".` plus versioned details about the
-resolved path, frontmatter, sizes, and supporting files. If the name is not a
-currently loaded `skill:<name>` command, the call fails with
-`Unknown skill "<name>"`.
+That message reaches the model as user context and stays in the session
+history, so later turns can follow it without loading the skill again. The
+tool result itself is the one-line text `Loaded skill "<name>".` plus a
+`details` object (`version: 1`) with `name`, `requestedName`, `filePath`,
+`directory`, `hasSupportingFiles`, `supportingFiles`,
+`supportingFilesTruncated`, `frontmatterRemoved`, `sourceChars`,
+`loadedChars`, `loadedTokens`, and `instructions`.
 
-The contextual message stays in the Pi session history, so later turns can
-follow the loaded instructions without loading the skill again.
+### Frontmatter
 
-The TUI keeps that hidden context out of the transcript. Its compact result is
-a single `Skill · <name> · <tokens>` row; activating the row reveals the skill
-body on an inset surface and activating it again collapses it.
+If `SKILL.md` starts with `---`, everything up to and including the next line
+beginning with `---` is dropped. A file with an opening delimiter but no
+closing one is sent unchanged.
 
-### Frontmatter and supporting files
+### Supporting files
 
-If `SKILL.md` starts with YAML frontmatter delimited by `---` lines, the
-frontmatter is removed before the body is sent. A file without a closing
-delimiter is left unchanged.
+The loader walks the skill directory recursively and records relative paths of
+every file except `SKILL.md` and `agents/openai.yaml`. At most 256 paths are
+recorded; `supportingFilesTruncated` is `true` when more exist. File contents
+are never read or appended.
 
-The loader walks the skill directory recursively and records supporting file
-paths. It excludes `SKILL.md` and `agents/openai.yaml`; every other file counts,
-including nested files. It records at most 256 paths. When more exist,
-`supportingFilesTruncated` is true. It does not read or append the contents of
-those files.
-
-When at least one supporting file exists, the loaded body ends with:
+When at least one supporting file exists, the body ends with:
 
 ```text
 Skill directory: /absolute/path/to/skill
 ```
 
-That directory line is not added when `SKILL.md` is the only file, or when the
-only companion is `agents/openai.yaml`. Use the directory from the result to
-open a needed asset, script, or reference yourself.
+The line is omitted when `SKILL.md` is alone or when `agents/openai.yaml` is
+the only companion. Use the directory to open scripts, assets, or references
+yourself.
+
+## Code Mode
+
+The `skill` tool registers a Code Mode adapter, so when Code Mode lifts it, the
+model calls `tools.skill({ name })` inside `exec` instead of calling `skill`
+directly. Code Mode decides which of the two is active; this package only
+supplies the adapter.
 
 ## Prompt catalogue
 
-When visible skills exist, the package can add their names and descriptions to
-the developer prompt. It never puts their filesystem paths in that catalogue.
+When skills exist that Pi allows the model to invoke, the package contributes
+a `<skills_instructions>` block (priority 50) listing each skill's name and
+description, plus short rules: use the smallest set of skills, call
+`tools.skill` with the exact name inside `exec` before acting, load only the
+supporting files the task needs. Skill filesystem paths are never included.
+Skills flagged `disableModelInvocation` are omitted.
 
-Configure it with `pi-xsettings`:
+## Settings
 
-```toml
-[tools]
-pi-skills.catalogVisibility = "when-active"
-```
+Namespace `pi-skills`. Edited via `/xsettings` when `@luan-pi/pi-xsettings` is
+installed; otherwise the default applies.
 
-`catalogVisibility` accepts:
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `catalogVisibility` | `when-active` | `when-active`: include the catalogue when `skill` or `exec` is an active tool. `always`: include it in every prompt. `off`: never include it. |
 
-- `when-active` (default): include the catalogue when `skill` or `exec` is an
-  active tool;
-- `always`: include it in every prompt;
-- `off`: do not include it.
+## Transcript rendering
 
-Skills marked by Pi as unavailable for model invocation are omitted. The
-catalogue tells the model to call `tools.skill` with an exact name and to load
-only the supporting files required by the task.
+The steering message is hidden from the transcript. The tool call renders as a
+single row: a lightbulb marker, `Skill`, the skill name, and an estimated token
+count (`123 tokens` or `1.2k tokens`). Expanding the row shows the loaded body
+as Markdown; collapsing hides it again. Failures render as `Skill failed` with
+the error text.
 
-Loaded instructions remain in model context but stay collapsed in the
-transcript. Activate the skill row to read them without a duplicate context
-message or card.
-
-Without the xsettings host, the package uses the defaults above. Do not create
-a second settings file.
+In submitted user messages, `$name` tokens that match a discovered skill are
+drawn as pills labelled with the skill's display name. References inside inline
+or fenced Markdown code stay literal. Pills are suppressed while an overlay is
+open or a selection is active.
 
 ## Editor autocomplete
 
-Type `$` at a token boundary to autocomplete a loaded skill. Completion works
-anywhere in the prompt and preserves text after the cursor.
+Type `$` at the start of the input or after whitespace to list discovered
+skills; continue typing to filter by substring, case-insensitive. Accepting a
+suggestion replaces the `$query` token with `$name` and keeps any text after
+the cursor. Each item shows the skill description in muted text when the skill
+has one.
 
-When `pi-custom-editor` is installed, known `$skill` references render as
-subdued pills after the cursor moves at least one whitespace cell away. The
-pill omits `$`, uses the transcript's lightbulb icon, and prefers
-`agents/openai.yaml`'s `interface.display_name` as its label.
+Pill labels come from `interface.display_name` in the skill's
+`agents/openai.yaml` when present (plain or quoted scalars only), otherwise the
+skill name. A missing or unreadable file never prevents loading.
 
-Submitted user messages render the same pill in the transcript. References in
-inline or fenced Markdown code remain literal `$skill` text.
+This package registers no keyboard actions.
 
-## Architecture
+## Layout
 
-| Concern | Owner |
+| Responsibility | File |
 | --- | --- |
 | Pi registration and lifecycle | `src/extension.ts` |
-| Skill discovery, frontmatter, and file listing | `src/skills.ts` |
-| `skill` schema, loading call, and result details | `src/tools/skill/definition.ts` |
+| Skill discovery, frontmatter, supporting files, display names | `src/skills.ts` |
+| `skill` tool schema, execution, and result details | `src/tools/skill/definition.ts` |
+| Transcript row rendering | `src/tools/skill/presentation.ts` |
+| Steering message wrapper | `src/loaded-skill-context.ts` |
 | Developer prompt catalogue | `src/prompt.ts` |
-| Contextual message wrapper | `src/loaded-skill-context.ts` |
-| Code Mode adapter | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
-| Settings declaration | `src/contributions/xsettings.ts` via `pi-xsettings/sdk` |
-| TUI rendering | `src/tools/skill/presentation.ts` using `pi-libtui` |
-| Editor autocomplete | `src/ui/autocomplete.ts` using Pi's public autocomplete provider API |
-| Optional editor highlights | `src/contributions/editor-highlights.ts` via `pi-custom-editor/highlights/v1` |
-| Transcript skill pills | `src/ui/transcript-skills.ts` via Pi Markdown transforms and `pi-libtui/mouse` |
+| Code Mode adapter | `src/code-mode-adapter.ts` |
+| Settings declaration | `src/contributions/xsettings.ts` |
+| Optional editor pills | `src/contributions/editor-highlights.ts` |
+| `$skill` autocomplete | `src/ui/autocomplete.ts` |
+| Transcript pills for user messages | `src/ui/transcript-skills.ts` |
+| Public exports | `src/index.ts` |
 
 ## Troubleshooting
 
-- **Unknown skill:** verify that Pi loaded the skill and registered a
-  `skill:<name>` command. Use the exact suffix, including punctuation and
-  case.
-- **The catalogue is missing:** check `catalogVisibility`, and make sure
-  `skill` or `exec` is active when the value is `when-active`.
-- **The loaded instructions are not visible:** activate the skill row. The
-  instructions are collapsed by default and still reach model context.
-- **A referenced asset is not in the loaded text:** only `SKILL.md` is loaded.
-  Use the reported `Skill directory` and load the required supporting file.
-- **The tool cannot load a new skill by path:** that is intentional. Pi must
-  discover and register the skill first.
+- **Unknown skill:** the name must match a `skill:<name>` command or a
+  discovered `SKILL.md` exactly, including case and punctuation.
+- **No catalogue in the prompt:** check `catalogVisibility`, make sure `skill`
+  or `exec` is active when it is `when-active`, and install
+  `@luan-pi/pi-developer-prompt`.
+- **Loaded text not visible:** expand the skill row; the text is already in
+  model context.
+
+## Develop
+
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-skills. Run `bun run typecheck` and
+`bun test test` in that directory.

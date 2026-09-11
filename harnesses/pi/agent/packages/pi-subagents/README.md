@@ -1,10 +1,11 @@
-# pi-subagents
+# @luan-pi/pi-subagents
 
-`pi-subagents` adds one root-scoped tree of concurrent, nested Pi agents. Each
-agent has its own session and can receive follow-up work, direct messages, or an
-interrupt without blocking unrelated agents in the tree.
+`@luan-pi/pi-subagents` is a Pi extension that adds one root-scoped tree of
+concurrent, nested agents. Each agent runs in its own Pi session and can
+receive follow-up work, direct messages, or an interrupt without blocking
+unrelated agents in the tree.
 
-The package exposes six collaboration tools:
+The extension registers six collaboration tools for the model:
 
 - `spawn_agent` starts one bounded task under the caller.
 - `followup_task` continues an existing agent.
@@ -13,41 +14,52 @@ The package exposes six collaboration tools:
 - `list_agents` returns the current tree snapshot.
 - `wait_agent` waits for a useful tree update and returns only compact status.
 
-## Install and load
+## Install
 
 ```sh
 pi install npm:@luan-pi/pi-subagents
 ```
 
-From a checkout of this repository:
+Optional companions:
 
-```sh
-just setup
-pi install ./harnesses/pi/agent/packages/pi-subagents
-```
-
-The package bundles its workspace dependencies so the installed copy remains
-independently loadable. `pi-libtui` supplies its generic TUI host bridge;
-child sessions inherit the parent model and thinking level by default.
-Collaboration tools stay direct Pi tools because their session-tree state must
-not be hidden inside a Code Mode cell.
+- `pi install npm:@luan-pi/pi-xsettings` adds a `/xsettings` UI for the
+  settings below and binds keys from `keybindings.json`; without it the
+  defaults apply and no key is bound.
+- `pi install npm:@luan-pi/pi-side-panel` lets the Agent Hub open as a
+  side-panel tab; without it the Agent Hub always opens as a fullscreen overlay.
+- `pi install npm:@luan-pi/pi-developer-prompt` makes the delegation
+  instructions arrive as developer messages; without it they are appended to
+  the system prompt.
 
 ## Use
 
 Ask the model to delegate a concrete, bounded task. `spawn_agent` returns the
 new canonical path, such as `/root/review` or `/root/review/tests`. A relative
 target resolves from the calling agent; a canonical path can address an agent
-anywhere in the same tree. The assigned work arrives as a hidden child-specific
+anywhere in the same tree. The assigned work arrives as a hidden
 `NEW_TASK` message rather than an end-user prompt.
 
-A successful child response is delivered independently to its direct parent as
-a hidden `FINAL_ANSWER` mailbox message. An active parent receives it in the
-current turn; an idle parent receives it on the next turn without starting one.
-Nested completion goes to the immediate parent. Failed and interrupted turns
-only publish status. `send_message` remains the separate explicit `MESSAGE`
-path, while `wait_agent` never carries either message payload.
+A successful child response is delivered to its direct parent as a hidden
+`FINAL_ANSWER` mailbox message. An active parent receives it in the current
+turn; an idle parent receives it on the next turn without starting one. Failed
+and interrupted turns only publish status. `send_message` is the separate
+explicit `MESSAGE` path, and `wait_agent` never carries either payload.
+`wait_agent` accepts `timeout_ms` from 10000 to 3600000 (default 30000).
 
-In Pi's interactive TUI:
+`spawn_agent` parameters:
+
+- `task_name`: lowercase letters, digits, and single dashes; at most 64 chars.
+- `message`: the task text; at most 32768 chars (same limit for other tools).
+- `fork_turns`: `all` (default), `none`, or a positive integer of recent parent
+  turns to copy. Historical tool calls, tool results, and collaboration
+  messages are never copied into the child context.
+- `model`: exact `provider/model-id`; omit to inherit the parent model.
+- `thinking_level`: `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, or
+  `max`; omit to inherit. Unsupported explicit levels are rejected; inherited
+  effort is clamped to the chosen model's supported levels. Resolved choices
+  are kept when a child is retried or restored from a checkpoint.
+
+Commands in Pi's interactive TUI:
 
 ```text
 /subagents             open the Agent Hub
@@ -55,120 +67,106 @@ In Pi's interactive TUI:
 /retry /root/review     retry one failed subagent
 ```
 
+Inside the Agent Hub, `q`, `escape`, or `alt+a` closes it; `gg`, `G`, `home`,
+`end`, `pageUp`/`ctrl+u`, and `pageDown`/`ctrl+d` scroll the transcript; the
+mouse wheel scrolls too. The compact Agent Widget lists running agents and
+clicking a row opens the Agent Hub with that agent selected.
+
 Every agent gets a separate transcript beneath the root session directory. A
-root started with `--no-session` keeps those transcripts in temporary storage
-instead of the working directory.
-Root-session checkpoints preserve the tree across reload, resume, fork, clone,
-and tree navigation. Shutting down an agent does not delete its transcript.
+root started with `--no-session` keeps those transcripts under the system
+temporary directory (`pi-subagents/<session id>`). Root-session checkpoints
+preserve the tree across reload, resume, fork, and clone. Session-tree
+navigation is refused while subagents are queued or running. Shutting down an
+agent does not delete its transcript.
 
 Child sessions rediscover installed extensions, tools, and skills from the same
-working directory and Pi agent directory, then keep only names active in the
-parent. Session-only inline tools or resource paths that were never installed
-are not transferable through Pi's public extension API and are omitted.
+working directory and Pi agent directory, then keep only tool names active in
+the parent (plus any tools lifted into a Code Mode `exec` cell). Session-only
+inline tools or resource paths that were never installed are omitted. The
+collaboration tools themselves stay direct Pi tools and are not lifted into
+Code Mode.
 
-## Configure
+## Settings
 
-Open `/xsettings` and edit **Subagents** in the Behavior category. The settings
-namespace is `pi-subagents` in `~/.pi/agent/xsettings.toml`:
+Settings use the `pi-subagents` namespace. Edit them via `/xsettings` when
+`@luan-pi/pi-xsettings` is installed; otherwise the defaults apply.
 
-```toml
-[behavior]
-pi-subagents.maxConcurrency = "4"
-pi-subagents.maxDepth = "2"
-pi-subagents.multiAgentMode = "explicit-requests"
-
-[appearance]
-pi-subagents.agentWidgetIndicator = "inherit"
-pi-subagents.agentHubPresentation = "side-panel"
-```
+| Key | Default | Values |
+| --- | --- | --- |
+| `maxConcurrency` | `"4"` | `"2"`, `"4"`, `"8"`, `"16"`, `"32"` |
+| `maxDepth` | `"2"` | `"1"`, `"2"`, `"3"`, `"4"` |
+| `multiAgentMode` | `"explicit-requests"` | `"direct-requests-only"`, `"explicit-requests"`, `"proactive-read-only"`, `"proactive-mechanical"`, `"proactive"` |
+| `agentWidgetIndicator` | `"inherit"` | `"inherit"` or any `pi-libtui` activity indicator |
+| `agentHubPresentation` | `"side-panel"` | `"side-panel"`, `"fullscreen"` |
 
 `maxConcurrency` counts the root agent, so `4` provides three simultaneous
-subagent slots. The available values are `2`, `4`, `8`, `16`, and `32`.
-`maxDepth` counts levels below `/root`; its available values are `1` through
-`4`. The compiled defaults are concurrency `8` and depth `2`, including when
-the xsettings host is absent. The concurrency default matches Codex.
-`multiAgentMode` is an ordered delegation spectrum:
-`direct-requests-only`, `explicit-requests`, `proactive-read-only`,
-`proactive-mechanical`, and `proactive`. The default `explicit-requests` policy
-matches Codex at non-Ultra reasoning efforts. The two endpoint policies use
-Codex's exact explicit-request and proactive instructions; Pi exposes the
-spectrum as a setting because it does not implement Codex's Ultra mode.
-Changed limits apply when an idle root tree
-reloads; an active tree keeps its original limits until its agents settle.
-The Agent Hub defaults to a side-panel tab. Set `agentHubPresentation` to
-`"fullscreen"` for the original overlay. If `pi-side-panel` is not installed,
-the side-panel choice falls back to that fullscreen overlay.
+subagent slots; a spawn beyond the limit is queued. `maxDepth` counts levels
+below `/root`. Changed limits apply when an idle root tree reloads; an active
+tree keeps its original limits until its agents settle.
 
-Child sessions inherit the parent's model and thinking level. To override them,
-pass `model` as an exact `provider/model-id` reference and/or
-`thinking_level` (`off`, `minimal`, `low`, `medium`, `high`, `xhigh`, or `max`)
-to `spawn_agent`. Unsupported explicit thinking levels are rejected; inherited
-effort is clamped to the chosen model's supported levels. The resolved choices
-are retained when a child is retried or restored from a root-session checkpoint.
-Forking can copy all parent
-conversational history, no history, or a positive number of recent turns.
-Historical tool calls, tool results, and collaboration messages are not copied
-into the child context.
+`multiAgentMode` is an ordered delegation spectrum. `direct-requests-only`
+lets only the user's explicit request authorize delegation; `explicit-requests`
+also accepts an applicable skill or AGENTS.md; `proactive-read-only` allows
+proactive bounded investigation but no mutations; `proactive-mechanical` adds
+bounded mechanical edits and verification; `proactive` delegates whenever it
+could save time or improve quality. The two endpoints use Codex's explicit and
+proactive instructions verbatim. Mode changes apply live.
 
-The Agent Widget, Agent Hub, and running collaboration-tool rows use the shared
-`pi-libtui.activityIndicator` and `pi-libtui.textEffect` Appearance settings.
-Indicator and text-effect choices combine independently and apply live.
-Each Agent Widget row is clickable and opens Agent Hub with that agent selected,
-matching the Process Widget interaction contract.
-The Animations page also has an **Agents** section. Its Agent Widget indicator
-inherits the global activity indicator by default and can be overridden live.
+`agentWidgetIndicator` overrides the spinner beside each running agent in the
+widget; `inherit` uses the shared `pi-libtui.activityIndicator` setting. The
+Agent Widget, Agent Hub, and running tool rows also follow
+`pi-libtui.textEffect`. `agentHubPresentation` set to `side-panel` is only
+honored when a side-panel host is present; it falls back to fullscreen.
 
-## Architecture map
+## Keybindings
 
-| Concern | Owner |
-| --- | --- |
-| Pi registration and lifecycle composition | `src/extension.ts` |
-| Tool definitions | `src/tools/spawn-agent/`, `src/tools/followup-task/`, `src/tools/send-message/`, `src/tools/interrupt-agent/`, `src/tools/list-agents/`, and `src/tools/wait-agent/` |
-| Shared tool results, scope resolution, and repeat protection | `src/tools/result.ts`, `src/tools/scope.ts`, and `src/tools/repeat-breaker.ts` |
-| Execution owner | Named tool `definition.ts` modules delegate stateful work to `src/runtime/coordinator.ts` |
-| State and mailbox owner | `src/runtime/coordinator.ts`; each child Pi session owns its transcript |
-| Agent execution and prompt assembly | `src/runtime/agent-runner.ts`, `src/core/prompts.ts`, and `src/core/types.ts` |
-| Codex-compatible delegation instructions | `src/core/instructions.ts` contributed as developer messages by `src/contributions/developer-prompt.ts` |
-| History forking and nested activity | `src/core/fork-history.ts` and `src/runtime/nested-tool-activity.ts` |
-| Native boundary | Pi's session, model, and tool APIs |
-| Typed settings | `src/config/settings.ts` via `pi-xsettings/sdk` |
-| Keyboard action | `src/contributions/actions.ts` via `pi-libactions/sdk` |
-| Presentation owner | `src/ui/agent-browser.ts`, `src/ui/agent-summary.ts`, `src/ui/agent-tree.ts`, `src/ui/agent-widget.ts`, and `src/ui/tool-presentations.ts` using `pi-libtui`; `src/protocol/presentation.ts` bridges child renderer capabilities |
-| Public capabilities | Export-only `src/index.ts` exposes stable tool names and versioned result-detail contracts |
+The package registers one action, `subagents.open` (Open the Agent Hub). It
+has no default key. Bind it in Pi's agent directory, normally
+`~/.pi/agent/keybindings.json`, as an action ID mapped to a key ID string or
+array of key IDs:
 
-Tool execution does not import TUI modules. The coordinator publishes immutable
-snapshots; the Agent Hub, widget, and tool renderers consume those snapshots.
-Tool results carry bounded, serializable, versioned details. Direct calls use
-the package's semantic `pi-libtui` presentations. Transcript browsing resolves
-the child session's public Pi tool and custom-message renderers, then delegates
-to Pi's own message and `ToolExecutionComponent` implementations. The Agent Hub
-adds shared `pi-libtui` selection, wheel scrolling, and scrollbar behavior.
-
-## Validate
-
-For a focused package check:
-
-```sh
-bun run lint:pi
-bun run --cwd=harnesses/pi/agent/packages/pi-subagents typecheck
-bun test --cwd=harnesses/pi/agent/packages/pi-subagents
-just pi-install-check harnesses/pi/agent/packages/pi-subagents
+```json
+{
+  "subagents.open": "alt+a"
+}
 ```
 
-Run `just setup` after dependency or package-manifest changes and `just check`
-before handoff. Live validation should exercise the Agent Hub, `alt+a`, nested
-spawns through the configured depth, queueing at the concurrency limit,
-follow-up delivery, interruption, waiting, retry, reload, and session resume.
+Bindings take effect only when a shortcut host such as
+`@luan-pi/pi-xsettings` is installed. The file is read on load; reload
+extensions after editing. `/subagents` always works without a binding.
+
+## Layout
+
+| Responsibility | File |
+| --- | --- |
+| Pi registration, commands, lifecycle | `src/extension.ts` |
+| Tool definitions | `src/tools/<tool-name>/definition.ts` |
+| Tool results, scope, repeat protection, limits | `src/tools/result.ts`, `src/tools/scope.ts`, `src/tools/repeat-breaker.ts`, `src/tools/limits.ts` |
+| Tree state, mailbox, checkpoints | `src/runtime/coordinator.ts` |
+| Child session execution and prompt assembly | `src/runtime/agent-runner.ts`, `src/core/prompts.ts`, `src/core/types.ts` |
+| Delegation instructions | `src/core/instructions.ts`, `src/contributions/developer-prompt.ts` |
+| History forking and nested activity | `src/core/fork-history.ts`, `src/runtime/nested-tool-activity.ts` |
+| Transcript location | `src/runtime/session-root.ts` |
+| Typed settings | `src/config/settings.ts` |
+| Keyboard action | `src/contributions/actions.ts` |
+| Agent Hub, widget, tool renderers | `src/ui/*.ts`, `src/protocol/presentation.ts` |
+| Public exports (tool names, result types) | `src/index.ts` |
 
 ## Troubleshooting
 
-- **A spawn remains queued:** the tree is at its concurrency limit. Wait for a
-  running agent to become idle or interrupt work that is no longer needed.
-- **The depth limit is reached:** continue the task in the current agent or
-  spawn from a shallower ancestor.
-- **`alt+a` does nothing:** verify `subagents.open` in
-  `~/.pi/agent/keybindings.json` and reload Pi. `/subagents` remains available.
-- **A requested model is unavailable:** verify the exact `provider/model-id`
-  reference and that the provider is configured in Pi.
-- **A collaboration tool is missing inside `exec`:** call it directly. The
-  package deliberately does not lift session-tree coordination into Code Mode.
+- **A spawn remains queued:** the tree is at `maxConcurrency`. Wait for a
+  running agent to settle or interrupt work that is no longer needed.
+- **The depth limit is reached:** continue in the current agent or spawn from
+  a shallower ancestor.
+- **The bound key does nothing:** check `subagents.open` in
+  `keybindings.json`, confirm `@luan-pi/pi-xsettings` is installed, and reload.
+- **A requested model is unavailable:** use the exact `provider/model-id` and
+  confirm the provider is configured in Pi.
+- **A collaboration tool is missing inside `exec`:** call it directly; the
+  package does not lift session-tree coordination into Code Mode.
+
+## Develop
+
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-subagents. Run `bun run typecheck` and
+`bun test test` in that directory.

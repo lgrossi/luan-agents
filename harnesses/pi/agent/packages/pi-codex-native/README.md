@@ -1,12 +1,15 @@
-# pi-codex-native
+# @luan-pi/pi-codex-native
 
-`pi-codex-native` adds the `openai-codex` provider to Pi. It talks to the
-ChatGPT-backed Codex Responses endpoint, keeps the provider's native request
-and response format, and registers the `web__run` tool.
+`@luan-pi/pi-codex-native` adds the `openai-codex` provider to Pi. It talks
+to the ChatGPT-backed Codex Responses endpoint, keeps the provider's native
+request and response format, and registers the `web__run` tool.
 
-It is an OpenAI Codex subscription provider. It is not a general OpenAI API
-adapter, and it does not add shell, file, Code Mode, MCP, or image-generation
-tools.
+It is an OpenAI Codex subscription provider (ChatGPT Plus/Pro). It is not a
+general OpenAI API adapter, and it does not add shell, file, Code Mode, MCP,
+or image-generation tools.
+
+Upstream attribution for the ported transport and conversion code is in
+`UPSTREAM.md`.
 
 ## Install
 
@@ -14,24 +17,24 @@ tools.
 pi install npm:@luan-pi/pi-codex-native
 ```
 
-From a checkout of this repository:
+Optional companions:
 
-```sh
-just setup
-pi install ./harnesses/pi/agent/packages/pi-codex-native
-```
-
-`just setup` installs the workspace dependencies and builds the Rust `web_run`
-binary for checkout use; installed copies build it on first use. `pi install`
-adds this package to the Pi settings file used by the current command.
+- `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings` UI for the
+  settings below and binds the package's actions to keys from
+  `keybindings.json`. Without it, compiled defaults apply and no keys are
+  bound.
+- `pi install npm:@luan-pi/pi-code-mode` exposes `web__run` inside Code Mode
+  scripts as well as directly. Without it, `web__run` is only a direct tool.
 
 ## Sign in and use
 
 Start Pi and choose an `openai-codex/...` model. Pi asks this provider to log
 in the first time. The provider offers:
 
-- Browser login, using a local OAuth callback on port `1455`.
-- Device-code login for a headless machine.
+- Browser login, using a local OAuth callback at
+  `http://localhost:1455/auth/callback`. You can also paste the
+  authorization code or redirect URL into the prompt.
+- Device-code login for a headless machine (15-minute code lifetime).
 
 Pi stores the OAuth credential in its normal auth store and refreshes it when
 needed. Check the provider without starting a session with:
@@ -40,23 +43,19 @@ needed. Check the provider without starting a session with:
 pi auth check --provider openai-codex
 ```
 
-The package currently provides these models:
+The package provides these models:
 
 | Model | Input | Notes |
 | --- | --- | --- |
-| `gpt-5.3-codex-spark` | Text | 128k context; no tool-search flag. |
+| `gpt-5.3-codex-spark` | Text | 128k context. |
 | `gpt-5.4` | Text, images | Tool search. |
 | `gpt-5.4-mini` | Text, images | Tool search. |
 | `gpt-5.5` | Text, images | Tool search. |
-| `gpt-5.6-luna` | Text, images | Additional tools and tool search. |
-| `gpt-5.6-sol` | Text, images | Additional tools and tool search. |
-| `gpt-5.6-terra` | Text, images | Additional tools and tool search. |
-| `gpt-6-astra` | Text, images | Additional tools and tool search; reasoning through `max`. |
+| `gpt-5.6-luna`, `gpt-5.6-sol`, `gpt-5.6-terra` | Text, images | Additional tools, tool search, reasoning through `max`. |
+| `gpt-6-astra` | Text, images | Same as GPT-5.6; cost estimates are zero until verified pricing is available. |
 
-Astra uses the existing Codex context presets and fast-mode controls. Its
-cost estimates are zero until verified pricing is available. The cached
-`ultra` reasoning level is not exposed because Pi's thinking controls stop at
-`max`; add it when Pi supports that level.
+All models default to a 272k context window (128k for Spark) and 128k max
+output tokens. GPT-5.6 models and GPT-6 Astra use the context presets below.
 
 Use a model explicitly when needed:
 
@@ -64,100 +63,127 @@ Use a model explicitly when needed:
 pi --model openai-codex/gpt-5.6-luna
 ```
 
-## Settings
+## Fast mode
 
-Settings are registered with `pi-xsettings` and are stored in
-`~/.pi/agent/xsettings.toml`. The package uses its compiled defaults when the
-xsettings host is not installed; it does not create a second settings file.
+Fast mode sends Codex priority routing (`service_tier: "priority"` plus the
+`x-codex-routing-hint` header) on every request. It only affects models whose
+provider is `openai-codex` and API is `openai-codex-responses`. When enabled
+the footer shows `fast`. Each session starts from the `fastModeDefault`
+setting; a model role that already sets `serviceTier: "priority"` keeps fast
+mode on even if you toggle it off.
 
-The settings namespace is `pi-codex-native` under the `[behavior]` category:
+## Context window
 
-```toml
-[behavior]
-pi-codex-native.cacheDiagnostics = "off"
-pi-codex-native.fallbackCompaction = true
-pi-codex-native.fastModeDefault = false
-pi-codex-native.contextWindowPreset = "balanced"
-pi-codex-native.contextAutoUpgrade = "never"
-pi-codex-native.textVerbosity = "low"
+For GPT-5.6 and GPT-6 Astra models the package sets the model's context
+window from a preset: `smart` (180k), `balanced` (272k), `enhanced` (400k),
+`large` (600k), or `max` (1M). The footer shows the active preset. Another
+extension may request a preset through the `@luan-pi/pi-libcontext`
+capability; without one, the `contextWindowPreset` setting is used.
+
+`contextAutoUpgrade` controls what happens when Pi reaches its compaction
+threshold: `never` compacts, `mid-turn` moves to the next tier after a tool
+turn that crosses the threshold and compacts once the run ends, and `always`
+moves up a tier instead of compacting until `max` is reached.
+
+## Keybindings
+
+The package registers two actions:
+
+| Action | Effect |
+| --- | --- |
+| `codex.fast.toggle` | Toggle fast mode for the current session. |
+| `codex.context.cycle` | Move to the next context preset (wraps after `max`). |
+
+Actions have no default keys. Bind them in `keybindings.json` in Pi's agent
+directory (normally `~/.pi/agent/keybindings.json`). Each property name is an
+action ID; each value is a key ID string or an array of key ID strings. For
+example:
+
+```json
+{
+  "codex.fast.toggle": "ctrl+shift+f",
+  "codex.context.cycle": "ctrl+shift+w"
+}
 ```
 
-- `cacheDiagnostics`: `off`, `status`, or `status-and-log`. The last option
-  writes metadata-only logs under `~/.pi/agent/logs/codex-native/`.
-- `fallbackCompaction`: let Pi compact locally when native remote compaction
-  fails. The default is `true`.
-- `fastModeDefault`: start each new or resumed session with Codex priority
-  routing. Fast mode only affects eligible Codex models. The package registers
-  `codex.fast.toggle`; it does not choose a default shortcut.
-- `contextWindowPreset`: `smart` (180k), `balanced` (272k), `enhanced`
-  (400k), `large` (600k), or `max` (1M). This setting applies to GPT-5.6
-  and GPT-6 Astra Codex models. The package also registers `codex.context.cycle`.
-- `contextAutoUpgrade`: `never`, `mid-turn`, or `always`. These settings
-  control whether GPT-5.6 and GPT-6 Astra can move to a larger context tier before compacting.
-- `textVerbosity`: `low`, `medium`, or `high` for the next provider request.
+Keys take effect only when `@luan-pi/pi-xsettings` is installed; the file is
+read on load, so reload extensions after editing it.
 
-Other extensions may request a context preset through the versioned
-`pi-libcontext` capability. A role selection is optional; without one, the
-Codex setting above is used.
+## Settings
+
+Settings use namespace `pi-codex-native` (label "Codex Native"), all in the
+`behavior` category. Edit them with `/xsettings` when `@luan-pi/pi-xsettings`
+is installed; otherwise the defaults apply.
+
+| Key | Default | Values |
+| --- | --- | --- |
+| `cacheDiagnostics` | `off` | `off`, `status`, `status-and-log` |
+| `fallbackCompaction` | `true` | boolean |
+| `fastModeDefault` | `false` | boolean |
+| `contextWindowPreset` | `balanced` | `smart`, `balanced`, `enhanced`, `large`, `max` |
+| `contextAutoUpgrade` | `never` | `never`, `mid-turn`, `always` |
+| `textVerbosity` | `low` | `low`, `medium`, `high` |
+
+- `cacheDiagnostics`: `status` shows prompt-cache hit/miss in the footer;
+  `status-and-log` also writes metadata-only logs under
+  `<Pi agent directory>/logs/codex-native/`.
+- `fallbackCompaction`: for Codex models the package replaces Pi's compaction
+  with Codex remote compaction and replays the checkpoint on later requests
+  (custom `/compact` guidance is ignored with a warning). When remote
+  compaction fails, `true` lets Pi compact locally, including the last remote
+  checkpoint; `false` cancels compaction with an error notice.
+- `textVerbosity`: sets `text.verbosity` on each provider request.
 
 ## `web__run`
 
-`web__run` is a Codex-only tool. It supports web search and source inspection,
-image search, finance, weather, sports, and time operations. It rejects other
-providers before starting the Rust process. When Code Mode is installed, the
-same operation is exposed through Code Mode's adapter; this package still
-owns the definition and execution.
+`web__run` is a Codex-only tool. It accepts `search_query`, `image_query`,
+`open`, `click`, `find`, `screenshot`, `finance`, `weather`, `sports`, and
+`time` operations plus `response_length` and `settings.search_context_size`.
+It rejects a non-Codex active model before starting the native process.
 
-The native `web_run` binary builds itself on first use with `cargo`, so a Rust
-toolchain (<https://rustup.rs>) is the only requirement. In a checkout of this
-repository the extension uses `target/` instead. If you need a different
-executable, set:
+Requires a Rust toolchain (https://rustup.rs). The `web_run` binary builds
+itself on first use under Pi's agent directory (`native/web-run/<version>/`).
+Set `PI_CODEX_WEB_RUN_BIN` to use a prebuilt binary.
 
-```sh
-export PI_CODEX_WEB_RUN_BIN=/absolute/path/to/web_run
-```
-
-The binary normally reads the OpenAI Codex credential from Pi's auth store.
-For a custom runner setup, it also accepts `PI_CODEX_ACCESS_TOKEN` and
-`PI_CODEX_ACCOUNT_ID` together. `PI_CODEX_SEARCH_URL` overrides the search
-endpoint; `PI_CODEX_BASE_URL` derives one when the explicit URL is absent.
+The binary reads the `openai-codex` credential from Pi's auth store
+(`PI_AUTH_PATH` overrides the file). For a custom runner it also accepts
+`PI_CODEX_ACCESS_TOKEN` and `PI_CODEX_ACCOUNT_ID`, which must be set together.
+`PI_CODEX_SEARCH_URL` overrides the search endpoint; otherwise one is derived
+from `PI_CODEX_BASE_URL` or the default Codex backend.
 
 ## Troubleshooting
 
 - `No credentials` or an auth error: run
   `pi auth check --provider openai-codex`, then sign in again from a session
   using an `openai-codex/...` model.
-- Browser login cannot return to Pi: make sure port `1455` is available. Set
-  `PI_OAUTH_CALLBACK_HOST` if the callback must bind to another local host.
-- `web_run` fails to build: make sure `cargo` is on `PATH`; in a checkout run
-  `cargo build --release -p web-run` or `just setup`.
+- Browser login cannot return to Pi: make sure port `1455` is free. Set
+  `PI_OAUTH_CALLBACK_HOST` if the callback must bind to a host other than
+  `127.0.0.1`.
+- `web_run` fails to build: make sure `cargo` is on `PATH`, or point
+  `PI_CODEX_WEB_RUN_BIN` at a prebuilt binary.
 - `web__run` rejects the model: the active model must use provider
   `openai-codex` and API `openai-codex-responses`.
 - A custom search endpoint returns `403` or `404`: check the endpoint and
   credentials. The Codex backend can reject search for an account or proxy
   even when normal model requests work.
 
-## Architecture
+## Layout
 
-| Concern | Owner |
+| Responsibility | File |
 | --- | --- |
 | Pi registration and lifecycle | `src/extension.ts` |
-| Provider registration, models, OAuth, transport | `src/provider/` |
-| Remote-v2 and fallback compaction | `src/compaction/` |
+| Provider, models, OAuth, transport | `src/provider/` |
+| Responses stream and history conversion | `src/responses/` |
+| Remote compaction and fallback | `src/compaction/` |
 | Fast mode and context-window actions | `src/fast-mode.ts`, `src/context-window.ts` |
-| Typed settings | `src/contributions/xsettings.ts` via `pi-xsettings/sdk` |
-| Codex developer-message serialization | `src/prompt-payload-adapter.ts` |
-| Code Mode bridge | `src/code-mode-tool-adapter.ts` via `pi-code-mode/sdk` |
-| `web__run` schema, process, and result details | `src/tools/web-run/` |
-| Tool presentation | `src/tools/web-run/presentation.ts` maps web semantics onto `pi-libtui` activities |
+| Typed settings | `src/contributions/xsettings.ts` |
+| Cache diagnostics status and logs | `src/diagnostics/` |
+| Developer-message serialization | `src/prompt-payload-adapter.ts` |
+| Code Mode bridge | `src/code-mode-tool-adapter.ts` |
+| `web__run` schema, process, result, rendering | `src/tools/web-run/` |
 
-## Validate
+## Develop
 
-```sh
-cd harnesses/pi/agent/packages/pi-codex-native
-bun run typecheck
-bun test test
-```
-
-From the repository root, `just check` runs the package with the other Pi
-packages and the Rust workspace.
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-codex-native. Run `bun run typecheck` and
+`bun test test` in that directory.

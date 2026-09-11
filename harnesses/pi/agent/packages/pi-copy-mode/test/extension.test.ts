@@ -48,3 +48,20 @@ test("session lifecycle mounts one host, subscribes once to mouse selection, and
 	await events.get("session_shutdown")?.({ reason: "reload" }, context);
 	expect(widgets.at(-1)).toEqual({ key: "pi-copy-mode.host", content: undefined });
 });
+
+test("a second loaded copy stays inert until the owner releases", async () => {
+	const harness = () => {
+		const events = new Map<string, EventHandler>();
+		const boundary: ExtensionApiBoundary = { on: (name: string, handler: EventHandler) => events.set(name, handler) };
+		copyModeExtension(boundary as ExtensionAPI);
+		return events;
+	};
+	const owner = harness();
+	const duplicate = harness();
+	expect(owner.has("session_start")).toBe(true);
+	expect(duplicate.size).toBe(0);
+
+	const contextBoundary: ContextBoundary = { mode: "tui", ui: { setWidget() {}, notify() {} } };
+	await owner.get("session_shutdown")?.({ reason: "quit" }, contextBoundary as ExtensionContext);
+	expect(harness().has("session_start")).toBe(true);
+});

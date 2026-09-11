@@ -1,8 +1,12 @@
 # pi-apply-patch
 
-`pi-apply-patch` adds an `apply_patch` tool that applies Codex-style patches
-through the repository's Rust implementation. The same operation works when
-called directly by Pi or from Code Mode.
+`@luan-pi/pi-apply-patch` adds an `apply_patch` tool to Pi. The model writes a
+Codex-style patch (`*** Begin Patch` ... `*** End Patch`) and a native Rust
+binary applies it: parsing, context matching, filesystem writes, and
+partial-failure tracking. The same operation is available as a direct Pi tool
+and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
+
+Adapted from upstream Codex tooling; see UPSTREAM.md for provenance.
 
 ## Install
 
@@ -10,25 +14,31 @@ called directly by Pi or from Code Mode.
 pi install npm:@luan-pi/pi-apply-patch
 ```
 
-The native `apply_patch` binary builds itself on first use with `cargo`, so a
-Rust toolchain (<https://rustup.rs>) is the only requirement. In a checkout of
-this repository the package uses `target/` instead. Set `PI_APPLY_PATCH_BIN` to
-an executable binary elsewhere when developing or testing.
+Requires a Rust toolchain (<https://rustup.rs>). The `apply_patch` binary builds
+itself on first use under Pi's agent directory (`native/apply-patch/<version>/`).
+Set `PI_APPLY_PATCH_BIN` to use a prebuilt binary.
+
+Optional companion: `pi install npm:@luan-pi/pi-code-mode` adds the `exec`
+tool and can move `apply_patch` under it; without it `apply_patch` is always a
+direct tool.
 
 ## Direct and Code Mode calls
 
-`pi-apply-patch` registers `apply_patch` as a normal direct Pi tool and also
-registers a Code Mode execution adapter. `pi-code-mode` alone decides which
-one the model sees when Code Mode and `exec` are active:
+The extension registers `apply_patch` as an ordinary Pi tool and also registers
+a Code Mode execution adapter. Code Mode alone decides which one the model
+sees:
 
-- If `apply_patch` is not selected under exec, the model calls the active
-  direct tool with `{ "input": "...patch text..." }`.
-- If it is selected in `pi-code-mode.tools`, it disappears from the direct
+- Without Code Mode, or when `apply_patch` is not selected in Code Mode's
+  `pi-code-mode.tools` setting, the model calls the direct tool with
+  `{ "input": "...patch text..." }`.
+- When it is selected there and `exec` is active, it disappears from the direct
   tool list and becomes `tools.apply_patch("...patch text...")` inside `exec`.
+  The adapter accepts only a raw string; any other input is rejected.
 
-The adapter forwards execution and reuses this package's semantic diff
-presentation inside Code Mode. This package does not change the tool hierarchy,
-read Code Mode settings, or create another nested-tool system.
+The adapter forwards execution to the same tool implementation and reuses this
+package's diff presentation for the nested trace. It does not read Code Mode
+settings or change the tool hierarchy. A partial failure inside `exec` is
+reported as a thrown error to the script after the result is published.
 
 ## Patch format
 
@@ -50,66 +60,92 @@ file:
 Supported actions are `Add File`, `Update File`, `Delete File`, and `Move to`.
 Put `*** Move to: ...` immediately after an `*** Update File: ...` header.
 Order multiple hunks for one file from top to bottom. Context and indentation
-are literal text.
+are literal text. Every line of an `Add File` body must start with `+`.
 
 Paths are resolved relative to the Pi session cwd. Absolute paths are passed
-through as absolute paths. A leading `@` is accepted for compatibility with
-Pi path arguments.
+through unchanged. A leading `@` and surrounding quotes are stripped from
+paths for compatibility with Pi path arguments.
+
+The direct tool accepts `input`; the aliases `patchText` and `patch` are
+normalized to `input` before execution.
 
 ## Execution and results
 
 The Rust binary owns parsing, matching, filesystem mutations, and partial
-failure tracking. The TypeScript package owns Pi registration, argument
+failure tracking. The TypeScript side owns Pi registration, argument
 normalization, per-file mutation queues, process control, and result shaping.
 
-The tool serializes mutations touching the same path, including the
-read-modify-write window. A successful result reports changed, created,
-deleted, and moved files, fuzz, and the native committed unified diff. The
-input patch is only a queued/running preview; completed presentation uses the
-native diff so line ranges describe the files that were actually written. If
-an early action succeeds and a later action fails, the tool returns a
-`partial_failure` result that lists and renders only the committed prefix.
-Read failed files before retrying, and do not reapply successful actions.
-Direct Pi calls are marked as errors; a Code Mode call reports the partial
-failure through the nested execution result.
+Before running, the tool takes Pi's file mutation queue for every path the
+patch touches (including move targets), so concurrent edits to the same file
+are serialized. The binary is spawned with the patch on stdin and
+`PI_APPLY_PATCH_JSON=1`; its final stdout line is the structured result.
 
-The direct tool uses native freeform grammar when the provider supports it.
-Other providers receive the ordinary `{ input: string }` function schema. In
-Code Mode, the adapter always receives the raw patch string.
+A successful result reports changed, created, deleted, and moved files, fuzz,
+and the committed unified diff. While queued or running, the transcript shows a
+preview built from the input patch; once complete, it renders the native diff,
+so line ranges describe the files actually written.
+
+If an early action succeeds and a later one fails, the tool returns a
+`partial_failure` result listing the committed prefix and the failed targets.
+The text result tells the model to re-read failed files before retrying and
+not to reapply successful actions. A `tool_result` hook marks direct
+partial-failure results as errors. If nothing was committed, the tool throws
+with the binary's diagnostic (bounded to 8 KiB).
+
+The direct tool declares a Lark grammar as constrained sampling, so providers
+that support native freeform tools receive the raw patch text. Other providers
+receive the ordinary `{ input: string }` function schema.
+
+## Settings and keybindings
+
+This package has no settings and registers no commands or key-bound actions.
+Its only configuration is the `PI_APPLY_PATCH_BIN` environment variable.
 
 ## API
 
-The package's default export is the Pi extension. The supported exports from
-`src/index.ts` include:
+The default export of `src/extension.ts` is the Pi extension. `src/index.ts`
+exports:
 
-- `createApplyPatchTool()` and `registerApplyPatchTool()` for Pi registration.
+- `createApplyPatchTool()` and `registerApplyPatchTool(pi, tool?)` for Pi
+  registration.
 - `executePatchWithRust({ cwd, patchText, signal?, binary? })` for the native
-  execution boundary.
+  execution boundary; it throws `ExecutePatchError` on failure.
 - `resolveApplyPatchBinary()` for the default/override binary lookup.
-- `ApplyPatchToolDetails`, `ApplyPatchOperation`, and related result types.
+- `createApplyPatchRunningResult`, `createApplyPatchSuccessResult`, and
+  `createApplyPatchPartialFailureResult` for building tool results.
+- Types `ApplyPatchToolDetails`, `ApplyPatchOperation`, `ApplyPatchFileResult`,
+  `ApplyPatchRunningDetails`, `ApplyPatchSuccessDetails`,
+  `ApplyPatchPartialFailureDetails`, and `ExecutePatchResult`.
 
-The result details are versioned and JSON-serializable. The stable fields are
-the operation list, affected paths, per-file statuses, counts, progress,
-timing, native result, and partial-failure information.
+Result details are `version: 1` and JSON-serializable. Every status carries
+`input.operations`, `affectedPaths`, `files` (per-file `applied`/`failed`),
+`counts`, `progress`, and `timing.durationMs`. `success` and `partial_failure`
+add `result` (the native result); `partial_failure` adds
+`failure.{message, failedTargets}`.
 
-## Architecture map
+## Layout
 
-| Role | Owner |
+| Responsibility | File |
 | --- | --- |
-| Tool definition | `src/tools/apply-patch/definition.ts` |
-| Execution owner | `src/executor.ts` and the Rust `apply-patch` crate |
-| State owner | The native process owns one patch execution; the package keeps no session state |
-| Native boundary | `src/executor.ts` spawns `apply_patch` resolved by `src/binary.ts` |
-| Hierarchy bridge | `src/code-mode-adapter.ts` via `pi-code-mode/sdk` |
-| Presentation owner | `src/tools/apply-patch/presentation.ts` previews input while queued/running and renders the native committed diff when complete |
-| Public capabilities | Direct `apply_patch`, Code Mode adapter, executor, and result types |
+| Extension entry: registers tool, result hook, and Code Mode adapter | `src/extension.ts` |
+| Tool definition, argument normalization, mutation queues | `src/tools/apply-patch/definition.ts` |
+| Result shaping and details types | `src/tools/apply-patch/result.ts` |
+| Transcript rendering (input preview, native diff) | `src/tools/apply-patch/presentation.ts` |
+| Spawning the native binary and parsing its JSON | `src/executor.ts` |
+| Binary lookup and first-use build | `src/binary.ts` |
+| TypeScript patch parsing for previews and path resolution | `src/patch.ts` |
+| Lark grammar for freeform providers | `src/grammar.ts` |
+| Code Mode adapter | `src/code-mode-adapter.ts` |
+| Shared types and `ExecutePatchError` | `src/types.ts` |
+| Public exports | `src/index.ts` |
 
 ## Troubleshooting
 
 - **Binary fails to build:** make sure `cargo` is installed and on `PATH`, or
   set `PI_APPLY_PATCH_BIN` to an executable file.
-- **The tool stays direct:** select `apply_patch` in Code Mode's `Tools under
-  exec` setting and restart the session. Only Code Mode owns placement.
+- **The tool stays direct:** install `@luan-pi/pi-code-mode`, select
+  `apply_patch` in its `tools` setting, and restart the session. Only Code
+  Mode owns placement.
 - **The tool is missing entirely:** check Pi's active tool selection. A strict
   `--tools` list must include `apply_patch` or `exec`, depending on which path
   you want to use.
@@ -118,13 +154,8 @@ timing, native result, and partial-failure information.
 - **A patch is rejected:** check the begin/end markers, action headers, exact
   context lines, and the required `+` prefix for added-file content.
 
-## Validation
+## Develop
 
-```sh
-cargo test -p apply-patch
-bun run --cwd=harnesses/pi/agent/packages/pi-apply-patch typecheck
-bun test --cwd=harnesses/pi/agent/packages/pi-apply-patch
-```
-
-From the repository root, `just check` runs the aggregate TypeScript, Rust,
-and harness checks.
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-apply-patch. Run `bun run typecheck` and
+`bun test test` in that directory.

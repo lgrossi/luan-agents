@@ -1,41 +1,49 @@
-# pi-libcontext
+# @luan-pi/pi-libcontext
 
-`pi-libcontext` is the UI-free capability for optional Codex context-window
-preferences. A contributor can publish a requested preset without importing
-the provider that applies it. The provider decides what the preset means and
-whether the current model supports it.
+`@luan-pi/pi-libcontext` is a small TypeScript library for Pi extension
+authors. It defines a shared, UI-free protocol for context-window preferences:
+one extension can publish a requested preset (for example `"large"`), and a
+provider extension that owns the model can read that request and decide what
+it means for the current model. Neither side has to import the other.
 
-This is a library, not a Pi extension. It has no settings file, persistence,
-commands, shortcuts, tools, or UI.
+This is a library, not a Pi extension. It has no settings, persistence,
+commands, keybindings, tools, or UI, and it does nothing on its own until a
+provider calls `requestedContextWindowPreset()`.
 
-## Install and import
+## Install
 
-Add it as a dependency of a Pi package. Packages in this repository use the
-workspace protocol; external packages use the published version:
+Add it to the extension package that will register or read presets. Bundle it
+so the installed extension carries its own copy:
 
 ```json
 {
   "dependencies": {
-    "@luan-pi/pi-libcontext": "workspace:*"
-  }
+    "@luan-pi/pi-libcontext": "^0.1.0"
+  },
+  "bundledDependencies": ["@luan-pi/pi-libcontext"]
 }
 ```
 
-Run `bun install`, then import the public SDK:
+Then import the public SDK:
 
 ```ts
 import {
   CONTEXT_WINDOW_PRESETS,
-  requestedContextWindowPreset,
   ensureContextWindowSourceRegistry,
+  requestedContextWindowPreset,
   type ContextWindowPreset,
 } from "@luan-pi/pi-libcontext/sdk";
 ```
 
-The package has no runtime dependencies. Its only peer dependency is Pi's
-coding-agent package, which supplies the `ExtensionContext` type. It is not
-installed with `pi install` by itself; install a Pi extension that depends on
-it.
+The package root (`@luan-pi/pi-libcontext`) re-exports the same names. It has
+no runtime dependencies. Its only peer dependency is
+`@earendil-works/pi-coding-agent`, which supplies the `ExtensionContext` type
+passed to sources.
+
+Optional companion: `pi install npm:@luan-pi/pi-codex-native` is a provider
+that reads the first valid request from this registry and applies it to
+eligible Codex models; without it (or another provider), registered sources
+are stored but never consulted.
 
 ## Presets
 
@@ -49,33 +57,21 @@ const CONTEXT_WINDOW_PRESETS = ["smart", "balanced", "enhanced", "large", "max"]
 `ContextWindowPreference` adds `"default"` at the front:
 
 ```ts
-const CONTEXT_WINDOW_PREFERENCES = [
-  "default",
-  "smart",
-  "balanced",
-  "enhanced",
-  "large",
-  "max",
-] as const;
+const CONTEXT_WINDOW_PREFERENCES = ["default", "smart", "balanced", "enhanced", "large", "max"] as const;
 ```
 
-`default` means that the provider's own setting should win. It is a preference
-value and is not returned by `requestedContextWindowPreset()`.
+`"default"` means the provider's own setting should win. It is a preference
+value for provider-side settings, not a preset, and is never returned by
+`requestedContextWindowPreset()`.
 
-Use `isContextWindowPreset(value)` when validating an untyped value. It accepts
-only the five values in `CONTEXT_WINDOW_PRESETS`; `default`, `undefined`, and
-other strings are rejected.
+`isContextWindowPreset(value)` validates an untyped value. It accepts only the
+five strings in `CONTEXT_WINDOW_PRESETS`; `"default"`, `undefined`, and any
+other value are rejected.
 
-## Source registry
+## Publishing a request (source side)
 
-The registry protocol is `pi-libcontext/sources/v1`, stored at:
-
-```ts
-Symbol.for("pi-libcontext/sources/v1")
-```
-
-A source has an ID and a function that derives a preset for the current Pi
-context:
+A source has an `id` and a `preset(ctx)` function that derives a preset for the
+current `ExtensionContext`, or returns `undefined` to make no request:
 
 ```ts
 import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "@luan-pi/pi-libcontext/sdk";
@@ -91,48 +87,67 @@ const unregister = ensureContextWindowSourceRegistry().register({
 unregister();
 ```
 
-The registry exposes `protocol`, `version` (`1`), and `register()`. Registering
-the same ID replaces the previous source. A disposer is identity-safe: it can
-remove only the source instance that created it, so an old disposer cannot
-remove a replacement. Separate copies of this package in the same JavaScript
-realm share the registry through `Symbol.for`.
+`register()` returns a disposer. Register and dispose with your extension
+lifecycle so reloads do not leave stale sources behind.
 
-## Resolution and failure behavior
+Registrations are keyed by source object identity, not by `id`. Registering a
+second source with the same `id` does not replace the first; both stay active,
+and each disposer removes only the object it was created for. The `id` is
+descriptive only.
 
-The provider asks for the current request with:
+## Reading a request (provider side)
 
 ```ts
 const requested = requestedContextWindowPreset(ctx);
 ```
 
-Sources are checked in registry insertion order. The first source that returns
-a valid preset wins. A source returning `undefined` or an invalid string is
-ignored and resolution continues. If a source throws, the error is swallowed
-and the next source is tried. If no source returns a valid preset, the function
-returns `undefined`.
+Sources are checked in registration order. The first source whose `preset()`
+returns a valid preset wins. A source that returns `undefined` or an invalid
+value is skipped. A source that throws is also skipped and the error is
+swallowed, so a broken contributor cannot break the provider. If no source
+returns a valid preset, the result is `undefined`.
 
-Registrations are owned by source object identity. Multiple active extension
-instances may use the same descriptive `id`; unregistering one removes only
-that registration and preserves the others.
+The library has no built-in default and never applies a context window itself.
+The provider owns model eligibility, numeric window sizes, fallback behaviour,
+and any stronger provider-side override.
 
-The registry has no built-in default and does not apply a context window. It
-only carries the optional request; the provider owns model eligibility,
-numeric window sizes, fallback behavior, and any stronger provider-side
-override. `ensureContextWindowSourceRegistry(scope)` accepts a custom
-global-like object when a separate scope is required.
+## Registry details
 
-The SDK also exports `CONTEXT_WINDOW_SOURCES_KEY`,
-`CONTEXT_WINDOW_SOURCES_PROTOCOL`, `ContextWindowSource`, and
-`ContextWindowSourceRegistry` for hosts that need to inspect the versioned
-capability directly.
+The registry lives on `globalThis` under `Symbol.for("pi-libcontext/sources/v1")`
+(exported as `CONTEXT_WINDOW_SOURCES_KEY`). It exposes:
 
-## Consumers
+| Member | Value |
+| --- | --- |
+| `protocol` | `"pi-libcontext/sources/v1"` (`CONTEXT_WINDOW_SOURCES_PROTOCOL`) |
+| `version` | `1` |
+| `register(source)` | returns a disposer function |
 
-- `pi-codex-native` reads the first valid request and applies it to eligible
-  Codex models. Its session setting remains the fallback when no source makes
-  a request.
+`ensureContextWindowSourceRegistry()` creates the registry on first call and
+returns the existing one afterwards. Because the key uses `Symbol.for`,
+separate copies of this package loaded in the same JavaScript realm (for
+example two extensions that each bundle it) share one registry and one source
+list. An existing value at that key is reused only if it has the matching
+`protocol`, `version`, and a `register` function; otherwise it is replaced.
 
-Consumers should register and dispose their source with their extension
-lifecycle. A missing provider is harmless: the source registry can still be
-created and populated, while no package is required to own the other package's
-private implementation.
+`ensureContextWindowSourceRegistry(scope)` accepts a custom global-like object
+instead of `globalThis` when an isolated registry is needed, such as in tests.
+`requestedContextWindowPreset()` always reads the `globalThis` registry.
+
+The SDK also exports the `ContextWindowSource` and
+`ContextWindowSourceRegistry` types for hosts that inspect the capability
+directly.
+
+## Layout
+
+| Responsibility | File |
+| --- | --- |
+| Preset constants, validator, registry, resolution | `src/protocol/context-window.ts` |
+| Public SDK surface (`@luan-pi/pi-libcontext/sdk`) | `src/sdk.ts` |
+| Package root re-export | `src/index.ts` |
+| Registry behaviour tests | `test/registry.test.ts` |
+
+## Develop
+
+Source: https://github.com/luan/agents, directory
+`harnesses/pi/agent/packages/pi-libcontext`. Run `bun run typecheck` and
+`bun test test` in that directory.

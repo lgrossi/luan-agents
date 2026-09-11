@@ -1,14 +1,14 @@
-# pi-side-chat
+# @luan-pi/pi-side-chat
 
-`pi-side-chat` opens independent, interactive Pi sessions next to the one you
-are working in. Each side chat is a real child `pi` process running in a PTY.
-It starts with a copy of the parent session's model-visible history, followed
-by a hidden boundary message that tells the model the inherited history is
-reference only. Use it to ask questions or explore without disturbing the main
-thread.
+`@luan-pi/pi-side-chat` opens independent, interactive Pi sessions next to the
+one you are working in. Each side chat is a real child `pi` process running in
+a PTY. It starts with a copy of the parent session's model-visible history,
+followed by a hidden boundary message that tells the model the inherited
+history is reference only. Use it to ask questions or explore without
+disturbing the main thread.
 
-It is a Pi extension, not a model-facing tool. It registers one command, one
-action, and an optional side-panel provider.
+It is a Pi extension, not a model-facing tool. It registers one command
+(`/side`), one action (`side-panel.chat.new`), and a side-panel provider.
 
 ## Install
 
@@ -16,24 +16,19 @@ action, and an optional side-panel provider.
 pi install npm:@luan-pi/pi-side-chat
 ```
 
-From a checkout of this repository:
+The package requires Pi's interactive TUI. In print or non-UI mode the `/side`
+command reports that side chat is unavailable.
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-side-chat
-```
+Optional companion: `pi install npm:@luan-pi/pi-side-panel` hosts each side
+chat as a tab in a side panel; without it, side chats open in a fullscreen
+overlay instead (see below).
 
-The package bundles its `pi-libtui` and `pi-libactions` dependencies and loads
-the `pi-libtui` extension alongside its own. It requires Pi's interactive TUI;
-in print or non-UI mode the `/side` command reports that side chat is
-unavailable.
+### Native binary: `terminal_bridge`
 
-### External requirement: `terminal_bridge`
-
-Side chats render through `PtyPane` from `pi-libtui`, which drives child
-processes with the native `terminal_bridge` binary. It builds itself on first
-use with `cargo`, so a Rust toolchain (<https://rustup.rs>) is required. Set
-`PI_TERMINAL_BRIDGE_BINARY` to an absolute path to use a binary that is
-installed elsewhere.
+Side chats are driven by the native `terminal_bridge` binary. Requires a Rust
+toolchain (https://rustup.rs). The `terminal_bridge` binary builds itself on
+first use under Pi's agent directory (`native/terminal-bridge/<version>/`).
+Set `PI_TERMINAL_BRIDGE_BINARY` to use a prebuilt binary.
 
 ## Use it
 
@@ -54,17 +49,28 @@ two surfaces are distinguishable. The environment variable
 `PI_EMBEDDED_SIDE_CHAT=1` is set on the child process.
 
 Child sessions are stored in `side-chats/<uuid>/` under the parent's session
-directory. When the parent runs without a session file (`--no-session`), they
-go under `pi-side-chat/<parent-session-id>/` in the OS temporary directory
-instead.
+directory, together with the generated theme file
+`side-chat-<uuid>.json`. When the parent runs without a session file
+(`--no-session`), they go under `pi-side-chat/<parent-session-id>/` in the OS
+temporary directory instead.
 
-### With and without `pi-side-panel`
+### Inherited history
 
-The package registers a side-panel provider through `pi-libtui`. When a
-side-panel host such as `pi-side-panel` is present, each chat appears as a
-tab labelled `Side N` with a `󱐒` icon, and the panel's empty state gains a
-"Side chat" action. Restored tabs are added without starting their child
-processes until they are shown.
+When a side chat is created, every entry of the parent's current branch that
+contributes to the model context is copied into the child session, followed by
+a hidden custom message (`pi-side-chat-boundary`). The boundary tells the model
+that everything before it is reference context, that it should answer
+questions and do lightweight non-mutating exploration, that sub-agents are
+off-limits, and that it must not modify files or state unless the user
+explicitly asks after the boundary. The child session records the parent
+session file as its parent.
+
+### With and without `@luan-pi/pi-side-panel`
+
+The package registers a side-panel provider. When a side-panel host is
+present, each chat appears as a tab labelled `Side N` with a `󱐒` icon, and the
+panel's empty state gains a "Side chat" action. Restored tabs are added
+without starting their child processes until they are shown.
 
 When no host is present, the same PTY pane opens in a fullscreen overlay
 instead. Only one restored chat can be shown this way: on session start the
@@ -87,9 +93,22 @@ session location from the parent Pi context.
 
 ## Keybindings
 
-The extension registers the `side-panel.chat.new` action through
-`pi-libactions` without a default key. Bind it in your managed
-`keybindings.json` if you want a shortcut; `/side` works without one.
+The `side-panel.chat.new` action has no default key. To bind one, add it to
+`keybindings.json` in Pi's agent directory (normally
+`~/.pi/agent/keybindings.json`). Each property name is an action ID and each
+value is a key ID string or an array of them:
+
+```json
+{
+  "side-panel.chat.new": "ctrl+shift+n"
+}
+```
+
+Key IDs are a base key optionally preceded by `ctrl`, `shift`, `alt`, or
+`super`, joined with `+`. The file is read on load, so reload extensions after
+editing. Bindings only take effect when a shortcut host is installed
+(`pi install npm:@luan-pi/pi-xsettings` provides one). `/side` works without
+any binding.
 
 ## Layout
 
@@ -104,9 +123,6 @@ The extension registers the `side-panel.chat.new` action through
 
 ## Develop
 
-From the package directory:
-
-```sh
-bun run typecheck
-bun test test
-```
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-side-chat. Run `bun run typecheck` and
+`bun test test` in that directory.

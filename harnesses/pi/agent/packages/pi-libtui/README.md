@@ -1,150 +1,93 @@
-# pi-libtui
+# @luan-pi/pi-libtui
 
-`pi-libtui` contains the shared terminal UI pieces used by this repository's
-Pi extensions: layouts, split panes, dialogs, pickers, selection actions, semantic colors,
-icons, cursors, syntax highlighting, animated tool surfaces, streamed output,
-diffs, terminal projection, and the protocols those pieces need.
+Shared terminal UI for Pi extensions: layouts, split panes, dialogs, pickers,
+selection actions, semantic colors, icons, cursors, syntax highlighting,
+animated tool surfaces, streamed output, diffs, terminal projection, and the
+protocols those pieces need. The primary audience is extension authors.
 
-It has two separate surfaces:
+The package has two surfaces. `import "@luan-pi/pi-libtui"` is a
+side-effect-free library: it does not start Pi, probe the terminal, register a
+tool, or install UI. `src/extension.ts` is a Pi extension (listed in the
+package's `pi.extensions`) that installs the generic mouse, cursor, and
+editor-token bridges, keeps the shared native PTY host alive, measures terminal
+colors, applies the `harmonious` theme fallback, drives Pi's streaming status
+row, and registers the `/libtui:colors` 256-color palette diagnostic. It
+registers no model-facing tools, keybindings, or feature-specific UI.
 
-1. `import "pi-libtui"` is a side-effect-free library. Importing it does not
-   start Pi, probe the terminal, register a tool, or install UI.
-2. The package manifest also loads `src/extension.ts` as a Pi extension. That
-   entry point installs the generic mouse, cursor, and editor-token bridges, detects terminal
-   colors, provides the fallback for the bundled `harmonious` theme, and registers the
-   `/libtui:colors` terminal-palette diagnostic. It registers no model-facing tools,
-   shortcuts, or feature-specific UI.
-
-This dual role lets feature packages share the host compatibility layer while
-keeping their own behavior and settings.
-
-## Install and load
-
-Feature packages bundle their own copy, so most users never install this
-package directly. To load it on its own:
+## Install
 
 ```sh
 pi install npm:@luan-pi/pi-libtui
 ```
 
-From a checkout of this repository:
+This loads the host extension and the `harmonious` theme on its own. Feature
+packages normally bundle their own copy instead: add `@luan-pi/pi-libtui` to
+both `dependencies` and `bundledDependencies` in `package.json`, and list
+`"./node_modules/@luan-pi/pi-libtui/src/extension.ts"` in the package's
+`pi.extensions` so the mouse/cursor bridge is active. The host claims itself
+once per process, so several installed copies do not conflict.
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-libtui
-```
+Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings`
+UI that publishes the appearance settings below; without it the compiled
+defaults apply.
 
-Feature packages depend on it as `@luan-pi/pi-libtui` and list its extension
-entry in their own `pi.extensions` so the mouse/cursor bridge is active;
-importing the library alone is enough for pure components, color helpers, and
-protocol types.
+## Themes
 
-The package also exposes `themes/harmonious.json` through its Pi manifest. If
-the terminal does not support the palette query required by that theme, the
-extension uses Pi's detected light or dark theme as a safe fallback and keeps
-the saved theme choice intact.
+The manifest exposes `themes/harmonious.json`, which relies on the terminal's
+indexed palette. If `harmonious` is active and the measured terminal reports
+neither a generated 256-color palette nor an ANSI base-16 palette, the host
+switches to Pi's built-in theme for the detected light or dark scheme (dark if
+the measurement fails).
 
 ## Public modules
 
-Every public entry point is a side-effect-free library import. The owner column
-describes who supplies state or consumes the capability; “host required” means
-that importing and using the module alone is insufficient for the corresponding
-Pi-native behavior.
+Every entry point is a side-effect-free import. "Host required" means the
+Pi-native behaviour also needs the extension loaded.
 
-| Import path | Principal exports / capability | Owner | Import side effects | Host required |
-| --- | --- | --- | --- | --- |
-| `pi-libtui` | Common TUI components: layouts, split panes, side-panel contribution protocol, dialogs, pickers, inputs, mounted selection actions, semantic colors, icons, cursors, `PtyProcess`, `PtyPane`, `applyScrollbar`, `PointerInteractionController`, `RenderedLinesCache`, `SyntaxText`, and motion/progress | `pi-libtui` owns component and mounting mechanics; consumers own pane contents, selection eligibility, and action payloads | None; registries, appearance, and the shared motion scheduler initialize only when explicitly used | No for rendering; yes for panes and Pi-native bridges |
-| `pi-libtui/diff` | `createUnifiedDiffModel`, `parseUnifiedDiff`, `renderUnifiedDiff`, `UnifiedDiffView`, and bounded diff models/viewports | Consumer supplies diff input and theme; `pi-libtui` owns parsing/rendering | None on import or render | No |
-| `pi-libtui/editor` | `ensureEditorRegistry`, `dispatchEditorPaste`, `dispatchEditorRender`, `SemanticEditor`, `semanticEditorTheme`, and editor registry contracts | Editor host and feature packages share the registry | Explicit `ensureEditorRegistry` creates or reuses a process-global capability | Only to connect the registry to Pi's editor |
-| `pi-libtui/folding` | `ensureFoldingRegistry`, `foldTargetAt`, `clearFoldingCurrent`, and fold-target contracts | Foldable feature owns targets; copy-mode host owns keyboard consumption | Explicit `ensureFoldingRegistry` creates or reuses a process-global capability | Only for host keyboard/copy-mode integration |
-| `pi-libtui/mouse` | `ensureMouseRegistry`, `registerModalPointerShield`, viewport handlers, normalized pointer contracts, `getFullscreenLayoutCapability`, `publishFullscreenLayoutCapability`, and `resolveFullscreenLayout` | Generic host bridge dispatches; the Pi host publishes validated layout geometry; feature packages resolve it without knowing the host extension | Explicit `ensureMouseRegistry` creates or reuses a process-global capability; layout resolution only reads an existing host capability | Yes for terminal pointer events or Pi-private layout geometry |
-| `pi-libtui/selection` | `ensureSelectionRegistry`, native selection geometry, completion events, and action contracts | Pi selection host publishes; feature packages subscribe/actions | Explicit `ensureSelectionRegistry` creates or reuses a process-global capability | Yes for Pi-native selection events |
-| `pi-libtui/stream` | `BoundedStreamBuffer` and bounded UTF-8/ANSI-safe stream snapshots | Stream consumer owns lifecycle and view policy | None; instances are local state | No |
-| `pi-libtui/terminal` | `TerminalProjection` and incremental `TerminalOutput` for bounded PTY/ANSI projection | Tool consumer supplies bytes, dimensions, and repaint callback | None on import; instances own emulator state | No; a TUI callback is supplied by the consumer |
-| `pi-libtui/tool` | `ToolAction`, `LiveToolAction`, `ToolDisclosureAction`, `ToolActivity`, `ToolOutput`, `ToolTranscript`, `ToolViewRegion`, and tool-call preview helpers | `pi-libtui` owns generic presentation; feature packages own tool semantics | None on import; instances are local state | No for rendering |
+| Import path | Principal exports / capability | Host required |
+| --- | --- | --- |
+| `@luan-pi/pi-libtui` | Layouts, split panes, side-panel protocol, dialogs, pickers, inputs, selection actions, semantic colors, icons, cursors, `PtyProcess`, `PtyPane`, `applyScrollbar`, `PointerInteractionController`, `RenderedLinesCache`, `SyntaxText`, motion/progress, appearance (`getTuiAppearance`, `configureTuiAppearance`, `subscribeTuiAppearance`), `ensureNativeBinary` | Rendering no; panes, PTYs, and bridges yes |
+| `@luan-pi/pi-libtui/diff` | `createUnifiedDiffModel`, `parseUnifiedDiff`, `renderUnifiedDiff`, `UnifiedDiffView`, bounded diff models/viewports | No |
+| `@luan-pi/pi-libtui/editor` | `ensureEditorRegistry`, `dispatchEditorPaste`, `dispatchEditorRender`, `SemanticEditor`, `semanticEditorTheme`, editor registry contracts | Only to connect the registry to Pi's editor |
+| `@luan-pi/pi-libtui/folding` | `ensureFoldingRegistry`, `foldTargetAt`, `clearFoldingCurrent`, fold-target contracts | Only for copy-mode keyboard integration |
+| `@luan-pi/pi-libtui/mouse` | `ensureMouseRegistry`, `registerModalPointerShield`, viewport handlers, pointer contracts, `getFullscreenLayoutCapability`, `publishFullscreenLayoutCapability`, `resolveFullscreenLayout` | Yes for terminal pointer events and layout geometry |
+| `@luan-pi/pi-libtui/selection` | `ensureSelectionRegistry`, native selection geometry, completion events, action contracts | Yes for Pi-native selection events |
+| `@luan-pi/pi-libtui/stream` | `BoundedStreamBuffer`, bounded UTF-8/ANSI-safe stream snapshots | No |
+| `@luan-pi/pi-libtui/terminal` | `TerminalProjection`, incremental `TerminalOutput` for bounded PTY/ANSI projection | No |
+| `@luan-pi/pi-libtui/tool` | `ToolAction`, `LiveToolAction`, `ToolDisclosureAction`, `ToolActivity`, `ToolOutput`, `ToolTranscript`, `ToolViewRegion`, tool-call preview helpers | No for rendering |
 
-The package manifest separately loads `src/extension.ts` as a Pi extension. That
-entry point installs mouse, cursor, editor, and shared native PTY compatibility,
-terminal-color fallback behavior, and the `/libtui:colors` diagnostic; it
-registers no model-facing tools, shortcuts, or feature UI.
-Importing any table entry does not load or invoke that extension.
+The `ensure*Registry` functions create or reuse a process-global capability
+keyed by `Symbol.for`, so feature packages and the host share one instance.
+Tool presentation has three layers: `ToolTranscript` (copy-friendly action plus
+payload), `ToolActivity` (streaming, diff, terminal, and viewport state for a
+live surface), and `ToolOutput` for text streams. `mountTranscriptProjection`
+exposes native transcript entries to a feature-owned component through a
+guarded Pi 0.84–0.85 adapter; unsupported hosts keep their native transcript.
 
-Tool presentation has three deliberate layers. `ToolTranscript` is the small
-copy-friendly action-plus-payload wrapper. `ToolActivity` composes streaming,
-diff, terminal, and viewport state for a live tool surface. Feature packages
-compose these generic pieces for their own tool grammar; `bodyIndent` places
-the payload under a multi-row action such as a `└` connector.
-`ToolOutput` handles text streams, while
-`TerminalOutput` and `TerminalProjection` handle PTY/ANSI state.
-`pi-libtui/tool` is the only tool-presentation API. The package root owns
-general components and does not duplicate the tool surface.
+## Native binaries
 
-`mountTranscriptProjection` exposes native thinking, tool, and visible-content
-entries to a feature-owned transcript component. It borrows the original tool
-renderers and restores Pi's container on unmount. The guarded Pi 0.84–0.85
-adapter lives in `src/host/transcript-bridge.ts`; unsupported hosts keep their
-native transcript. Regular mode passes through native content because pointer
-disclosure requires fullscreen. Replace this bridge when Pi exposes a public
-transcript API. `ToolDisclosureAction.getActivityLabel()` supplies a semantic
-action summary without reading or rendering its output.
+Feature packages shell out to Rust binaries such as `terminal_bridge` (the
+exported `TERMINAL_BRIDGE` descriptor). Requires a Rust toolchain
+(https://rustup.rs). The `terminal_bridge` binary builds itself on first use
+under Pi's agent directory (`native/terminal-bridge/v<version>/`), where
+`<version>` is this package's version. Set `PI_TERMINAL_BRIDGE_BINARY` to use
+a prebuilt binary; it must point at an executable file.
 
-`SyntaxText` and diff rendering use the shared Pierre/Shiki highlighter.
-Feature packages such as `pi-exec-command` compose shell-specific presentation
-from that generic syntax surface.
-Semantic Markdown text continues to use Pi's native `highlightCode` callback so
-that Markdown rendering retains its host-provided theme and token behavior.
-
-The root library surface keeps these implementation boundaries:
-
-| Capability | Implementation modules |
-| --- | --- |
-| Layout and rendering infrastructure | `src/background-surface.ts`, `src/component-stack.ts`, `src/line-layout.ts`, `src/render-cache.ts`, `src/scrollbar.ts` |
-| Fullscreen split panes | `src/split-pane.ts` and `src/host/split-pane-bridge.ts` |
-| Side-panel contribution protocol | `src/side-panel.ts` |
-| Overlays | `src/overlay/anchored.ts`, `src/overlay/dialog.ts`, `src/overlay/floating.ts`, `src/overlay/fullscreen.ts`, `src/overlay/hover-tooltip.ts`, `src/overlay/modal-mount.ts` |
-| Actions and navigation | `src/controls/action-panel.ts`, `src/controls/dialog-button-bar.ts`, `src/controls/screen-icon-actions.ts`, `src/controls/selection-action-bar.ts` (including fullscreen mounting), `src/controls/tab.ts` |
-| Choices and fields | `src/controls/selectable-list.ts`, `src/controls/semantic-input.ts`, `src/controls/searchable-select.ts`, `src/controls/picker-panel.ts`, `src/controls/multi-select.ts` |
-| Text content | `src/content/text.ts` |
-| Glyphs, status, pills, and pointer interaction | `src/decoration/glyphs.ts`, `src/decoration/status.ts`, `src/decoration/editor-pills.ts`, `src/decoration/powerline-pill.ts`, `src/decoration/transient-pill.ts`, `src/decoration/pointer-interaction.ts` |
-| Editor protocol and presentation | `src/editor/protocol.ts`, `src/editor/presentation.ts`, `src/editor/chrome.ts`, `src/editor/composition.ts`, and `src/editor/layout.ts` (re-exported by `src/editor.ts`) |
-| Syntax highlighting | `src/syntax.ts` |
-| Shared native PTY lifecycle | `src/terminal/bridge-client.ts`, `src/terminal/pty-host.ts`, and `src/terminal/pty-pane.ts` |
-| Native binary discovery and first-use builds | `src/native-binary.ts` |
-
-The extension host keeps the shared PTY host alive across an extension reload
-so feature-owned process leases can reattach without losing terminal state. A
-session switch or quit shuts the host down.
-
-### Native binaries
-
-Feature packages shell out to Rust binaries from this repository's `crates/`
-(`terminal_bridge`, `code-mode-host`, `apply_patch`, `view_image`, `web_run`).
-`ensureNativeBinary(binary, hooks?)` resolves one for the running process:
-
-1. the binary's override env var (for example `PI_TERMINAL_BRIDGE_BINARY`),
-   which must name an executable file;
-2. `<agentDir>/native/<crate>/v<version>/bin/<name>`, built on first use with
-   `cargo install --git … --rev v<version> --root …` when absent, where
-   `<version>` is this package's version;
-3. `target/{release,debug}/<name>` when the package runs from a checkout of this
-   repository. A checkout without a built binary is reported, not built.
-
-A Rust toolchain is the only requirement for consumers. Builds are keyed by
-crate and revision, so every installed `pi-libtui` copy shares them, and
-concurrent requests in one process share one build. Pass `onBuild` to surface
-the delay in the UI. Publishing a version requires a matching `v<version>` git
-tag; cross-process build deduplication is a deliberate limit until concurrent
-first-use builds are observed.
-
-These are implementation paths, not additional package exports. Consumers keep
-using the documented package root and subpaths so the public API remains stable.
+`ensureNativeBinary(binary, hooks?)` resolves in this order: the descriptor's
+env override, then `<agentDir>/native/<crate>/v<version>/bin/<name>`, building
+it on first use when absent. Builds are keyed by crate and version, so every
+installed copy shares them, and concurrent requests within one process share
+one build. Pass `onBuild` to show the delay in the UI. The extension host keeps
+the shared PTY host alive across an extension reload; a session switch or quit
+shuts it down.
 
 ## Fullscreen split panes
 
 `mountSplitPane()` composes one extension-owned pane beside Pi's complete
-fullscreen layout. Pi's transcript, editor, widgets, status, and footer remain
-inside the main pane and reflow to its allocated width. The most recently
-mounted contribution is visible; disposing it restores the previous
-contribution, or Pi's unwrapped layout when none remains.
+fullscreen layout. Pi's transcript, editor, widgets, status, and footer stay in
+the main pane and reflow to its width. The highest-priority contribution is
+visible, with the latest mount breaking ties; disposing it restores the
+previous contribution or Pi's unwrapped layout.
 
 ```ts
 const unmount = mountSplitPane({
@@ -159,171 +102,96 @@ const unmount = mountSplitPane({
 });
 ```
 
-The pane and Pi's main surface are separated by a semantic vertical border.
-Drag that border with the primary mouse button across all available terminal
-space; Pi retains only the contribution's `minMainSize`. The preferred width
-survives temporary pane replacement within the session. The pane hides when
-the terminal cannot fit one pane cell, its border and gap, and the minimum main size.
-`initialRatio` derives the first width from the terminal when the contribution
-has no restored cell width. `onResize` runs once when a pointer drag commits so
-the owning feature can persist that width without coupling persistence to the
-shared geometry host.
-Components whose input becomes visible only after asynchronous output may implement
-`defersInputRender()`. The host then skips Pi's unchanged post-input frame and paints
-when the component requests its output frame; synchronous components retain Pi's
-normal immediate repaint.
-It is available only in fullscreen mode. Protocol v2 selects the highest-priority
-contribution and uses the latest mount to break ties. A pane factory receives the
-active `tui`, allocated pane viewport-size and render-request access, plus
-`focus()`, `blur()`, and `isFocused()`. Focus captures Pi's current component and restores it only
-while the pane still owns focus, so an overlay or another component that takes
-focus is not displaced. Clicking either pane focuses it without consuming the
-click, preserving native selection and component behavior. Contributed
-`ScrollView` layout nodes remain visible to Pi's native selection engine. Input
-and mouse events are safely forwarded through the host wrapper to the
-contributed component. `pi-libtui` owns layout composition, focus restoration,
-and cleanup.
-
-Pi 0.84.x exposes `setLayoutRoot()` but no layout-root getter. The extension
-host therefore reads and validates that one private field, and guards focus
-capture through `getFocusedComponent()` when that method is present. Its
-prototype patch uses a versioned, ref-counted lease. If the expected shape is
-absent, the bridge leaves Pi's layout unchanged. Regular rendering, and imports
-of the side-effect-free library surface, are never patched.
+A draggable vertical border separates the pane from the main surface; Pi keeps
+only `minMainSize`. `initialRatio` derives the first width when none is
+restored, and `onResize` runs once when a drag commits. The pane hides when the
+terminal cannot fit one pane cell, the border and gap, and the minimum main
+size. The factory receives the active `tui`, viewport size, render requests,
+and `focus()`, `blur()`, `isFocused()`; clicking either pane focuses it without
+consuming the click. Split panes exist only in fullscreen mode. Pi 0.84.x has
+`setLayoutRoot()` but no getter, so the host validates one private field
+through a ref-counted prototype lease and leaves the layout unchanged if the
+shape is absent.
 
 ## Appearance settings
 
-`pi-xsettings` owns the settings UI and persistence for the shared appearance:
+This package has no settings store of its own. It exposes an appearance
+registry with compiled defaults (`DEFAULT_TUI_APPEARANCE`) that a settings host
+such as `@luan-pi/pi-xsettings` overrides through `configureTuiAppearance()`;
+with pi-xsettings installed they are edited live via `/xsettings`. Keys and
+defaults:
 
-- icon pack: `unicode`, `nerd-fonts`, or `emoji`;
-- activity indicator: off, spinner, and static plus curated one-to-four-cell Unicode, ASCII, Braille, and Nerd Font animations;
-- activity message: the request phase or rotating typewriter text;
-- text effect: `off`, `sweep`, cosine `glow`, `rainbow`, `rainbow-glow`, `lightning`, `aurora`, `glitch`, or `crush`;
-- pulse effects: independent dim-to-bright or contrasting-color motion composed over any indicator and text effect without changing glyph shape;
-- text-effect scope: the message alone or the whole indicator, separator, and message unit;
-- status presentation: standard inline composition, mixed compositions such as `brainstorm`, or exclusive scenes adapted from `arpagon/pi-animations`;
-- animation speed: `slow`, `relaxed`, `normal`, `fast`, or `very-fast`;
-- animation smoothness: `economy`, `balanced`, `smooth`, or `ultra` terminal redraws;
-- independent indicator, message, text-effect, and presentation overrides for Thinking, Working, and Tool request phases;
-- Powerline separators and Powerline button caps;
-- softer virtual cursor;
-- insertion, navigation, and selection cursor styles.
+| Key | Default | Values |
+| --- | --- | --- |
+| `iconPack` | `unicode` | `unicode`, `nerd-fonts`, `emoji` |
+| `activityIndicator` | `spinner` | `off`, `spinner`, `static`, and the Unicode/ASCII/Braille/Nerd Font animations in `TUI_ACTIVITY_INDICATOR_OPTIONS` |
+| `activityMessage` | `phase` | `phase`, `typewriter` |
+| `textEffect` | `off` | `off`, `sweep`, `glow`, `rainbow`, `rainbow-glow`, `lightning`, `aurora`, `glitch`, `crush` |
+| `textEffectScope` | `message` | message only or the whole indicator, separator, and message unit |
+| `pulseEffect` | `off` | dim-to-bright or contrasting-color pulse over any indicator/text effect |
+| `statusPresentation` | `standard` | `standard`, mixed compositions such as `brainstorm`, or exclusive scenes in `TUI_STATUS_PRESENTATION_OPTIONS` |
+| `animationSpeed` | `normal` | `slow`, `relaxed`, `normal`, `fast`, `very-fast` |
+| `animationSmoothness` | `balanced` | `economy`, `balanced`, `smooth`, `ultra` (roughly 13 to 60 redraws per second) |
+| `thinking*`, `working*`, `tool*` (`Indicator`, `Message`, `TextEffect`, `PulseEffect`, `Presentation`) | `inherit` | per-phase overrides of the general value |
+| `powerline`, `powerlineButtons`, `softCursor` | `false` | Powerline separators, button caps, softer virtual cursor |
+| `insertionCursor`, `navigationCursor`, `selectionCursor` | `virtual` | cursor styles |
 
-The compiled defaults are portable Unicode icons, a Braille spinner, the phase
-message, no text effect, standard inline presentation, normal-speed balanced
-animation, flat separators/buttons, and virtual cursors. Inline activity is
-composed as `indicator + message`, then the selected effect scope is painted.
-An exclusive scene replaces that composition. Static activity allocates no
-timer. If `pi-xsettings` is absent, components use the compiled defaults. The settings can be changed live
-through `/xsettings` when its host is installed.
-
-Speed scales the animation timeline. Smoothness independently caps the shared
-repaint frequency, from roughly 13 redraws per second in economy mode to 60 in
-ultra mode. Balanced matches oh-my-pi's 30fps animated loader. Text effects use a
-continuous elapsed-time timeline, while discrete indicators retain their designed
-pace. The scheduler uses deadline-corrected one-shot timers, skips missed ticks,
-and lets Pi coalesce and backpressure the actual terminal paints.
-
-The extension entry point applies the same renderer to Pi's streaming status
-row through public lifecycle and UI APIs. Thinking takes priority over Tool,
-which takes priority over Working; parallel tool calls are tracked independently.
-Each phase inherits General by default and can override its indicator, message,
-text effect, or status presentation without changing extension-owned activity
-surfaces.
-
-Feature surfaces may pass one `ActivityAnimationOverrides` value to both
-`activityFrame()` and `mountConfiguredAnimation()`. Omitted fields inherit the
-live global appearance; explicit fields affect only that surface. Sharing the
-same value keeps visible frames and scheduler cadence aligned, including the
-fully static indicator-off and text-effect-off case.
-
-Lightning retains `main`'s exact `z`/`i`/`n`/`g` variants and supplies the same
-nine artifact families for every other printable ASCII character. Marker and
-text characters change variants while its strike travels backward through the
-complete activity unit.
-
-Compact indicator frames retain a fixed width within each style so activity text
-does not shift. Nerd Font indicator styles use their icon frames when the Nerd
-Fonts icon pack is active and fall back to an ASCII line animation otherwise.
-Arc always uses its six rounded Unicode positions. The Fira Code progress
-spinner is a separate Nerd Font-only choice. The compact Braille catalog is
-adapted from
-[`unicode-animations`](https://github.com/gunnargray-dev/unicode-animations) and
-[`cli-loaders`](https://github.com/agilek/cli-loaders); the geometric single-cell
-sequences come from [Unicode Spinner](https://unicode.framer.website/).
+Inline activity is composed as `indicator + message`, then the effect scope is
+painted; an exclusive scene replaces that composition. The extension applies
+the same renderer to Pi's streaming status row: Thinking takes priority over
+Tool, which takes priority over Working. Feature surfaces may pass
+`ActivityAnimationOverrides` to `activityFrame()` and
+`mountConfiguredAnimation()`; omitted fields inherit the live appearance.
 
 ## Architecture
 
 | Responsibility | Owner |
 | --- | --- |
 | Tool definition | None; the package adds no model-facing tool |
-| Execution owner | None in the library; `src/extension.ts` owns host setup |
-| State owner | Components own local state; `MouseBridgeHost` owns host bridge state; `RequestAnimationController` owns active request phase state |
-| Library surface | `src/index.ts`, `src/overlay/`, `src/controls/`, `src/content/`, `src/decoration/`, `src/editor.ts`, `src/syntax.ts`, `src/color/theme.ts`, `src/tool/`, and the public subpaths; `src/color/palette.ts` and `src/color/resolver.ts` remain internal color helpers |
-| Extension host | `src/extension.ts` and `src/host/` |
-| Shared contracts | `src/editor/protocol.ts` through the `src/editor.ts` facade, `src/folding.ts`, `src/selection.ts`, `src/decoration/pointer-interaction.ts`, and the explicit public contracts selected by `src/mouse.ts`; mutable mouse registry storage remains host-internal |
-| Native boundary | TUI mouse/cursor compatibility, terminal color queries, and host bridges |
-| Presentation owner | `src/background-surface.ts`, `src/component-stack.ts`, `src/line-layout.ts`, `src/render-cache.ts`, `src/scrollbar.ts`, `src/overlay/`, `src/controls/`, `src/content/`, `src/decoration/`, `src/editor/presentation.ts`, `src/syntax.ts`, `src/color/theme.ts`, `src/tool/`, motion, and semantic renderers |
-| Stream and terminal projection | `src/stream.ts` and `src/terminal/` |
-| Diff models and rendering | `src/diff/` |
-| Public capabilities | `src/index.ts` and the documented `pi-libtui/*` subpaths |
+| Execution | None in the library; `src/extension.ts` owns host setup |
+| State | Components own local state; `MouseBridgeHost` owns bridge state; `RequestAnimationController` owns request phase state |
+| Shared contracts | `src/editor/protocol.ts` (via `src/editor.ts`), `src/folding.ts`, `src/selection.ts`, `src/decoration/pointer-interaction.ts`, the public contracts selected by `src/mouse.ts` |
+| Native boundary | Mouse/cursor compatibility, terminal color queries, PTY host, host bridges in `src/host/` |
 
-The extension host knows only generic TUI mechanics. Feature labels, settings,
-actions, and workflows stay in their owning packages. A consumer can import
-the library without loading the host bridge.
+The host knows only generic TUI mechanics; feature labels, settings, actions,
+and workflows stay in their owning packages. Color resolution has one path:
+`src/color/theme.ts` owns the semantic-token table and resolves every paint
+through `src/color/resolver.ts`. Feature code uses only the root color API:
+`tuiTheme(theme)`, `createTuiThemeVariation(theme, name)`,
+`tuiThemeAppearance(theme)`, `TuiForegroundToken`/`TuiBackgroundToken`,
+`TuiSwatch` (seven ramps at shades `0`–`5`), opaque `TuiColor` handles, and
+`TuiTheme.mixForeground()`.
 
-Color resolution has one internal value path. `theme.ts` owns the complete
-semantic-token table and resolves every paint through `resolver.ts`, which maps
-the direct palette index or measured RGB value to the active terminal's RGB,
-ANSI, or contrast output. Opaque `TuiColor` values retain either a semantic
-token reference or a direct value: semantic handles are re-resolved by the
-consuming theme, while palette indexes use its active palette and exact
-measured RGB values remain exact. `TuiTheme.color()` creates handles;
-`fg()`/`bg()` and `fgAnsi()`/`bgAnsi()` are the only paint operations.
+## Layout
 
-Feature code uses only the root color API:
-
-- `tuiTheme(theme)` creates the semantic facade.
-- `createTuiThemeVariation(theme, name)` creates a complete, non-persisted Pi
-  theme document with related but shifted surfaces for an adjacent full TUI.
-- `tuiThemeAppearance(theme)` resolves the active surface to `dark` or `light`
-  for an embedded application that cannot query the outer terminal background.
-- `TuiForegroundToken` and `TuiBackgroundToken` name reusable roles.
-- `TuiSwatch` selects one of the red, green, yellow, blue, magenta, cyan, or
-  gray ramps at shade `0` through `5`.
-- `TuiColor` is an opaque resolved handle used when a component must carry a
-  color between operations without exposing RGB values or palette indexes.
-- `TuiTheme.mixForeground()` interpolates semantic foreground paints through
-  the active terminal color policy for smooth motion without leaking raw RGB.
-
-`TabBar` renders semantic pill tabs with semantic or explicit glyph icons plus
-an optional close affordance with independent hit geometry and pointer drag
-reordering. Close hover changes only the glyph foreground so the tab pill stays
-stable.
-`mountScreenIconActions()` places dynamic icon-only actions at the top-right of
-the complete screen. It owns pointer hit regions, hover paint, activation, and
-borderless dim-pill tooltips with configured key hints while leaving action
-registration to the feature package. `mountHoverTooltip()` supplies that same
-compact behavior. `mountHoverDetailCard()` supplies reusable structured hover
-content for annotation-like attachments. `DialogButtonBar` supports start,
-center, and end-aligned button groups.
-
-`src/color/palette.ts`, `src/color/resolver.ts`, and `src/terminal-colors.ts`
-are terminal-boundary implementation. The exact 6×6×6 color256 coordinates,
-generated RGB palette, ANSI parsing, and terminal measurements do not belong in
-feature-package APIs.
+| Responsibility | Source |
+| --- | --- |
+| Extension entry and host | `src/extension.ts`, `src/host/` |
+| Layout and rendering infrastructure | `src/background-surface.ts`, `src/component-stack.ts`, `src/line-layout.ts`, `src/render-cache.ts`, `src/scrollbar.ts` |
+| Split panes and side panel | `src/split-pane.ts`, `src/host/split-pane-bridge.ts`, `src/side-panel.ts` |
+| Overlays | `src/overlay/` |
+| Controls | `src/controls/` |
+| Text content, glyphs, status, pills, editor | `src/content/`, `src/decoration/`, `src/editor.ts`, `src/editor/` |
+| Appearance, motion, request animation | `src/appearance.ts`, `src/motion.ts`, `src/request-animation.ts` |
+| Colors and syntax | `src/color/`, `src/terminal-colors.ts`, `src/syntax.ts` |
+| Streams, terminal projection, PTY host, diffs, tools | `src/stream.ts`, `src/terminal/`, `src/diff/`, `src/tool/` |
+| Native binary discovery and first-use builds | `src/native-binary.ts` |
 
 ## Troubleshooting
 
-- If a feature renders but clicks do not work, install/load `pi-libtui` as a
-  Pi package so the extension-side bridge is active. Components do not install
-  pointer regions by themselves.
-- If Nerd Font or Powerline glyphs are missing, switch the icon pack to
-  `unicode` and disable Powerline in `/xsettings`. Those are also the fallback
-  defaults when no settings host is present.
-Run package checks from the package directory:
+- A feature renders but clicks do nothing: the host extension is not loaded.
+  Install `@luan-pi/pi-libtui` as a Pi package or list its `src/extension.ts`
+  in the feature package's `pi.extensions`.
+- Nerd Font or Powerline glyphs are missing: set the icon pack to `unicode` and
+  disable Powerline in `/xsettings`. Those are also the compiled defaults.
+- `cargo was not found`: install Rust from https://rustup.rs, or set the
+  binary's env override to a prebuilt executable.
 
-```sh
-bun run typecheck
-bun test test
-```
+## Develop
+
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-libtui. Run `bun run typecheck` and
+`bun test test` in that directory. When running from that checkout,
+`ensureNativeBinary` also looks for `target/{release,debug}/<name>` in the Cargo
+workspace and reports an unbuilt checkout instead of building; builds are pinned
+to the `v<version>` git tag, so publishing requires a matching tag.
