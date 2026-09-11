@@ -1,5 +1,7 @@
 # pi-tool-search
 
+[Pi gallery](https://pi.dev/packages/@cfcluan/pi-tool-search)
+
 `@cfcluan/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
 activates tools which are currently inactive. It searches only the scope
 assigned to it. It does not inspect or modify the global tool hierarchy.

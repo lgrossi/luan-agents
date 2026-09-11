@@ -1,5 +1,7 @@
 # pi-thinking-binding
 
+[Pi gallery](https://pi.dev/packages/pi-thinking-binding)
+
 A Pi extension that drops Anthropic thinking blocks a system prompt or tool
 change has already invalidated, so the `prefix_binding_mismatch` warning
 appears once instead of on every turn.

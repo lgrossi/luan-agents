@@ -1,5 +1,7 @@
 # pi-libactions
 
+[Pi gallery](https://pi.dev/packages/pi-libactions)
+
 `pi-libactions` is a UI-free action registry and keybinding loader
 for Pi extensions. It is a library, not a Pi extension: importing it registers
 no commands, shortcuts, tools, or UI, and it is not installed with `pi install`

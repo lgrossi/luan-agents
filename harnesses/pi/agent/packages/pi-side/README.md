@@ -1,5 +1,7 @@
 # pi-side
 
+[Pi gallery](https://pi.dev/packages/pi-side)
+
 `pi-side` opens independent, interactive Pi sessions next to the
 one you are working in. Each side chat is a real child `pi` process running in
 a PTY. It starts with a copy of the parent session's model-visible history,

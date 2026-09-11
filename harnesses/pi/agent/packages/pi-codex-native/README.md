@@ -1,5 +1,7 @@
 # pi-codex-native
 
+[Pi gallery](https://pi.dev/packages/pi-codex-native)
+
 `pi-codex-native` adds the `openai-codex` provider to Pi. It talks
 to the ChatGPT-backed Codex Responses endpoint, keeps the provider's native
 request and response format, and registers the `web__run` tool.

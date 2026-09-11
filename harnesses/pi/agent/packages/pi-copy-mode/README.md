@@ -1,5 +1,7 @@
 # pi-copy-mode
 
+[Pi gallery](https://pi.dev/packages/pi-copy-mode)
+
 `pi-copy-mode` adds Vim-style transcript selection, copying,
 annotations, and reactions to Pi. Select characters, lines, or columns, copy
 them, or attach feedback to your next request directly from the selection.

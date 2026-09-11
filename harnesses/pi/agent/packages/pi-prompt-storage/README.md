@@ -1,5 +1,7 @@
 # pi-prompt-storage
 
+[Pi gallery](https://pi.dev/packages/pi-prompt-storage)
+
 `pi-prompt-storage` is a Pi extension that adds a per-directory prompt
 stash and a searchable history of past user prompts to Pi's editor. It stores
 both in a local SQLite database, indexes session files lazily, and merges the

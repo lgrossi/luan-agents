@@ -1,5 +1,7 @@
 # pi-collapse-transcript
 
+[Pi gallery](https://pi.dev/packages/pi-collapse-transcript)
+
 `pi-collapse-transcript` folds runs of tool calls and thinking blocks in Pi's fullscreen
 transcript into one collapsed activity row. The row shows the latest tool action
 or the latest provider-supplied thinking heading, a step count, and a failure

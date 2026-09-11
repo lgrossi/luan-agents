@@ -1,5 +1,7 @@
 # pi-panels
 
+[Pi gallery](https://pi.dev/packages/pi-panels)
+
 `pi-panels` is a generic side-panel host for Pi's TUI. It mounts
 a right-hand split pane and lets other Pi extensions contribute tabs to it.
 The host owns the split layout, focus, pointer resizing, persisted width and

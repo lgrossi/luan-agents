@@ -1,5 +1,7 @@
 # pi-view-image
 
+[Pi gallery](https://pi.dev/packages/pi-view-image)
+
 `pi-view-image` adds a Codex-compatible `view_image` tool to Pi. A
 native Rust binary reads and validates a local PNG, JPEG, GIF, or WebP file and
 returns it as a Pi image content block, so any vision-capable model can look at

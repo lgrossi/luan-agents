@@ -1,5 +1,7 @@
 # pi-fileops
 
+[Pi gallery](https://pi.dev/packages/pi-fileops)
+
 `pi-fileops` adds an `apply_patch` tool to Pi. The model writes a
 Codex-style patch (`*** Begin Patch` ... `*** End Patch`) and a native Rust
 binary applies it: parsing, context matching, filesystem writes, and

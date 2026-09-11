@@ -1,5 +1,7 @@
 # @cfcluan/pi-code-mode
 
+[Pi gallery](https://pi.dev/packages/@cfcluan/pi-code-mode)
+
 Code Mode adds two tools to Pi:
 
 - `exec` runs restricted JavaScript that calls selected Pi tools through a

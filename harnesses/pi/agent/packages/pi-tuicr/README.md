@@ -1,5 +1,7 @@
 # @cfcluan/pi-tuicr
 
+[Pi gallery](https://pi.dev/packages/@cfcluan/pi-tuicr)
+
 `@cfcluan/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
 opens a picker of git review targets, launches `tuicr` in an embedded terminal,
 and watches tuicr's session files for review comments. Comments written in

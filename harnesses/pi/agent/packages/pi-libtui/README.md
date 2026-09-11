@@ -1,5 +1,7 @@
 # pi-libtui
 
+[Pi gallery](https://pi.dev/packages/pi-libtui)
+
 Shared terminal UI for Pi extensions: layouts, split panes, dialogs, pickers,
 selection actions, semantic colors, icons, cursors, syntax highlighting,
 animated tool surfaces, streamed output, diffs, terminal projection, and the

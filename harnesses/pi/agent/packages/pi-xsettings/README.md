@@ -1,5 +1,7 @@
 # pi-xsettings
 
+[Pi gallery](https://pi.dev/packages/pi-xsettings)
+
 `pi-xsettings` is a settings host for Pi extensions. It adds the
 `/xsettings` editor to Pi's interactive TUI, persists Pi and extension settings
 in one `xsettings.toml` file, exposes a UI-free SDK

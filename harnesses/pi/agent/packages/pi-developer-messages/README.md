@@ -1,5 +1,7 @@
 # pi-developer-messages
 
+[Pi gallery](https://pi.dev/packages/pi-developer-messages)
+
 `pi-developer-messages` is a Pi extension that builds the provider-ready prompt
 envelope for each turn. It keeps three kinds of instructions in their intended
 roles: provider (system) instructions, developer messages, and project context

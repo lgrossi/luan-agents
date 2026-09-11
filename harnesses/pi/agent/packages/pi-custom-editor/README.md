@@ -1,5 +1,7 @@
 # pi-custom-editor
 
+[Pi gallery](https://pi.dev/packages/pi-custom-editor)
+
 A Pi extension that replaces the built-in input editor chrome and footer with a
 configurable composition: semantic surfaces, top and bottom rules, left and
 right rails, a prompt marker, and four status quadrants showing path, git

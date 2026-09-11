@@ -1,5 +1,7 @@
 # @cfcluan/pi-skills
 
+[Pi gallery](https://pi.dev/packages/@cfcluan/pi-skills)
+
 `pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
 into the conversation by exact name, so the model can pull in detailed
 instructions only when a task needs them. The package also lists available

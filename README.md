@@ -33,28 +33,35 @@ just unlink
 
 Each extension can be loaded from this checkout or installed on its own. Its README explains its settings and public API.
 
-| Package | What it adds |
-| --- | --- |
-| [`pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. |
-| [`@cfcluan/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
-| [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. |
-| [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. |
-| [`pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. |
-| [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
-| [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. |
-| [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. |
-| [`@cfcluan/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. |
-| [`pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. |
-| [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. |
-| [`pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. |
+| Package | What it adds | Gallery |
+| --- | --- | --- |
+| [`pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. | [Pi gallery](https://pi.dev/packages/pi-fileops) |
+| [`@cfcluan/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-code-mode) |
+| [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. | [Pi gallery](https://pi.dev/packages/pi-codex-native) |
+| [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. | [Pi gallery](https://pi.dev/packages/pi-copy-mode) |
+| [`pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. | [Pi gallery](https://pi.dev/packages/pi-collapse-transcript) |
+| [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. | [Pi gallery](https://pi.dev/packages/pi-developer-messages) |
+| [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. | [Pi gallery](https://pi.dev/packages/pi-exec-command) |
+| [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. | [Pi gallery](https://pi.dev/packages/pi-libtui) |
+| [`@cfcluan/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-skills) |
+| [`@cfcluan/pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-tool-search) |
+| [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. | [Pi gallery](https://pi.dev/packages/pi-view-image) |
+| [`pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. | [Pi gallery](https://pi.dev/packages/pi-xsettings) |
+| [`pi-custom-editor`](harnesses/pi/agent/packages/pi-custom-editor/README.md) | Custom editor layouts, file and skill tokens, and a semantic status footer. | [Pi gallery](https://pi.dev/packages/pi-custom-editor) |
+| [`pi-panels`](harnesses/pi/agent/packages/pi-panels/README.md) | Contributed side-panel tabs with focus, resize, reorder, and zoom controls. | [Pi gallery](https://pi.dev/packages/pi-panels) |
+| [`pi-prompt-storage`](harnesses/pi/agent/packages/pi-prompt-storage/README.md) | Draft stashing and searchable prompt history. | [Pi gallery](https://pi.dev/packages/pi-prompt-storage) |
+| [`pi-side`](harnesses/pi/agent/packages/pi-side/README.md) | Independent side conversations alongside the main session. | [Pi gallery](https://pi.dev/packages/pi-side) |
+| [`@cfcluan/pi-subagents`](harnesses/pi/agent/packages/pi-subagents/README.md) | Concurrent, nested subagents with an Agent Hub for inspecting their work. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-subagents) |
+| [`pi-thinking-binding`](harnesses/pi/agent/packages/pi-thinking-binding/README.md) | Drops Anthropic thinking blocks invalidated by system-prompt or tool changes. | [Pi gallery](https://pi.dev/packages/pi-thinking-binding) |
+| [`@cfcluan/pi-tuicr`](harnesses/pi/agent/packages/pi-tuicr/README.md) | Embedded Tuicr review with comments returned to Pi as prompt attachments. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-tuicr) |
 
 ## Shared Pi libraries
 
 These packages register no Pi extension by themselves.
 
-| Package | What it owns |
-| --- | --- |
-| [`pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. |
+| Package | What it owns | Gallery |
+| --- | --- | --- |
+| [`pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. | [Pi gallery](https://pi.dev/packages/pi-libactions) |
 
 `pi-libtui` is the one deliberate dual-role package: imports expose reusable components without side effects, while its extension entry point installs generic terminal compatibility for Pi.
 

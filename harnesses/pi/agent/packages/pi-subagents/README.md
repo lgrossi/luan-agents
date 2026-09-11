@@ -1,5 +1,7 @@
 # @cfcluan/pi-subagents
 
+[Pi gallery](https://pi.dev/packages/@cfcluan/pi-subagents)
+
 `@cfcluan/pi-subagents` is a Pi extension that adds one root-scoped tree of
 concurrent, nested agents. Each agent runs in its own Pi session and can
 receive follow-up work, direct messages, or an interrupt without blocking

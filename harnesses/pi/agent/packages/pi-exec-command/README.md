@@ -1,5 +1,7 @@
 # pi-exec-command
 
+[Pi gallery](https://pi.dev/packages/pi-exec-command)
+
 Bounded shell execution for Pi with persistent PTY sessions, backed by the
 native `terminal_bridge` binary. `exec_command` starts a shell command and
 returns output or a session ID; `write_stdin` sends input to, or polls, a
