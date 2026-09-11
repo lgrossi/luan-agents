@@ -9,9 +9,9 @@ commands.
 
 ## Preview
 
-![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-copy-mode.png)
+![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-copy-mode.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode.mp4).
 
 ## Install
 
@@ -301,4 +301,4 @@ harnesses/pi/agent/packages/pi-copy-mode. Run `bun run typecheck` and
 `bun test test` in that directory.
 
 The combined gallery video includes selection/copying and annotation workflows.
-[Selection and copying](https://github.com/luan/agents/releases/download/v0.3.0/pi-copy-mode-selection.mp4) · [Comments and reactions](https://github.com/luan/agents/releases/download/v0.3.0/pi-copy-mode-annotations.mp4).
+[Selection and copying](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode-selection.mp4) · [Comments and reactions](https://github.com/luan/agents/releases/download/v0.3.1/pi-copy-mode-annotations.mp4).

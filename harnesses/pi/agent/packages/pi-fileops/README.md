@@ -10,9 +10,9 @@ Adapted from upstream Codex tooling; see UPSTREAM.md for provenance.
 
 ## Preview
 
-![pi-fileops in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-fileops.png)
+![pi-fileops in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-fileops.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-fileops.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-fileops.mp4).
 
 ## Install
 
@@ -24,7 +24,7 @@ Requires a Rust toolchain (<https://rustup.rs>). The `apply_patch` binary builds
 itself on first use under Pi's agent directory (`native/apply-patch/<version>/`).
 Set `PI_APPLY_PATCH_BIN` to use a prebuilt binary.
 
-Optional companion: `pi install npm:pi-code-mode` adds the `exec`
+Optional companion: `pi install npm:pi-codemode` adds the `exec`
 tool and can move `apply_patch` under it; without it `apply_patch` is always a
 direct tool.
 
@@ -149,7 +149,7 @@ add `result` (the native result); `partial_failure` adds
 
 - **Binary fails to build:** make sure `cargo` is installed and on `PATH`, or
   set `PI_APPLY_PATCH_BIN` to an executable file.
-- **The tool stays direct:** install `pi-code-mode`, select
+- **The tool stays direct:** install `pi-codemode`, select
   `apply_patch` in its `tools` setting, and restart the session. Only Code
   Mode owns placement.
 - **The tool is missing entirely:** check Pi's active tool selection. A strict

@@ -1,4 +1,4 @@
-# pi-code-mode
+# pi-codemode
 
 Code Mode adds two tools to Pi:
 
@@ -13,14 +13,14 @@ for the ported host and protocol is in `UPSTREAM.md`.
 
 ## Preview
 
-![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-code-mode.png)
+![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-codemode.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-code-mode.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-codemode.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-code-mode
+pi install npm:pi-codemode
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
@@ -54,7 +54,7 @@ changing the hierarchy; session shutdown releases it.
 
 ## Settings
 
-Settings use the `pi-code-mode` namespace and are edited with `/xsettings` when
+Settings use the `pi-codemode` namespace and are edited with `/xsettings` when
 `pi-xsettings` is installed; otherwise the defaults apply.
 
 | Key | Default | Meaning |
@@ -137,7 +137,7 @@ output bounds, errors, and bounded nested call traces.
 
 ## SDK for other extensions
 
-Depend on `pi-code-mode` and import from `pi-code-mode/sdk`
+Depend on `pi-codemode` and import from `pi-codemode/sdk`
 (UI-free). Registering an adapter makes a tool eligible for lifting; the user
 still selects it in `pi-code-mode.tools`.
 
@@ -146,7 +146,7 @@ The bridge reuses the tool's `execute`, `prepareArguments`, `renderCall`, and
 `renderResult`, so direct and nested calls share one execution path:
 
 ```ts
-import { registerCodeModeFunctionTool } from "pi-code-mode/sdk";
+import { registerCodeModeFunctionTool } from "pi-codemode/sdk";
 
 const dispose = registerCodeModeFunctionTool(tool, {
   outputSchema: { type: "object", properties: { value: { type: "string" } }, required: ["value"] },
@@ -162,7 +162,7 @@ Use `registerCodeModeToolAdapter` for freeform tools or behaviour a
 `ToolDefinition` cannot express:
 
 ```ts
-import { registerCodeModeToolAdapter } from "pi-code-mode/sdk";
+import { registerCodeModeToolAdapter } from "pi-codemode/sdk";
 
 const dispose = registerCodeModeToolAdapter({
   name: "example_tool",
@@ -216,5 +216,8 @@ toolCallId, extensionContext, signal }` and may return `{ block: true, reason }`
 ## Develop
 
 Source: https://github.com/luan/agents, directory
-harnesses/pi/agent/packages/pi-code-mode. Run `bun run typecheck` and
+harnesses/pi/agent/packages/pi-codemode. Run `bun run typecheck` and
 `bun test test` in that directory.
+
+The npm name is `pi-codemode`. Existing `pi-code-mode` settings and versioned
+capability identifiers retain their names for compatibility.

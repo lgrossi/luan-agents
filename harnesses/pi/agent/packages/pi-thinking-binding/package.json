@@ -1,6 +1,6 @@
 {
   "name": "pi-thinking-binding",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,5 +33,6 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "bundledDependencies": []
 }

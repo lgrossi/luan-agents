@@ -1,6 +1,6 @@
 {
   "name": "@cfcluan/pi-tool-search",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,20 +20,20 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-tool-search.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-tool-search.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"
   },
   "dependencies": {
-    "pi-code-mode": "workspace:*",
+    "pi-codemode": "workspace:*",
     "pi-libtui": "workspace:*",
     "pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-code-mode",
+    "pi-codemode",
     "pi-libtui",
     "pi-xsettings"
   ],

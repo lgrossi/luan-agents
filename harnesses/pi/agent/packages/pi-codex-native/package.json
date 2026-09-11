@@ -1,6 +1,6 @@
 {
   "name": "pi-codex-native",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,8 +21,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-codex-native.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
@@ -35,7 +35,7 @@
     "partial-json": "^0.1.7",
     "pi-libactions": "workspace:*",
     "pi-libtui": "workspace:*",
-    "pi-code-mode": "workspace:*",
+    "pi-codemode": "workspace:*",
     "pi-xsettings": "workspace:*",
     "proxy-from-env": "^2.1.0",
     "undici": "^8.10.0"
@@ -43,7 +43,7 @@
   "bundledDependencies": [
     "pi-libactions",
     "pi-libtui",
-    "pi-code-mode",
+    "pi-codemode",
     "pi-xsettings"
   ],
   "devDependencies": {

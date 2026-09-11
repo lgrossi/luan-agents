@@ -36,7 +36,7 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 | Package | What it adds |
 | --- | --- |
 | [`pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. |
-| [`pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
+| [`pi-codemode`](harnesses/pi/agent/packages/pi-codemode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
 | [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. |
 | [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. |
 | [`pi-collapse`](harnesses/pi/agent/packages/pi-collapse/README.md) | Collapsible tools and thinking sections with a live activity summary. |
@@ -122,7 +122,7 @@ bun run test:pi
 cargo nextest run --locked
 ```
 
-See [the 0.3.0 package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
+See [the 0.3.1 package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
 
 ## Release
 
@@ -131,7 +131,7 @@ Pi packages publish under their unscoped names, except `@cfcluan/pi-subagents`,
 package version, commit, then tag and push:
 
 ```sh
-git tag v0.3.0 && git push origin main v0.3.0
+git tag v0.3.1 && git push origin main v0.3.1
 ```
 
 `.github/workflows/publish.yml` publishes each package whose version matches the

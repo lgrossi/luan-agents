@@ -11,9 +11,9 @@ no settings.
 
 ## Preview
 
-![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.png)
+![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-tuicr.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-tuicr.mp4).
 
 ## Install
 

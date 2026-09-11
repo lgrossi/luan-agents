@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "pi-code-mode/sdk";
+import { getCodeModeToolAdapterRegistry } from "pi-codemode/sdk";
 import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, icon } from "pi-libtui";
 import { parseUnifiedDiff } from "pi-libtui/diff";
 import { resolveApplyPatchBinary } from "../src/binary.ts";

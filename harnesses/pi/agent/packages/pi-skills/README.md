@@ -8,9 +8,9 @@ editor, and shows loaded skills as compact rows in the transcript.
 
 ## Preview
 
-![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-skills.png)
+![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-skills.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-skills.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-skills.mp4).
 
 ## Install
 

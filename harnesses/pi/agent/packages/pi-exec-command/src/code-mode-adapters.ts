@@ -4,13 +4,13 @@ import {
 	type CodeModeFunctionToolOptions,
 	type CodeModeToolAdapter,
 	registerCodeModeToolAdapter,
-} from "pi-code-mode/sdk";
+} from "pi-codemode/sdk";
 import type { UnifiedExecResult } from "./session-manager.ts";
 import type { createExecCommandTool } from "./tools/exec-command/definition.ts";
 import type { ExecToolPresentationDetails } from "./tools/presentation.ts";
 import type { createWriteStdinTool } from "./tools/write-stdin/definition.ts";
 
-export type { CodeModeToolAdapter } from "pi-code-mode/sdk";
+export type { CodeModeToolAdapter } from "pi-codemode/sdk";
 
 type CodeModeExecTool = ReturnType<typeof createExecCommandTool> | ReturnType<typeof createWriteStdinTool>;
 type ExecCommandTool = ReturnType<typeof createExecCommandTool>;

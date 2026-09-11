@@ -1,6 +1,6 @@
 {
   "name": "pi-exec-command",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-exec-command.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-exec-command.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.1/pi-exec-command.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.1/pi-exec-command.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
@@ -29,13 +29,13 @@
     "typebox": "*"
   },
   "dependencies": {
-    "pi-code-mode": "workspace:*",
+    "pi-codemode": "workspace:*",
     "pi-libactions": "workspace:*",
     "pi-libtui": "workspace:*",
     "pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-code-mode",
+    "pi-codemode",
     "pi-libactions",
     "pi-libtui",
     "pi-xsettings"

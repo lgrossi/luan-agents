@@ -13,9 +13,9 @@ model-visible content are never rewritten.
 
 ## Preview
 
-![pi-collapse in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-collapse.png)
+![pi-collapse in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-collapse.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-collapse.mp4).
 
 ## Install
 

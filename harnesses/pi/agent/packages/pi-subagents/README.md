@@ -16,9 +16,9 @@ The extension registers six collaboration tools for the model:
 
 ## Preview
 
-![pi-subagents in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.png)
+![pi-subagents in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-subagents.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-subagents.mp4).
 
 ## Install
 

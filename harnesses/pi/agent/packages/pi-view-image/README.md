@@ -11,9 +11,9 @@ Upstream attribution: see `UPSTREAM.md`.
 
 ## Preview
 
-![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.png)
+![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-view-image.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-view-image.mp4).
 
 ## Install
 
@@ -26,8 +26,8 @@ itself on first use under Pi's agent directory (`native/view-image/<version>/`).
 Set `PI_VIEW_IMAGE_BIN` to use a prebuilt binary; it must point to an
 executable file. Pi shows an info notification while the first build runs.
 
-Code Mode support is bundled. If `pi-code-mode` is also installed
-(`pi install npm:pi-code-mode`), `view_image` is callable from inside
+Code Mode support is bundled. If `pi-codemode` is also installed
+(`pi install npm:pi-codemode`), `view_image` is callable from inside
 Code Mode scripts as described below; without it the tool is still available as
 a normal Pi tool.
 

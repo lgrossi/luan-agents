@@ -15,9 +15,9 @@ without registering their keys as global editor shortcuts.
 
 Actions registered by Side Panel and Side Chat, bound by Xsettings, and listed in Pi's `/hotkeys`. The library itself registers no UI.
 
-![pi-libactions in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-libactions.png)
+![pi-libactions in Bootty](https://github.com/luan/agents/releases/download/v0.3.1/pi-libactions.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-libactions.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.1/pi-libactions.mp4).
 
 ## For users: `keybindings.json`
 
