@@ -60,7 +60,7 @@ pi.steeringMode = "one-at-a-time"
 
 [tools]
 pi.defaultTools = []
-pi-skillful.catalogVisibility = "when-active"
+pi-skills.catalogVisibility = "when-active"
 pi-code-mode.tools = [ "skill", "web__run", "exec_command", "write_stdin", "tool_search", "apply_patch", "view_image" ]
 pi-code-mode.defaultOutputTokens = 10000
 pi-tool-search.tools = []

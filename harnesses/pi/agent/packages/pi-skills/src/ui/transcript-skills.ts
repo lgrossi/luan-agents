@@ -11,10 +11,10 @@ import {
 import type { SkillReference } from "../skills.ts";
 
 const SKILL_REFERENCE = /(?:^|\s)(\$[a-zA-Z][\w-]*(?::[\w-]+)*)/gu;
-const MARKER_PREFIX = "pi-skillful:transcript:";
+const MARKER_PREFIX = "pi-skills:transcript:";
 const MARKER_CLOSE = `\x1b_${MARKER_PREFIX}\x07`;
-const MARKER_OPEN = /\x1b_pi-skillful:transcript:([^\x07\x1b]+)\x07/gu;
-const MARKER_SEQUENCE = /\x1b_pi-skillful:transcript:[^\x07\x1b]*\x07/gu;
+const MARKER_OPEN = /\x1b_pi-skills:transcript:([^\x07\x1b]+)\x07/gu;
+const MARKER_SEQUENCE = /\x1b_pi-skills:transcript:[^\x07\x1b]*\x07/gu;
 
 function pillContent(label: string) {
 	return { icon: "lightbulb" as const, iconTone: "accent" as const, label };

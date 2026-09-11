@@ -16,7 +16,7 @@
     "packages/pi-subagents",
     "packages/pi-developer-messages",
     "packages/pi-codex-native",
-    "packages/pi-skillful",
+    "packages/pi-skills",
     "packages/pi-code-mode",
     "packages/pi-exec-command",
     "packages/pi-fileops",

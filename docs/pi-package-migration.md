@@ -18,7 +18,7 @@ part of Copy Mode; Tool Search remains independently installable.
 | `@luan-pi/pi-prompt-storage` | `pi-prompt-storage` |
 | `@luan-pi/pi-side-chat` | `pi-side` |
 | `@luan-pi/pi-side-panel` | `pi-panels` |
-| `@luan-pi/pi-skills` | `pi-skillful` |
+| `@luan-pi/pi-skills` | `@cfcluan/pi-skills` |
 | `@luan-pi/pi-subagents` | `@cfcluan/pi-subagents` |
 | `@luan-pi/pi-thinking-binding` | `pi-thinking-binding` |
 | `@luan-pi/pi-tool-search` | `@cfcluan/pi-tool-search` |

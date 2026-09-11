@@ -238,7 +238,7 @@ test("a loaded skill follows its paired tool output as contextual user content",
 		},
 		{
 			role: "custom",
-			customType: "pi-skillful/loaded",
+			customType: "pi-skills/loaded",
 			content:
 				"<skill>\n<name>writing-for-agents</name>\n<path>/skills/writing-for-agents/SKILL.md</path>\nWrite clearly.\n</skill>",
 			display: true,

@@ -40,7 +40,7 @@ function skillTool(filePath: string) {
 }
 
 test("reads the tentative skill label from agents/openai.yaml", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-display-name-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-display-name-"));
 	const filePath = join(directory, "SKILL.md");
 	mkdirSync(join(directory, "agents"));
 	writeFileSync(filePath, "# Write\n");
@@ -56,7 +56,7 @@ test("reads the tentative skill label from agents/openai.yaml", async () => {
 });
 
 test("falls back when agents/openai.yaml has no supported display name", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-display-name-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-display-name-"));
 	const reference = { name: "writing", filePath: join(directory, "SKILL.md") };
 
 	expect(await addSkillDisplayNames(new Map([[reference.name, reference]]))).toEqual(
@@ -65,7 +65,7 @@ test("falls back when agents/openai.yaml has no supported display name", async (
 });
 
 test("discovers trusted project skills from .pi and ancestor .agents directories", () => {
-	const parent = mkdtempSync(join(tmpdir(), "pi-skillful-project-parent-"));
+	const parent = mkdtempSync(join(tmpdir(), "pi-skills-project-parent-"));
 	const root = join(parent, "repo");
 	const cwd = join(root, "packages", "app");
 	mkdirSync(join(root, ".git"), { recursive: true });
@@ -109,7 +109,7 @@ test("discovers trusted project skills from .pi and ancestor .agents directories
 });
 
 test("loads a skill without frontmatter", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
 	const filePath = join(directory, "SKILL.md");
 	writeFileSync(filePath, "---\nname: writing-for-agents\ndescription: Write.\n---\n# Write\n\nUse short sentences.\n");
 
@@ -193,7 +193,7 @@ test("loads a skill without frontmatter", async () => {
 	expect(sent).toMatchObject([
 		{
 			message: {
-				customType: "pi-skillful/loaded",
+				customType: "pi-skills/loaded",
 				content: `<skill>\n<name>writing-for-agents</name>\n<path>${filePath}</path>\n# Write\n\nUse short sentences.\n\n</skill>`,
 				display: false,
 				details: { version: 1, tool: "skill", status: "loaded", name: "writing-for-agents", filePath },
@@ -219,7 +219,7 @@ test("loads a skill without frontmatter", async () => {
 });
 
 test("restored pre-instructions skill details stay compact and do not crash", () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
 	const filePath = join(directory, "SKILL.md");
 	writeFileSync(filePath, "# Write\n");
 	const { tool } = skillTool(filePath);
@@ -268,7 +268,7 @@ test("missing skill details render a compact expandable failure", () => {
 });
 
 test("omits the directory when agents/openai.yaml is the only companion file", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
 	const filePath = join(directory, "SKILL.md");
 	mkdirSync(join(directory, "agents"));
 	writeFileSync(filePath, "# Write\n");
@@ -282,7 +282,7 @@ test("omits the directory when agents/openai.yaml is the only companion file", a
 });
 
 test("appends the absolute directory when the skill has supporting files", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
 	const filePath = join(directory, "SKILL.md");
 	writeFileSync(filePath, "---\nname: writing-for-agents\n---\n# Write\n");
 	writeFileSync(join(directory, "SKILL-MECHANICS.md"), "# Mechanics\n");
@@ -351,7 +351,7 @@ test("adds the skill catalogue when skill is direct or available through exec", 
 
 		expect(messages).toEqual([
 			{
-				id: "pi-skillful/catalog",
+				id: "pi-skills/catalog",
 				content: expect.stringContaining("Call `tools.skill`"),
 			},
 		]);
@@ -395,7 +395,7 @@ test("registers the skill execution bridge with Code Mode", () => {
 			sendMessage: async () => {},
 		} as never);
 		expect(tools).toHaveLength(1);
-		expect(messageRenderers.get("pi-skillful/loaded")?.().render(80)).toEqual([]);
+		expect(messageRenderers.get("pi-skills/loaded")?.().render(80)).toEqual([]);
 		expect(adapters.get("skill")).toMatchObject({ name: "skill", kind: "function" });
 		expect(adapters.get("skill")).not.toHaveProperty("exposure");
 		handlers.get("session_shutdown")?.({ reason: "new" });
@@ -462,7 +462,7 @@ test("catalogue visibility supports always and off without changing skill discov
 });
 
 test("hidden loaded-skill display still sends identical model context", async () => {
-	const directory = mkdtempSync(join(tmpdir(), "pi-skillful-"));
+	const directory = mkdtempSync(join(tmpdir(), "pi-skills-"));
 	const filePath = join(directory, "SKILL.md");
 	writeFileSync(filePath, "# Write\n");
 	const sent: SentSkillMessage[] = [];

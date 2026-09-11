@@ -31,7 +31,7 @@ used and no settings file is created.
 
 Other extensions can add developer messages when they are installed alongside
 this package. For example `pi-copy-mode` contributes annotation
-guidance, and `@cfcluan/pi-subagents` and `pi-skillful` contribute
+guidance, and `@cfcluan/pi-subagents` and `pi-skills` contribute
 their own messages. Absent, those messages are simply not present.
 
 ## What Pi sends

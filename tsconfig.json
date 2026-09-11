@@ -9,7 +9,7 @@
 		{ "path": "harnesses/pi/agent/packages/pi-exec-command" },
 		{ "path": "harnesses/pi/agent/packages/pi-libactions" },
 		{ "path": "harnesses/pi/agent/packages/pi-libtui" },
-		{ "path": "harnesses/pi/agent/packages/pi-skillful" },
+		{ "path": "harnesses/pi/agent/packages/pi-skills" },
 		{ "path": "harnesses/pi/agent/packages/pi-thinking-binding" },
 		{ "path": "harnesses/pi/agent/packages/pi-tool-search" },
 		{ "path": "harnesses/pi/agent/packages/pi-collapse-transcript" },

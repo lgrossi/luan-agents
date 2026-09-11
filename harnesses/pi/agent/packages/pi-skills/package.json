@@ -1,11 +1,11 @@
 {
-  "name": "pi-skillful",
-  "version": "0.3.4",
+  "name": "@cfcluan/pi-skills",
+  "version": "0.3.5",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/luan/agents.git",
-    "directory": "harnesses/pi/agent/packages/pi-skillful"
+    "directory": "harnesses/pi/agent/packages/pi-skills"
   },
   "description": "Tool-based skill loading for Pi",
   "type": "module",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.4/pi-skillful.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.4/pi-skillful.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.mp4"
   },
   "dependencies": {
     "@cfcluan/pi-code-mode": "workspace:*",

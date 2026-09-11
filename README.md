@@ -43,7 +43,7 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 | [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
 | [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. |
 | [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. |
-| [`pi-skillful`](harnesses/pi/agent/packages/pi-skillful/README.md) | Exact-name skill loading through the `skill` tool. |
+| [`@cfcluan/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. |
 | [`pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. |
 | [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. |
 | [`pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. |
@@ -126,7 +126,7 @@ See [the package migration](docs/pi-package-migration.md) for renamed packages a
 
 ## Release
 
-Pi packages publish under their unscoped names, except `@cfcluan/pi-code-mode`, `@cfcluan/pi-subagents`,
+Pi packages publish under their unscoped names, except `@cfcluan/pi-skills`, `@cfcluan/pi-code-mode`, `@cfcluan/pi-subagents`,
 `@cfcluan/pi-tuicr`, and `@cfcluan/pi-tool-search`. Bump every
 package version, commit, then tag and push:
 

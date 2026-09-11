@@ -42,7 +42,7 @@ export function registerSkillEditorHighlights(getSkills: () => ReadonlyMap<strin
 	const registry = highlightRegistry();
 	if (!registry) return () => {};
 	return registry.register({
-		id: "pi-skillful.skill-references",
+		id: "pi-skills.skill-references",
 		matches({ text }) {
 			const skills = getSkills();
 			const matches = [];
