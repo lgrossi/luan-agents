@@ -3,7 +3,7 @@ name: publish
 on:
   push:
     tags:
-      - "v*"
+      - "pi-*/v*"
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   npm:
-    name: Publish Pi packages to npm
+    name: Publish one Pi package to npm
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -42,17 +42,11 @@ jobs:
       - name: Install workspace
         run: bun install --frozen-lockfile
 
-      - name: Publish every package at the tagged version
+      - name: Test release selection
+        run: bun test ./.github/scripts/publish-package.test.ts
+
+      - name: Publish the tagged package
         env:
+          RELEASE_TAG: ${{ github.ref_name }}
           NPM_PUBLISH_FLAGS: --provenance
-        run: |
-          set -eu
-          version="${GITHUB_REF_NAME#v}"
-          for package in harnesses/pi/agent/packages/*/; do
-            package="${package%/}"
-            if ! bun -e 'const [dir, version] = process.argv.slice(1); const m = await Bun.file(dir + "/package.json").json(); process.exit(m.version === version ? 0 : 1);' "$package" "$version"; then
-              echo "skip $package (version is not $version)"
-              continue
-            fi
-            just pi-publish "$package"
-          done
+        run: bash .github/scripts/publish-package.sh

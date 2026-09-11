@@ -79,13 +79,13 @@ guarded Pi 0.84–0.85 adapter; unsupported hosts keep their native transcript.
 Feature packages shell out to Rust binaries such as `terminal_bridge` (the
 exported `TERMINAL_BRIDGE` descriptor). Requires a Rust toolchain
 (https://rustup.rs). The `terminal_bridge` binary builds itself on first use
-under Pi's agent directory (`native/terminal-bridge/v<version>/`), where
-`<version>` is this package's version. Set `PI_TERMINAL_BRIDGE_BINARY` to use
+under Pi's agent directory (`native/terminal-bridge/<revision>/`), where
+`<revision>` is the source commit recorded in the packaged `native-revision` file. Set `PI_TERMINAL_BRIDGE_BINARY` to use
 a prebuilt binary; it must point at an executable file.
 
 `ensureNativeBinary(binary, hooks?)` resolves in this order: the descriptor's
-env override, then `<agentDir>/native/<crate>/v<version>/bin/<name>`, building
-it on first use when absent. Builds are keyed by crate and version, so every
+env override, then `<agentDir>/native/<crate>/<revision>/bin/<name>`, building
+it on first use when absent. Builds are keyed by crate and source commit, so every
 installed copy shares them, and concurrent requests within one process share
 one build. Pass `onBuild` to show the delay in the UI. The extension host keeps
 the shared PTY host alive across an extension reload; a session switch or quit
@@ -203,5 +203,6 @@ Source: https://github.com/luan/agents, directory
 harnesses/pi/agent/packages/pi-libtui. Run `bun run typecheck` and
 `bun test test` in that directory. When running from that checkout,
 `ensureNativeBinary` also looks for `target/{release,debug}/<name>` in the Cargo
-workspace and reports an unbuilt checkout instead of building; builds are pinned
-to the `v<version>` git tag, so publishing requires a matching tag.
+workspace and reports an unbuilt checkout instead of building. `just pi-pack`
+records the checkout commit in every bundled `pi-libtui/native-revision` file,
+so native builds do not depend on npm versions or repository-wide release tags.

@@ -81,7 +81,8 @@ export interface EnsureNativeBinaryHooks {
  * revision under Pi's agent directory and shared by every installed pi-libtui copy.
  */
 export async function ensureNativeBinary(binary: NativeBinary, hooks: EnsureNativeBinaryHooks = {}): Promise<string> {
-	const location = locateNativeBinary(binary, processOptions());
+	const options = processOptions();
+	const location = locateNativeBinary(binary, options);
 	if (location.kind === "found") return location.path;
 	if (location.kind === "unbuilt-checkout") {
 		throw new Error(
@@ -92,7 +93,7 @@ export async function ensureNativeBinary(binary: NativeBinary, hooks: EnsureNati
 	const existing = builds.get(location.path);
 	if (existing) return existing;
 	hooks.onBuild?.(`Building ${binary.binaryName} (first use); this takes a minute.`);
-	const build = runCargo(nativeBuildArguments(binary, nativeRevision(), location.installRoot), location.installRoot)
+	const build = runCargo(nativeBuildArguments(binary, options.rev, location.installRoot), location.installRoot)
 		.then(() => {
 			if (!isExecutable(location.path)) throw new Error(`cargo install did not produce ${location.path}`);
 			return location.path;
@@ -106,12 +107,11 @@ export function terminalBridgeBinaryPath(): Promise<string> {
 	return ensureNativeBinary(TERMINAL_BRIDGE);
 }
 
-/** Builds are pinned to the git tag matching this package's version. Tag the repository when publishing. */
+/** The pack step records the exact source commit independently of npm versions. */
 export function nativeRevision(): string {
-	const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as {
-		version: string;
-	};
-	return `v${manifest.version}`;
+	const revision = readFileSync(new URL("../native-revision", import.meta.url), "utf8").trim();
+	if (!/^[a-f0-9]{40}$/.test(revision)) throw new Error("Invalid native source revision; reinstall the package.");
+	return revision;
 }
 
 function processOptions(): NativeBinaryOptions {

@@ -133,20 +133,27 @@ See [the package migration](docs/pi-package-migration.md) for renamed packages a
 
 ## Release
 
-Pi packages publish under their unscoped names, except `@cfcluan/pi-skills`, `@cfcluan/pi-code-mode`, `@cfcluan/pi-subagents`,
-`@cfcluan/pi-tuicr`, and `@cfcluan/pi-tool-search`. Bump every
-package version, commit, then tag and push:
+Each package has its own version and release tag. Bump only the package being
+released, commit, then tag that commit with its package directory and version:
 
 ```sh
-git tag v0.3.3 && git push origin main v0.3.3
+git tag pi-codex-native/v0.3.8
+git push origin main pi-codex-native/v0.3.8
 ```
 
-`.github/workflows/publish.yml` publishes each package whose version matches the
-tag and skips versions already on the registry. It authenticates with npm
-trusted publishing (OIDC), so no token is stored; each package must list this
-repository's `publish.yml` as a trusted publisher on npmjs.com once. Native
-binaries build on first use from the same tag, so never move or delete a
-released tag. `just pi-publish <package>` runs the same steps locally.
+`.github/workflows/publish.yml` publishes only the named package, checks that
+its version matches the tag, and skips versions already on npm. Other packages
+may have the same version without being released. Scoped npm names still use
+the unscoped directory in the tag, for example `pi-code-mode/v0.3.8`.
+
+CI authenticates with npm trusted publishing (OIDC); each package must list
+this repository's `publish.yml` as a trusted publisher on npmjs.com once.
+`just pi-publish <package>` is the CI publishing recipe and requires checkout
+of that package's release tag with clean package and native sources.
+
+The pack step records the exact Git commit in every bundled native runtime.
+Native builds and caches use that commit, independently of package versions.
+Keep released commits reachable and never move or delete release tags.
 
 ## Common problems
 

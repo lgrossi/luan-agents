@@ -29,6 +29,7 @@ test:
     @bun run --cwd "{{ repo }}" test
 
 pi-test:
+    bun test ./.github/scripts/publish-package.test.ts
     bun run --cwd "{{ repo }}" test:pi
 
 # Build a publishable npm tarball for one Pi package. Workspace deps are bundled from sibling packages.
@@ -44,16 +45,20 @@ pi-pack package dest="target/npm":
     mkdir -p "$stage/packages"; \
     tar -C "$package_tree" --exclude='*/node_modules' --exclude='node_modules' -cf - . | tar -C "$stage/packages" -xf -; \
     bun -e 'import { existsSync, readdirSync } from "node:fs"; import { basename, resolve } from "node:path"; const tree=process.argv[1]; for(const directory of readdirSync(tree)){ const path=resolve(tree,directory,"package.json"); if(!existsSync(path)) continue; const manifest=await Bun.file(path).json(); let changed=false; for(const [name,specification] of Object.entries(manifest.dependencies ?? {})){ if(typeof specification !== "string" || !specification.startsWith("workspace:")) continue; const sibling=basename(name); if(!existsSync(resolve(tree,sibling,"package.json"))) throw new Error("workspace dependency has no package directory: " + name); manifest.dependencies[name]="file:../" + sibling; changed=true; } if(changed) await Bun.write(path,JSON.stringify(manifest,null,2) + "\n"); }' "$stage/packages"; \
+    git -C "{{ repo }}" rev-parse HEAD > "$stage/packages/pi-libtui/native-revision"; \
     cd "$stage/packages/$package_name"; \
     npm install --ignore-scripts --package-lock=false --install-links --omit=dev --no-audit --no-fund >/dev/null; \
     archive="$(npm pack --ignore-scripts --pack-destination "$dest" 2>/dev/null | tail -n 1)"; test -f "$dest/$archive"; echo "$dest/$archive"
 
-# Pack one Pi package and publish it to npm. Requires the git tag for its version so first-use native builds resolve.
+# Publish one package from its package-specific tag. CI supplies npm trusted publishing credentials.
 # Skips versions that are already on the registry so a release can be re-run safely.
 pi-publish package:
     @manifest="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log(m.name + " " + m.version);' "{{ package }}")"; \
     name="${manifest% *}"; version="${manifest#* }"; \
-    if ! git -C "{{ repo }}" rev-parse -q --verify "refs/tags/v$version" >/dev/null; then echo "missing git tag v$version; tag and push it before publishing" >&2; exit 1; fi; \
+    tag="$(basename "{{ package }}")/v$version"; \
+    tagged_revision="$(git -C "{{ repo }}" rev-parse --verify "refs/tags/$tag^{commit}")"; \
+    if test "$tagged_revision" != "$(git -C "{{ repo }}" rev-parse HEAD)"; then echo "check out $tag before publishing" >&2; exit 1; fi; \
+    git -C "{{ repo }}" diff --exit-code HEAD -- Cargo.toml Cargo.lock crates harnesses/pi/agent/packages >/dev/null; \
     if test -n "$(npm view "$name@$version" version 2>/dev/null)"; then echo "$name@$version is already published"; exit 0; fi; \
     archive="$(just repo="{{ repo }}" pi-pack "{{ package }}")"; \
     npm publish --access public ${NPM_PUBLISH_FLAGS:-} "$archive"
