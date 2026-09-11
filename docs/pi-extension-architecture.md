@@ -293,7 +293,7 @@ new data shape cannot be expressed by the existing kinds.
 
 ## Custom actions
 
-Register extension actions through the structural `@luan.sh/pi-libactions/registry/v1`
+Register extension actions through the structural `pi-libactions/registry/v1`
 capability. Use a stable namespaced action ID. Feature extensions do not call
 `pi.registerShortcut` and do not assign default keys. The user-owned
 `keybindings.json` file is the only source of custom action bindings.
