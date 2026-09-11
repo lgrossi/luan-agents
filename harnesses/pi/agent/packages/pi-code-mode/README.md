@@ -1,6 +1,6 @@
-# @cfcluan/pi-code-mode
+# @luan.sh/pi-code-mode
 
-[Pi gallery](https://pi.dev/packages/@cfcluan/pi-code-mode)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-code-mode)
 
 Code Mode adds two tools to Pi:
 
@@ -14,14 +14,14 @@ available inside `exec` through the SDK described below.
 
 ## Preview
 
-![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.png)
+![@luan.sh/pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@cfcluan/pi-code-mode
+pi install npm:@luan.sh/pi-code-mode
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
@@ -29,7 +29,7 @@ builds itself on first use under Pi's agent directory
 (`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
 prebuilt binary.
 
-Optional companion: `pi install npm:pi-xsettings` adds the
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` adds the
 `/xsettings` editor for the settings listed below; without it the defaults
 apply.
 
@@ -55,8 +55,8 @@ changing the hierarchy; session shutdown releases it.
 
 ## Settings
 
-Settings use the `pi-code-mode` namespace and are edited with `/xsettings` when
-`pi-xsettings` is installed; otherwise the defaults apply.
+Settings use the `@luan.sh/pi-code-mode` namespace and are edited with `/xsettings` when
+`@luan.sh/pi-xsettings` is installed; otherwise the defaults apply.
 
 | Key | Default | Meaning |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ output bounds, errors, and bounded nested call traces.
 
 ## SDK for other extensions
 
-Depend on `pi-code-mode` and import from `pi-code-mode/sdk`
+Depend on `@luan.sh/pi-code-mode` and import from `@luan.sh/pi-code-mode/sdk`
 (UI-free). Registering an adapter makes a tool eligible for lifting; the user
 still selects it in `pi-code-mode.tools`.
 
@@ -147,7 +147,7 @@ The bridge reuses the tool's `execute`, `prepareArguments`, `renderCall`, and
 `renderResult`, so direct and nested calls share one execution path:
 
 ```ts
-import { registerCodeModeFunctionTool } from "@cfcluan/pi-code-mode/sdk";
+import { registerCodeModeFunctionTool } from "@luan.sh/pi-code-mode/sdk";
 
 const dispose = registerCodeModeFunctionTool(tool, {
   outputSchema: { type: "object", properties: { value: { type: "string" } }, required: ["value"] },
@@ -163,7 +163,7 @@ Use `registerCodeModeToolAdapter` for freeform tools or behaviour a
 `ToolDefinition` cannot express:
 
 ```ts
-import { registerCodeModeToolAdapter } from "@cfcluan/pi-code-mode/sdk";
+import { registerCodeModeToolAdapter } from "@luan.sh/pi-code-mode/sdk";
 
 const dispose = registerCodeModeToolAdapter({
   name: "example_tool",

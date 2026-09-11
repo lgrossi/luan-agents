@@ -5,7 +5,7 @@ import {
 	type LayoutFrame,
 	type LayoutScrollView,
 	publishFullscreenLayoutCapability,
-} from "pi-libtui/mouse";
+} from "@luan.sh/pi-libtui/mouse";
 
 interface TestRect {
 	x: number;

@@ -1,5 +1,5 @@
 {
-  "name": "@cfcluan/pi-skills",
+  "name": "@luan.sh/pi-skills",
   "version": "0.3.7",
   "license": "MIT",
   "repository": {
@@ -18,20 +18,20 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.mp4"
   },
   "dependencies": {
-    "@cfcluan/pi-code-mode": "workspace:*",
-    "pi-libtui": "workspace:*",
-    "pi-xsettings": "workspace:*"
+    "@luan.sh/pi-code-mode": "workspace:*",
+    "@luan.sh/pi-libtui": "workspace:*",
+    "@luan.sh/pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "@cfcluan/pi-code-mode",
-    "pi-libtui",
-    "pi-xsettings"
+    "@luan.sh/pi-code-mode",
+    "@luan.sh/pi-libtui",
+    "@luan.sh/pi-xsettings"
   ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

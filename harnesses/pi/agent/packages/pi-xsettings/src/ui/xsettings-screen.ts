@@ -20,8 +20,8 @@ import {
 	SemanticInput,
 	type TuiIconName,
 	tuiTheme,
-} from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+} from "@luan.sh/pi-libtui";
+import type { TuiMouseEvent } from "@luan.sh/pi-libtui/mouse";
 import type { SettingApply, SettingCategory, SettingOption, SettingPage, SettingValue } from "../protocol/settings.ts";
 import { settingOptionsFromValue } from "../runtime/options.ts";
 import { type SettingField, SettingsEditor } from "./settings-editor.ts";

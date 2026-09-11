@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { CURSOR_MARKER, stripTerminalSequences, type TUI } from "@earendil-works/pi-tui";
-import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "pi-libtui";
-import { ensureFoldingRegistry, FOLD_TARGET_AT_ROW, type FoldTarget } from "pi-libtui/folding";
-import type { MouseRegistry, TuiMouseEvent } from "pi-libtui/mouse";
-import type { NativeSelectionCompleted, SelectionActionRequest, SelectionRegistry } from "pi-libtui/selection";
+import { configureTuiAppearance, DEFAULT_TUI_APPEARANCE, tuiTheme } from "@luan.sh/pi-libtui";
+import { ensureFoldingRegistry, FOLD_TARGET_AT_ROW, type FoldTarget } from "@luan.sh/pi-libtui/folding";
+import type { MouseRegistry, TuiMouseEvent } from "@luan.sh/pi-libtui/mouse";
+import type { NativeSelectionCompleted, SelectionActionRequest, SelectionRegistry } from "@luan.sh/pi-libtui/selection";
 import type { CopyModeKeybindings } from "../src/config/keybindings.ts";
 import { createCopyModeHost } from "../src/runtime/copy-mode.ts";
 import {

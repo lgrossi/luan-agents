@@ -1,21 +1,21 @@
-# pi-tool-search
+# @luan.sh/pi-tool-search
 
-[Pi gallery](https://pi.dev/packages/@cfcluan/pi-tool-search)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-tool-search)
 
-`@cfcluan/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
+`@luan.sh/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
 activates tools which are currently inactive. It searches only the scope
 assigned to it. It does not inspect or modify the global tool hierarchy.
 
 ## Preview
 
-![pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tool-search.png)
+![@luan.sh/pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tool-search.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-tool-search.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@cfcluan/pi-tool-search
+pi install npm:@luan.sh/pi-tool-search
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
@@ -23,7 +23,7 @@ builds itself on first use under Pi's agent directory
 (`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
 prebuilt binary.
 
-Optional companion: `pi install npm:pi-xsettings` adds the
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` adds the
 `/xsettings` editor for the deferred-tool picker described below; without it
 the default (no deferred tools) applies.
 
@@ -32,7 +32,7 @@ tool APIs (`getAllTools`, `getActiveTools`, `setActiveTools`).
 
 ## Direct use and use under `exec`
 
-Code Mode owns placement. `pi-tool-search` never decides whether `tool_search`
+Code Mode owns placement. `@luan.sh/pi-tool-search` never decides whether `tool_search`
 is direct or under `exec`.
 
 - When `tool_search` is direct, its assigned scope is the other tools that
@@ -73,8 +73,8 @@ owner changes the scope.
 
 ## Settings
 
-Settings live in the `pi-tool-search` namespace (label "Tool Search",
-category `tools`). Edit them with `/xsettings` when `pi-xsettings` is
+Settings live in the `@luan.sh/pi-tool-search` namespace (label "Tool Search",
+category `tools`). Edit them with `/xsettings` when `@luan.sh/pi-xsettings` is
 installed; otherwise the defaults apply.
 
 | Key | Type | Default | Meaning |

@@ -1,8 +1,8 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";
-import { tuiTheme } from "pi-libtui";
-import { installEditorLayer as installLayer } from "pi-libtui/editor";
-import { SemanticEditor } from "pi-libtui/editor";
+import { tuiTheme } from "@luan.sh/pi-libtui";
+import { installEditorLayer as installLayer } from "@luan.sh/pi-libtui/editor";
+import { SemanticEditor } from "@luan.sh/pi-libtui/editor";
 import { defaultConfig as config } from "./config.ts";
 import {
 	preview,

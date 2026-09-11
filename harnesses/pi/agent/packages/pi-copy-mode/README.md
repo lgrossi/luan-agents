@@ -1,8 +1,8 @@
-# pi-copy-mode
+# @luan.sh/pi-copy-mode
 
-[Pi gallery](https://pi.dev/packages/pi-copy-mode)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-copy-mode)
 
-`pi-copy-mode` adds Vim-style transcript selection, copying,
+`@luan.sh/pi-copy-mode` adds Vim-style transcript selection, copying,
 annotations, and reactions to Pi. Select characters, lines, or columns, copy
 them, or attach feedback to your next request directly from the selection.
 
@@ -11,23 +11,23 @@ commands.
 
 ## Preview
 
-![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.png)
+![@luan.sh/pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-copy-mode.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-copy-mode
+pi install npm:@luan.sh/pi-copy-mode
 ```
 
 Optional companions:
 
-- `pi install npm:pi-xsettings` adds the `/xsettings` UI for the
+- `pi install npm:@luan.sh/pi-xsettings` adds the `/xsettings` UI for the
   settings below and binds the `copy-mode.enter` action to a global key from
   `keybindings.json`; without it the default setting applies and copy mode can
   only be entered from a mouse selection (see below).
-- `pi install npm:pi-developer-messages` routes annotation guidance
+- `pi install npm:@luan.sh/pi-developer-messages` routes annotation guidance
   through developer messages. Without it, the same guidance is appended to
   the system prompt only when a request contains annotations.
 
@@ -68,7 +68,7 @@ Behaviour of the actions:
   clipboard when Pi provides one and falls back to an OSC 52 escape sequence
   otherwise. A "Copied!" or "Copy failed" pill appears at the cursor.
 - `annotate` and `react` publish `selection.comment` and `selection.reaction`
-  requests through the `pi-libtui/selection` registry. The built-in annotation feature handles both requests.
+  requests through the `@luan.sh/pi-libtui/selection` registry. The built-in annotation feature handles both requests.
   While the handler runs, copy-mode input is suspended. A confirmed request
   collapses the selection to the cursor and keeps copy mode active; a
   cancelled one keeps the range. When the request was started from a mouse
@@ -77,7 +77,7 @@ Behaviour of the actions:
 - Folds: `foldPrefix` arms a prefix; the next key is matched against
   `foldOpen`, `foldClose`, `foldOpenAll`, and `foldCloseAll`. The suffix keys
   do nothing without the prefix. Open/close apply to the fold under the
-  cursor, provided by other extensions through the `pi-libtui/folding`
+  cursor, provided by other extensions through the `@luan.sh/pi-libtui/folding`
   registry.
 
 A left click inside copy mode moves the cursor to that cell and drops the
@@ -120,14 +120,14 @@ as a hoverable pill. Directives inside inline or fenced code remain text.
 ## Keybindings
 
 No action in this package has a default key. Actions are registered through
-`pi-libactions`, and keys come from `keybindings.json` in Pi's agent
+`@luan.sh/pi-libactions`, and keys come from `keybindings.json` in Pi's agent
 directory, normally `~/.pi/agent/keybindings.json`. The file is a JSON object
 mapping action ID to one key ID or an array of key IDs. Key IDs are lowercase:
 write `shift+v` rather than `V`, `escape` rather than `Escape`. Invalid key IDs
 are ignored. The file is read when a session starts; run `/reload` after
 editing it.
 
-Global entry (exposed as a shortcut only when `pi-xsettings` is
+Global entry (exposed as a shortcut only when `@luan.sh/pi-xsettings` is
 installed):
 
 ```json
@@ -172,7 +172,7 @@ One example per group; the full ID list follows.
 
 ## Settings
 
-Settings use the `pi-copy-mode` namespace:
+Settings use the `@luan.sh/pi-copy-mode` namespace:
 
 | Key | Default | Meaning |
 | --- | --- | --- |
@@ -180,11 +180,11 @@ Settings use the `pi-copy-mode` namespace:
 | `copyOnSelect` | `false` | Copy text immediately when a mouse selection is completed. When off, the selection stays available for the action bar and keyboard adoption. |
 
 Edit them under Interaction → Copy mode via `/xsettings` when
-`pi-xsettings` is installed; otherwise the compiled defaults apply.
+`@luan.sh/pi-xsettings` is installed; otherwise the compiled defaults apply.
 
 ## Library API
 
-Importing `pi-copy-mode` does not start the extension. It exports:
+Importing `@luan.sh/pi-copy-mode` does not start the extension. It exports:
 
 - Keybinding contracts: `COPY_MODE_ACTIONS`, `loadCopyModeKeybindings`, and
   `matchCopyModeAction`, with the `CopyModeAction` and `CopyModeKeybindings`
@@ -193,7 +193,7 @@ Importing `pi-copy-mode` does not start the extension. It exports:
   `moveVirtualCursor`, `graphemeEnd`, and `scrollTopForCursor`, plus their
   document and point types.
 
-`pi-copy-mode/annotations` exposes annotation helpers without starting Pi:
+`@luan.sh/pi-copy-mode/annotations` exposes annotation helpers without starting Pi:
 
 - Envelope: `serializeEnvelope`, `parseEnvelope`, `projectEnvelope`,
   `responseAnnotations`, `annotationText`.
@@ -206,7 +206,7 @@ Importing `pi-copy-mode` does not start the extension. It exports:
   `ParsedResponseAnnotations`, `ResolvedAnnotationLink`.
 
 ```ts
-import { parseEnvelope, projectEnvelope } from "pi-copy-mode/annotations";
+import { parseEnvelope, projectEnvelope } from "@luan.sh/pi-copy-mode/annotations";
 
 const parsed = parseEnvelope(messageText);
 const readable = parsed ? projectEnvelope(messageText) : messageText;
@@ -238,7 +238,7 @@ The extension registers the `copy-mode.enter` action and the setting at load
 time, and mounts one session-scoped host widget per TUI session. The host
 reads the fullscreen transcript through a validated private Pi surface, draws
 the cursor and selection as screen decorations, and talks to other extensions
-only through the shared `pi-libtui` selection, folding, and mouse registries.
+only through the shared `@luan.sh/pi-libtui` selection, folding, and mouse registries.
 Annotations live in their own feature directory and register alongside copy
 mode under the same ownership claim. If two copies load, only the owner
 registers features; it releases ownership on reload or quit. The annotation
@@ -270,7 +270,7 @@ or native executable is registered.
 
 - A key does nothing: there are no built-in keys. Check the action ID and key
   ID in `keybindings.json` and run `/reload`. For `copy-mode.enter`,
-  `pi-xsettings` must be installed.
+  `@luan.sh/pi-xsettings` must be installed.
 - Comment or react requires a completed selection. Both are built in; no
   separate annotations package is needed. An empty reaction list shows a
   warning until at least one choice is configured.

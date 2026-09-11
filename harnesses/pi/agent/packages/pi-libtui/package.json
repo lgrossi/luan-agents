@@ -1,5 +1,5 @@
 {
-  "name": "pi-libtui",
+  "name": "@luan.sh/pi-libtui",
   "version": "0.3.8",
   "license": "MIT",
   "repository": {
@@ -51,5 +51,8 @@
     "typecheck": "tsc --build",
     "test": "bun test --only-failures --timeout 15000 test"
   },
-  "bundledDependencies": []
+  "bundledDependencies": [],
+  "publishAliases": [
+    "pi-libtui"
+  ]
 }

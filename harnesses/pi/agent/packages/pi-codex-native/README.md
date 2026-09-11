@@ -1,8 +1,8 @@
-# pi-codex-native
+# @luan.sh/pi-codex-native
 
-[Pi gallery](https://pi.dev/packages/pi-codex-native)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-codex-native)
 
-`pi-codex-native` adds the `openai-codex` provider to Pi. It talks
+`@luan.sh/pi-codex-native` adds the `openai-codex` provider to Pi. It talks
 to the ChatGPT-backed Codex Responses endpoint, keeps the provider's native
 request and response format, and registers the `web__run` tool.
 
@@ -12,23 +12,23 @@ or image-generation tools.
 
 ## Preview
 
-![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.png)
+![@luan.sh/pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-codex-native
+pi install npm:@luan.sh/pi-codex-native
 ```
 
 Optional companions:
 
-- `pi install npm:pi-xsettings` adds the `/xsettings` UI for the
+- `pi install npm:@luan.sh/pi-xsettings` adds the `/xsettings` UI for the
   settings below and binds the package's actions to keys from
   `keybindings.json`. Without it, compiled defaults apply and no keys are
   bound.
-- `pi install npm:@cfcluan/pi-code-mode` exposes `web__run` inside Code Mode
+- `pi install npm:@luan.sh/pi-code-mode` exposes `web__run` inside Code Mode
   scripts as well as directly. Without it, `web__run` is only a direct tool.
 
 ## Sign in and use
@@ -85,7 +85,7 @@ window from a preset: `smart` (180k), `balanced` (272k), `enhanced` (400k),
 extension may request a preset through the provider-owned
 [context-window capability](context-window-protocol.md); without one, the
 `contextWindowPreset` setting is used. Its published capability identity is
-preserved for compatibility with older `pi-codex-native` SDK copies.
+preserved for compatibility with older `@luan.sh/pi-codex-native` SDK copies.
 
 `contextAutoUpgrade` controls what happens when Pi reaches its compaction
 threshold: `never` compacts, `mid-turn` moves to the next tier after a tool
@@ -113,13 +113,13 @@ example:
 }
 ```
 
-Keys take effect only when `pi-xsettings` is installed; the file is
+Keys take effect only when `@luan.sh/pi-xsettings` is installed; the file is
 read on load, so reload extensions after editing it.
 
 ## Settings
 
-Settings use namespace `pi-codex-native` (label "Codex Native"), all in the
-`behavior` category. Edit them with `/xsettings` when `pi-xsettings`
+Settings use namespace `@luan.sh/pi-codex-native` (label "Codex Native"), all in the
+`behavior` category. Edit them with `/xsettings` when `@luan.sh/pi-xsettings`
 is installed; otherwise the defaults apply.
 
 | Key | Default | Values |

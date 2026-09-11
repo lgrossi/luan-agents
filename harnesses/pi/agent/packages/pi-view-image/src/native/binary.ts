@@ -1,4 +1,4 @@
-import { type EnsureNativeBinaryHooks, ensureNativeBinary, type NativeBinary } from "pi-libtui";
+import { type EnsureNativeBinaryHooks, ensureNativeBinary, type NativeBinary } from "@luan.sh/pi-libtui";
 
 const VIEW_IMAGE: NativeBinary = { crate: "view-image", binaryName: "view_image", env: "PI_VIEW_IMAGE_BIN" };
 

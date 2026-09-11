@@ -1,8 +1,8 @@
-# pi-developer-messages
+# @luan.sh/pi-developer-messages
 
-[Pi gallery](https://pi.dev/packages/pi-developer-messages)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-developer-messages)
 
-`pi-developer-messages` is a Pi extension that builds the provider-ready prompt
+`@luan.sh/pi-developer-messages` is a Pi extension that builds the provider-ready prompt
 envelope for each turn. It keeps three kinds of instructions in their intended
 roles: provider (system) instructions, developer messages, and project context
 files such as `AGENTS.md`. It does not register tools, keybindings, or
@@ -10,30 +10,30 @@ commands, and it does not decide how a provider serializes its request.
 
 ## Preview
 
-![pi-developer-messages in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.png)
+![@luan.sh/pi-developer-messages in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-developer-messages
+pi install npm:@luan.sh/pi-developer-messages
 ```
 
 The extension loads on its own, but it can only change what a provider
 actually receives when a provider package registers a payload adapter (see
-"Provider adapters"). `pi-codex-native` registers the adapter for the
-`openai-codex` provider (`pi install npm:pi-codex-native`); without an
+"Provider adapters"). `@luan.sh/pi-codex-native` registers the adapter for the
+`openai-codex` provider (`pi install npm:@luan.sh/pi-codex-native`); without an
 adapter, Pi's request goes out unchanged and only the `before_agent_start`
 system-prompt override applies.
 
-`pi-xsettings` (`pi install npm:pi-xsettings`) adds a
+`@luan.sh/pi-xsettings` (`pi install npm:@luan.sh/pi-xsettings`) adds a
 `/xsettings` UI for the audit setting below; without it the compiled default is
 used and no settings file is created.
 
 Other extensions can add developer messages when they are installed alongside
-this package. For example `pi-copy-mode` contributes annotation
-guidance, and `@cfcluan/pi-subagents` and `pi-skills` contribute
+this package. For example `@luan.sh/pi-copy-mode` contributes annotation
+guidance, and `@luan.sh/pi-subagents` and `@luan.sh/pi-skills` contribute
 their own messages. Absent, those messages are simply not present.
 
 ## What Pi sends
@@ -60,7 +60,7 @@ On every `before_agent_start`, the extension composes three separate parts:
    (`bash.exe` on Windows).
 3. **Contextual user instructions.** Pi's discovered context files
    (`AGENTS.md`, `CLAUDE.md`, and similar) are combined into one hidden custom
-   message of type `pi-developer-messages/agents-md`, inserted before the
+   message of type `@luan.sh/pi-developer-messages/agents-md`, inserted before the
    conversation history in the `context` hook. If the first file lives in Pi's
    agent directory (global instructions), it is separated from project files
    with a `--- project-doc ---` divider. Context files are never mapped to a
@@ -73,10 +73,10 @@ compaction input, and tree-summary input.
 
 ## Add a developer contribution
 
-Extensions import from `pi-developer-messages` and register content:
+Extensions import from `@luan.sh/pi-developer-messages` and register content:
 
 ```ts
-import { registerDeveloperMessageContribution } from "pi-developer-messages";
+import { registerDeveloperMessageContribution } from "@luan.sh/pi-developer-messages";
 
 const unregister = registerDeveloperMessageContribution({
 	id: "my-extension/mode",
@@ -144,8 +144,8 @@ extension never turns a developer message into a user message.
 
 ## Settings
 
-Settings use the `pi-developer-messages` namespace and are edited with
-`/xsettings` when `pi-xsettings` is installed; otherwise the defaults
+Settings use the `@luan.sh/pi-developer-messages` namespace and are edited with
+`/xsettings` when `@luan.sh/pi-xsettings` is installed; otherwise the defaults
 apply.
 
 | Key | Default | Meaning |
@@ -160,7 +160,7 @@ pi-developer-messages.auditEntries = ["developer", "context-user"]
 ```
 
 Set it to `[]`, `["developer"]`, or `["context-user"]` to reduce what is
-persisted. Audit entries are stored as one `pi-developer-messages/group` custom
+persisted. Audit entries are stored as one `@luan.sh/pi-developer-messages/group` custom
 entry containing only new or changed instructions, rendered as collapsible rows.
 Each instruction is compared with its latest audit on the current session branch,
 including after resume. Changes to one instruction do not repeat the others. They only affect the transcript; the model request is
@@ -174,7 +174,7 @@ unchanged.
 - A provider still receives the old prompt: no adapter is registered for that
   provider id, or `readSystemPrompt` did not return Pi's original prompt.
 - `AGENTS.md` appears twice after compaction: inspect custom messages of type
-  `pi-developer-messages/agents-md`; existing copies are removed before
+  `@luan.sh/pi-developer-messages/agents-md`; existing copies are removed before
   re-injection.
 - Audit entries are not visible: include `developer` or `context-user` in
   `auditEntries`, then expand the custom session entries.

@@ -1,6 +1,6 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import { renderEditorTokenPills } from "pi-libtui";
-import { type EditorRegistry, ensureEditorRegistry } from "pi-libtui/editor";
+import { renderEditorTokenPills } from "@luan.sh/pi-libtui";
+import { type EditorRegistry, ensureEditorRegistry } from "@luan.sh/pi-libtui/editor";
 import type { ImageAttachmentStore } from "../core/attachments.ts";
 import { pastedImagePath } from "../core/attachments.ts";
 

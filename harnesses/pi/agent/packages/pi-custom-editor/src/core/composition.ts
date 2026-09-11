@@ -7,7 +7,7 @@ import type {
 	EditorStatusSeparator,
 	EditorSurfaceStyle,
 	EditorTopTreatment,
-} from "pi-libtui/editor";
+} from "@luan.sh/pi-libtui/editor";
 
 export const CUSTOM_EDITOR_PRESETS = [
 	"claude-code",

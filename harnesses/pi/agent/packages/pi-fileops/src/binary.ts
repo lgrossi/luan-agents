@@ -1,4 +1,4 @@
-import { ensureNativeBinary, type NativeBinary } from "pi-libtui";
+import { ensureNativeBinary, type NativeBinary } from "@luan.sh/pi-libtui";
 
 const APPLY_PATCH: NativeBinary = { crate: "apply-patch", binaryName: "apply_patch", env: "PI_APPLY_PATCH_BIN" };
 

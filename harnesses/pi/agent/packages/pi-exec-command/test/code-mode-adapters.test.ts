@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from "bun:test";
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "@cfcluan/pi-code-mode/sdk";
+import { getCodeModeToolAdapterRegistry } from "@luan.sh/pi-code-mode/sdk";
 import { boundTraceResult } from "../../pi-code-mode/src/runtime/trace-values.ts";
 import { renderCodeModeResult } from "../../pi-code-mode/src/ui/presentation.ts";
 import { type CodeModeToolAdapter, registerCodeModeExecAdapters } from "../src/code-mode-adapters.ts";

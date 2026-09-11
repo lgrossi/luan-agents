@@ -1,56 +1,56 @@
 # Pi package names
 
-The packages have moved from `@luan-pi` to the names below. Annotations are now
-part of Copy Mode; Tool Search remains independently installable.
+All Pi packages are published under `@luan.sh`. Bare names we own remain
+supported aliases and continue receiving releases. Install either name for a
+package, not both. Versions are independent per package.
 
-| Previous package | Replacement |
-| --- | --- |
-| `@luan-pi/pi-annotations` | `pi-copy-mode` |
-| `@luan-pi/pi-apply-patch` | `pi-fileops` |
-| `@luan-pi/pi-code-mode` | `@cfcluan/pi-code-mode` |
-| `@luan-pi/pi-codex-native` | `pi-codex-native` |
-| `@luan-pi/pi-copy-mode` | `pi-copy-mode` |
-| `@luan-pi/pi-custom-editor` | `pi-custom-editor` |
-| `@luan-pi/pi-developer-prompt` | `pi-developer-messages` |
-| `@luan-pi/pi-exec-command` | `pi-exec-command` |
-| `@luan-pi/pi-libactions` | `pi-libactions` |
-| `@luan-pi/pi-libtui` | `pi-libtui` |
-| `@luan-pi/pi-prompt-storage` | `pi-prompt-storage` |
-| `@luan-pi/pi-side-chat` | `pi-side` |
-| `@luan-pi/pi-side-panel` | `pi-panels` |
-| `@luan-pi/pi-skills` | `@cfcluan/pi-skills` |
-| `@luan-pi/pi-subagents` | `@cfcluan/pi-subagents` |
-| `@luan-pi/pi-thinking-binding` | `pi-thinking-binding` |
-| `@luan-pi/pi-tool-search` | `@cfcluan/pi-tool-search` |
-| `@luan-pi/pi-transcript` | `pi-collapse-transcript` |
-| `@luan-pi/pi-tuicr` | `@cfcluan/pi-tuicr` |
-| `@luan-pi/pi-view-image` | `pi-view-image` |
-| `@luan-pi/pi-xsettings` | `pi-xsettings` |
+| Former name | Canonical name | Bare alias |
+| --- | --- | --- |
+| `@cfcluan/pi-code-mode` | `@luan.sh/pi-code-mode` | `pi-code-mode` |
+| `pi-codex-native` | `@luan.sh/pi-codex-native` | `pi-codex-native` |
+| `pi-collapse-transcript` | `@luan.sh/pi-collapse-transcript` | `pi-collapse-transcript` |
+| `pi-copy-mode` | `@luan.sh/pi-copy-mode` | `pi-copy-mode` |
+| `pi-custom-editor` | `@luan.sh/pi-custom-editor` | `pi-custom-editor` |
+| `pi-developer-messages` | `@luan.sh/pi-developer-messages` | `pi-developer-messages` |
+| `pi-exec-command` | `@luan.sh/pi-exec-command` | `pi-exec-command` |
+| `pi-fileops` | `@luan.sh/pi-fileops` | `pi-fileops` |
+| `pi-libactions` | `@luan.sh/pi-libactions` | `pi-libactions` |
+| `pi-libtui` | `@luan.sh/pi-libtui` | `pi-libtui` |
+| `pi-panels` | `@luan.sh/pi-panels` | `pi-panels` |
+| `pi-prompt-storage` | `@luan.sh/pi-prompt-storage` | `pi-prompt-storage` |
+| `pi-side` | `@luan.sh/pi-side` | `pi-side` |
+| `@cfcluan/pi-skills` | `@luan.sh/pi-skills` | — |
+| `@cfcluan/pi-subagents` | `@luan.sh/pi-subagents` | — |
+| `pi-thinking-binding` | `@luan.sh/pi-thinking-binding` | `pi-thinking-binding` |
+| `@cfcluan/pi-tool-search` | `@luan.sh/pi-tool-search` | — |
+| `@cfcluan/pi-tuicr` | `@luan.sh/pi-tuicr` | — |
+| `pi-view-image` | `@luan.sh/pi-view-image` | `pi-view-image` |
+| `pi-xsettings` | `@luan.sh/pi-xsettings` | `pi-xsettings` |
 
-Remove each old package you use, then install its replacement. For example:
+The former `@cfcluan` publications are deprecated after the new packages are
+verified. The retired `@luan-pi` publications are removed after migration.
+Existing bare-name installations keep working and do not need to switch.
+
+For an installation using a retired scope, install the replacement before
+removing the old entry, then restart Pi:
 
 ```sh
-pi remove npm:@luan-pi/pi-copy-mode
-pi remove npm:@luan-pi/pi-annotations
-pi install npm:pi-copy-mode
+pi install npm:@luan.sh/pi-skills
+pi remove npm:@cfcluan/pi-skills
 ```
 
-Only remove packages you have installed. Restart Pi afterward. Do not load the
-old and new packages together: both may register the same feature. Use the current setting namespaces and action IDs documented in each package README.
-Old identifiers and settings are not supported.
+Former `@luan-pi` names map to the canonical package with the same basename,
+with these exceptions:
 
-Library consumers must update npm dependencies and imports to the new package
-names. Annotation library exports are available through `pi-copy-mode/annotations`. The old published versions remain available; deprecation messages identify
-the replacements.
+| Retired package | Replacement |
+| --- | --- |
+| `@luan-pi/pi-annotations` | `@luan.sh/pi-copy-mode` |
+| `@luan-pi/pi-apply-patch` | `@luan.sh/pi-fileops` |
+| `@luan-pi/pi-developer-prompt` | `@luan.sh/pi-developer-messages` |
+| `@luan-pi/pi-side-chat` | `@luan.sh/pi-side` |
+| `@luan-pi/pi-side-panel` | `@luan.sh/pi-panels` |
+| `@luan-pi/pi-transcript` | `@luan.sh/pi-collapse-transcript` |
 
-`pi-fileops` currently supplies `apply_patch`. Its tool name, native binary, and
-`PI_APPLY_PATCH_BIN` override retain their existing names.
-
-Tool Search is available as `@cfcluan/pi-tool-search`, both directly and inside
-Code Mode. Code Mode continues to own tool placement.
-
-The gallery media in this release shows real Bootty workflows. The combined
-Copy Mode video covers selection/copying and comments/reactions; its README links
-to the two individual workflows as well.
-
-Code Mode is published as `@cfcluan/pi-code-mode`.
+Library consumers can use the canonical `@luan.sh` imports. The supported
+bare library names remain available. Settings, action IDs, tool names, and
+cross-extension registry keys keep their existing identities.

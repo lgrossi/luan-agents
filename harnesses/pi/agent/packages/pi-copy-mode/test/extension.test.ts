@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { ensureSelectionRegistry, type SelectionActionRequest } from "pi-libtui/selection";
+import { ensureSelectionRegistry, type SelectionActionRequest } from "@luan.sh/pi-libtui/selection";
 import copyModeExtension from "../src/extension.ts";
 
 type EventHandler = (event: { reason?: string }, ctx: ExtensionContext) => void | Promise<void>;

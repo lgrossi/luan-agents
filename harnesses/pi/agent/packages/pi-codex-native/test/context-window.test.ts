@@ -1,9 +1,9 @@
 import { afterEach, expect, test } from "bun:test";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan.sh/pi-libactions/sdk";
 import { ensureContextWindowSourceRegistry } from "../src/protocol/context-window.ts";
-import { ensureXSettingsRegistry } from "pi-xsettings";
+import { ensureXSettingsRegistry } from "@luan.sh/pi-xsettings";
 import registerContextWindow from "../src/context-window.ts";
 import {
 	CODEX_CONTEXT_COLORS,

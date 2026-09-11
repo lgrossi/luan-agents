@@ -1,8 +1,8 @@
-# pi-collapse-transcript
+# @luan.sh/pi-collapse-transcript
 
-[Pi gallery](https://pi.dev/packages/pi-collapse-transcript)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-collapse-transcript)
 
-`pi-collapse-transcript` folds runs of tool calls and thinking blocks in Pi's fullscreen
+`@luan.sh/pi-collapse-transcript` folds runs of tool calls and thinking blocks in Pi's fullscreen
 transcript into one collapsed activity row. The row shows the latest tool action
 or the latest provider-supplied thinking heading, a step count, and a failure
 count. Click it to expand the run back into the original tool renderers and
@@ -15,14 +15,14 @@ model-visible content are never rewritten.
 
 ## Preview
 
-![pi-collapse-transcript in Bootty](https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.png)
+![@luan.sh/pi-collapse-transcript in Bootty](https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-collapse-transcript
+pi install npm:@luan.sh/pi-collapse-transcript
 ```
 
 That is the only step. The package ships its rendering library and mouse host
@@ -30,7 +30,7 @@ with it and registers both through `package.json`; nothing else needs to be
 installed. It runs inside Pi (`@earendil-works/pi-coding-agent` with
 `@earendil-works/pi-tui`); 0.84.2 is the tested version.
 
-Optional companion: `pi install npm:pi-xsettings` adds the
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` adds the
 `/xsettings` UI for the shared appearance settings (activity indicator, text
 effects, animation speed) that the collapsed row uses; without it the compiled
 defaults apply.
@@ -75,26 +75,26 @@ transcript controls need the fullscreen surface.
 
 The package registers no settings, no actions, and no keybindings. The only
 input it handles is a mouse press on the activity row, provided by
-the bundled `pi-libtui` mouse host. There is nothing to add to
+the bundled `@luan.sh/pi-libtui` mouse host. There is nothing to add to
 `~/.pi/agent/keybindings.json` for this package. The running indicator and
-text effects follow `pi-libtui`'s shared appearance settings (`activityIndicator`,
+text effects follow `@luan.sh/pi-libtui`'s shared appearance settings (`activityIndicator`,
 default `spinner`; `textEffect`, default `off`; `animationSpeed`, default
-`normal`; and the other keys documented in the `pi-libtui` README).
-These are edited via `/xsettings` when `pi-xsettings` is installed;
+`normal`; and the other keys documented in the `@luan.sh/pi-libtui` README).
+These are edited via `/xsettings` when `@luan.sh/pi-xsettings` is installed;
 otherwise the defaults apply.
 
 ## Library API
 
-`import { ActivityTranscript } from "pi-collapse-transcript"` gives a
+`import { ActivityTranscript } from "@luan.sh/pi-collapse-transcript"` gives a
 `ComponentStack` that takes an entry reader, a Pi `Theme`, and a
 `requestRender` callback. It groups `TranscriptEntry` values from
-`pi-libtui/tool` and owns the fold state of each section. Pass it to
+`@luan.sh/pi-libtui/tool` and owns the fold state of each section. Pass it to
 `mountTranscriptProjection` to use it outside this extension, or render it
 directly in tests. It has no native binary.
 
 ## Native boundary
 
-`pi-libtui/tool` supplies the versioned transcript bridge. It reads Pi 0.84–0.85
+`@luan.sh/pi-libtui/tool` supplies the versioned transcript bridge. It reads Pi 0.84–0.85
 private transcript fields, guards each node's shape, and fails open: when the
 document layout does not match, when a node is not a recognised assistant or
 tool component, or when a projection is already installed, the transcript is
@@ -108,8 +108,8 @@ left untouched. Unknown nodes and native error notices render as they are.
 | Grouping entries into sections and fold state | `src/activity-transcript.ts` (`ActivityTranscript`, `ActivitySection`) |
 | Header text for a run | `activitySummary` in `src/activity-transcript.ts` |
 | Public exports | `src/index.ts` |
-| Native transcript bridge | `mountTranscriptProjection` in `pi-libtui/tool` |
-| Row rendering, motion, folding, mouse | `ToolActivity`, `ComponentStack`, and the mouse host in `pi-libtui` |
+| Native transcript bridge | `mountTranscriptProjection` in `@luan.sh/pi-libtui/tool` |
+| Row rendering, motion, folding, mouse | `ToolActivity`, `ComponentStack`, and the mouse host in `@luan.sh/pi-libtui` |
 | Tool execution | None; existing tools run unchanged |
 
 ## Develop

@@ -43,8 +43,8 @@ import {
 	SemanticInput,
 	sharedMotionScheduler,
 	tuiTheme,
-} from "pi-libtui";
-import { renderEditorCompositionPreview } from "pi-libtui/editor";
+} from "@luan.sh/pi-libtui";
+import { renderEditorCompositionPreview } from "@luan.sh/pi-libtui/editor";
 import type {
 	ListDefinition,
 	SettingOption as ProtocolSettingOption,

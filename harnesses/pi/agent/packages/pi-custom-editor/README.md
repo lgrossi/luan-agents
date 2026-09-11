@@ -1,6 +1,6 @@
-# pi-custom-editor
+# @luan.sh/pi-custom-editor
 
-[Pi gallery](https://pi.dev/packages/pi-custom-editor)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-custom-editor)
 
 A Pi extension that replaces the built-in input editor chrome and footer with a
 configurable composition: semantic surfaces, top and bottom rules, left and
@@ -12,20 +12,20 @@ type.
 
 ## Preview
 
-![pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-custom-editor.png)
+![@luan.sh/pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-custom-editor.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-custom-editor.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-custom-editor
+pi install npm:@luan.sh/pi-custom-editor
 ```
 
 The extension is active in the TUI on the next session start. No configuration
 is required; the `compact-field` preset is used until you change it.
 
-Optional companion: `pi install npm:pi-xsettings` adds the
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` adds the
 `/xsettings` command with a live preview UI for every setting listed below;
 without it the defaults apply and there is no in-app way to change them.
 
@@ -42,7 +42,7 @@ without it the defaults apply and there is no in-app way to change them.
   set to something other than `transcript`; the original visibility is restored
   on session shutdown.
 - Follows the shared appearance settings (animation speed, smoothness, reduced
-  motion) provided by the bundled `pi-libtui` runtime.
+  motion) provided by the bundled `@luan.sh/pi-libtui` runtime.
 
 ### Presets
 
@@ -82,9 +82,9 @@ Nothing is highlighted inside inline or fenced Markdown code.
 
 ## Settings
 
-Settings are defined with `pi-xsettings` under namespace
-`pi-custom-editor` (label "Custom Editor", page "Editor", applied live). Edit
-them with `/xsettings` when `pi-xsettings` is installed; otherwise the
+Settings are defined with `@luan.sh/pi-xsettings` under namespace
+`@luan.sh/pi-custom-editor` (label "Custom Editor", page "Editor", applied live). Edit
+them with `/xsettings` when `@luan.sh/pi-xsettings` is installed; otherwise the
 defaults below apply.
 
 | Key | Default | Values |
@@ -118,10 +118,10 @@ This package registers no actions, commands, or keybindings.
 ## Highlight API
 
 Other extensions can add editor highlights through a process-wide, versioned
-registry. Import from `pi-custom-editor`:
+registry. Import from `@luan.sh/pi-custom-editor`:
 
 ```ts
-import { ensureEditorHighlightRegistry } from "pi-custom-editor";
+import { ensureEditorHighlightRegistry } from "@luan.sh/pi-custom-editor";
 
 const registry = ensureEditorHighlightRegistry(); // protocol "pi-custom-editor/highlights/v1"
 const dispose = registry.register({

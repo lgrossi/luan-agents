@@ -153,24 +153,24 @@ external library forces an untyped boundary, give it a narrow named alias and
 an adjacent `type-boundary:` comment naming the source and validator. Validate
 at that boundary and return a concrete domain type.
 
-Keep shared UI libraries domain-free. A component belongs in `pi-libtui` only
+Keep shared UI libraries domain-free. A component belongs in `@luan.sh/pi-libtui` only
 when it has a concrete reusable interaction contract that does not name
 settings, tools, providers, or another feature domain. Keep feature
 composition and semantics in the owning extension. Searchable single-select
 and ordered or unordered multi-select are shared primitives; the settings
-editor remains owned by `pi-xsettings`.
+editor remains owned by `@luan.sh/pi-xsettings`.
 
-Feature UIs compose semantic `pi-libtui` components for tabs, selectable rows,
+Feature UIs compose semantic `@luan.sh/pi-libtui` components for tabs, selectable rows,
 fields, and actions. Pointer parsing, hit geometry, hover, capture, and wheel
-behavior stay inside `pi-libtui`; feature packages do not import mouse
+behavior stay inside `@luan.sh/pi-libtui`; feature packages do not import mouse
 contracts or register pointer regions for ordinary component interaction.
 Screen-positioned transcript actions use `SelectionActionBar`; the feature owns
 labels and callbacks while libtui owns placement, compositing, and pointer
 geometry.
 
 Before implementing a feature component, inspect the component inventory in
-`pi-libtui/README.md`. Reuse a shared component when its interaction contract
-fits. Add a domain-free primitive to `pi-libtui` when two feature packages need
+`@luan.sh/pi-libtui/README.md`. Reuse a shared component when its interaction contract
+fits. Add a domain-free primitive to `@luan.sh/pi-libtui` when two feature packages need
 the same interaction contract; do not move feature labels, state, actions, or
 workflow into the shared library.
 
@@ -179,7 +179,7 @@ that exercise the affected extensions. Keep production renderers as the only
 presentation path; a separate showcase must not reimplement or approximate Pi
 appearance, interaction, terminal state, or tool lifecycles.
 
-`pi-libtui` is a deliberate dual-role exception at the package level: it is
+`@luan.sh/pi-libtui` is a deliberate dual-role exception at the package level: it is
 also a Pi extension so generic TUI host compatibility can be installed as a
 dependency. Its extension entry point activates reusable mouse, fullscreen,
 and terminal-color compatibility. It may register package diagnostics such as
@@ -200,13 +200,13 @@ distinct hues.
 
 Feature packages do not use Pi's tool, message, thinking, markdown, syntax, or
 other host color tokens directly. This rule has no feature-package exception:
-even a renderer for an exact Pi-owned surface uses a semantic pi-libtui token.
-When preserving a native Pi meaning matters, pi-libtui owns and resolves that
+even a renderer for an exact Pi-owned surface uses a semantic @luan.sh/pi-libtui token.
+When preserving a native Pi meaning matters, @luan.sh/pi-libtui owns and resolves that
 alias so future UI evolution stays behind one boundary.
 
 Cursor shape follows the same ownership rule. Feature UI declares an
-`insertion`, `navigation`, or `selection` role through `pi-libtui`.
-`pi-libtui` resolves that role to virtual paint or the configured terminal
+`insertion`, `navigation`, or `selection` role through `@luan.sh/pi-libtui`.
+`@luan.sh/pi-libtui` resolves that role to virtual paint or the configured terminal
 default, block, underline, or bar; it alone controls hardware visibility,
 DECSCUSR sequences, and terminal restoration.
 
@@ -224,7 +224,7 @@ theme maps multiple Pi surfaces to the same color.
 
 Feature UI does not emit literal foreground or background SGR sequences, fixed
 RGB values, or fixed 256-color indices. Raw terminal color sequences belong in
-`pi-libtui` color generation, parsing, and compatibility code. Parsing or
+`@luan.sh/pi-libtui` color generation, parsing, and compatibility code. Parsing or
 preserving host-rendered SGR and emitting non-color terminal control sequences
 are allowed at a documented low-level boundary.
 
@@ -263,7 +263,7 @@ registration in `contributions/<capability>.ts`. Do not create a general
 
 A deliberate public library entry point is not an optional capability. It may
 be a normal package dependency when it is UI-free, independently loadable,
-and versioned as part of the provider package. `pi-xsettings/sdk` is the
+and versioned as part of the provider package. `@luan.sh/pi-xsettings/sdk` is the
 approved example. Feature packages must not import the xsettings extension,
 runtime, persistence, or UI modules.
 
@@ -272,7 +272,7 @@ or merge the extensions.
 
 ## Settings
 
-Register typed settings with `createSettings()` from `pi-xsettings/sdk`. The
+Register typed settings with `createSettings()` from `@luan.sh/pi-xsettings/sdk`. The
 SDK is the only feature-facing settings API; it owns the structural registry
 boundary and runtime validation. A definition chooses one fixed persistence
 category and may choose a presentation-only page. Changing the page never
@@ -293,15 +293,15 @@ new data shape cannot be expressed by the existing kinds.
 
 ## Custom actions
 
-Register extension actions through the structural `pi-libactions/registry/v1`
+Register extension actions through the structural `@luan.sh/pi-libactions/registry/v1`
 capability. Use a stable namespaced action ID. Feature extensions do not call
 `pi.registerShortcut` and do not assign default keys. The user-owned
 `keybindings.json` file is the only source of custom action bindings.
 Both global action hosts and modal features read it through the immutable,
-validated keybinding snapshot exported by `pi-libactions/sdk`.
+validated keybinding snapshot exported by `@luan.sh/pi-libactions/sdk`.
 
 An action remains available when no key is configured. Its owning extension
-must install and load without `pi-xsettings`; a missing action host is a no-op,
+must install and load without `@luan.sh/pi-xsettings`; a missing action host is a no-op,
 not a reason to restore a hard-coded shortcut.
 
 ## Tests

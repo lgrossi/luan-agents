@@ -1,27 +1,27 @@
-# pi-xsettings
+# @luan.sh/pi-xsettings
 
-[Pi gallery](https://pi.dev/packages/pi-xsettings)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-xsettings)
 
-`pi-xsettings` is a settings host for Pi extensions. It adds the
+`@luan.sh/pi-xsettings` is a settings host for Pi extensions. It adds the
 `/xsettings` editor to Pi's interactive TUI, persists Pi and extension settings
 in one `xsettings.toml` file, exposes a UI-free SDK
-(`pi-xsettings/sdk`) that other extensions use to declare typed
+(`@luan.sh/pi-xsettings/sdk`) that other extensions use to declare typed
 settings, and binds keys from `keybindings.json` to actions that extensions
 register through pi-libactions.
 
 ## Preview
 
-![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.png)
+![@luan.sh/pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-xsettings
+pi install npm:@luan.sh/pi-xsettings
 ```
 
-Optional companion: `pi install npm:pi-panels`. When a side-panel
+Optional companion: `pi install npm:@luan.sh/pi-panels`. When a side-panel
 host is present, `/xsettings` opens as a "Settings" tab beside the session;
 without it, the editor opens as a fullscreen overlay.
 
@@ -40,7 +40,7 @@ highlighted destination. In the content, `h`/`l` or left/right change pages,
 Enter edits the selected setting, and Backspace restores its default.
 
 Every confirmed edit is written to `xsettings.toml` immediately. Settings
-marked live (the theme and all `pi-libtui` settings) apply to the running TUI
+marked live (the theme and all `@luan.sh/pi-libtui` settings) apply to the running TUI
 at once. Other settings need a reload: when the editor was opened from
 `/xsettings`, Pi reloads after you close it; otherwise it tells you to run
 `/reload`.
@@ -83,11 +83,11 @@ telemetry, provider, and model configuration in `settings.json` directly.
 
 Both namespaces below are registered with `createSettings` and edited via
 `/xsettings`; when a value is absent or invalid the default applies.
-Namespace `pi-xsettings` (label "Xsettings") has one key, `presentation`,
+Namespace `@luan.sh/pi-xsettings` (label "Xsettings") has one key, `presentation`,
 default `side-panel` (or `fullscreen`); side-panel falls back to fullscreen
 when no panel host is present.
 
-Namespace `pi-libtui` (label "TUI", all applied live):
+Namespace `@luan.sh/pi-libtui` (label "TUI", all applied live):
 
 | Key | Default |
 | --- | --- |
@@ -126,7 +126,7 @@ The file is read once when extensions load, so reload Pi after editing it.
 Invalid JSON, an invalid key ID, or an unbound action installs no shortcut;
 the action stays available through its command or UI. This package is also the
 global shortcut host: for every action any installed extension registers
-through pi-libactions, it calls Pi's `registerShortcut()` with the keys
+through @luan.sh/pi-libactions, it calls Pi's `registerShortcut()` with the keys
 configured for that action ID. Other extensions' READMEs list their action IDs.
 
 ## SDK for extension authors
@@ -134,7 +134,7 @@ configured for that action ID. Other extensions' READMEs list their action IDs.
 Import the UI-free SDK, not the extension entry point:
 
 ```ts
-import { createSettings } from "pi-xsettings/sdk";
+import { createSettings } from "@luan.sh/pi-xsettings/sdk";
 
 const settings = createSettings({
   namespace: "pi-example",
@@ -166,7 +166,7 @@ the current values), and `register(onValues)` (returns a disposer). Types are
 `boolean`, `string`, `enum`, `multi-enum` (with `ordered`), `string-list`
 (helper `stringListSetting()`, with `minItems`), and schema-checked `list`
 (helper `listSetting(schema, definition)` with a TypeBox schema and a
-declarative item definition). Enum options may carry a pi-libtui `color`, or
+declarative item definition). Enum options may carry a @luan.sh/pi-libtui `color`, or
 point at another setting's list via `{ source: "setting", setting, field }`.
 
 Each definition names a `category` (its TOML table). Optional `page` places it
@@ -179,7 +179,7 @@ values resolve to a valid option, and multi-enum values drop stale choices.
 
 Registration works before the host loads or when it is absent: values arrive
 when the host publishes them, and without a host the extension keeps its
-defaults. Add `pi-xsettings` to your package's `dependencies`; do not
+defaults. Add `@luan.sh/pi-xsettings` to your package's `dependencies`; do not
 create a separate settings file or settings screen.
 
 ## Layout
@@ -191,7 +191,7 @@ create a separate settings file or settings screen.
 | Cross-extension registry protocol | `src/protocol/settings.ts` |
 | `xsettings.toml` load, set, unset, atomic write | `src/config/store.ts` |
 | Pi setting definitions and `settings.json` mirror | `src/config/pi-settings.ts` |
-| `pi-libtui` and `pi-xsettings` definitions | `src/config/tui-settings.ts`, `src/config/presentation.ts` |
+| `@luan.sh/pi-libtui` and `@luan.sh/pi-xsettings` definitions | `src/config/tui-settings.ts`, `src/config/presentation.ts` |
 | Value resolution, publication, reload decision | `src/runtime/settings.ts`, `src/runtime/apply.ts` |
 | Keybinding bridge and effort actions | `src/runtime/actions.ts`, `src/runtime/effort.ts` |
 | Editor session, fields, list editors, screen | `src/ui/` |

@@ -1,23 +1,23 @@
-# pi-libactions
+# @luan.sh/pi-libactions
 
-[Pi gallery](https://pi.dev/packages/pi-libactions)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-libactions)
 
-`pi-libactions` is a UI-free action registry and keybinding loader
+`@luan.sh/pi-libactions` is a UI-free action registry and keybinding loader
 for Pi extensions. It is a library, not a Pi extension: importing it registers
 no commands, shortcuts, tools, or UI, and it is not installed with `pi install`
 on its own. It reaches users as a dependency of the extensions that use it.
 
 The registry lets an extension publish a named action without knowing which
-host will expose it. A shortcut host (currently `pi-xsettings`) reads
+host will expose it. A shortcut host (currently `@luan.sh/pi-xsettings`) reads
 the user's `keybindings.json` and binds each configured key to the matching
-action. Modal features such as `pi-copy-mode` read the same snapshot
+action. Modal features such as `@luan.sh/pi-copy-mode` read the same snapshot
 without registering their keys as global editor shortcuts.
 
 ## Preview
 
 Actions registered by Side Panel and Side Chat, bound by Xsettings, and listed in Pi's `/hotkeys`. The library itself registers no UI.
 
-![pi-libactions in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libactions.png)
+![@luan.sh/pi-libactions in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libactions.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-libactions.mp4).
 
@@ -69,7 +69,7 @@ Rules the loader applies:
 
 Which action IDs exist depends on the extensions you have installed; each
 extension's README lists its IDs. Bindings only take effect when a shortcut
-host is installed: `pi install npm:pi-xsettings` provides one that
+host is installed: `pi install npm:@luan.sh/pi-xsettings` provides one that
 calls `pi.registerShortcut()` for every configured key. Without a host, the
 registry still works but nothing binds global keys.
 
@@ -83,16 +83,16 @@ ships inside your published package:
 ```json
 {
   "dependencies": {
-    "pi-libactions": "^0.1.0"
+    "@luan.sh/pi-libactions": "^0.1.0"
   },
-  "bundledDependencies": ["pi-libactions"]
+  "bundledDependencies": ["@luan.sh/pi-libactions"]
 }
 ```
 
 Then import the public SDK:
 
 ```ts
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan.sh/pi-libactions/sdk";
 ```
 
 The package has no runtime dependencies; `@earendil-works/pi-coding-agent` and
@@ -123,7 +123,7 @@ Use a stable, namespaced ID (for example `myext.panel.open`). Register during
 extension setup and keep the disposer for reload and shutdown:
 
 ```ts
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan.sh/pi-libactions/sdk";
 
 const unregister = registerAction({
   id: "example.open",
@@ -142,7 +142,7 @@ unregister();
 registry uses the full API:
 
 ```ts
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan.sh/pi-libactions/sdk";
 
 const actions = ensureActionsRegistry();
 const stopListening = actions.onRegister((action) => {
@@ -172,7 +172,7 @@ Behaviour, as implemented in `src/protocol/actions.ts`:
 ### Reading keybindings from an extension
 
 ```ts
-import { loadActionKeybindings, isActionKeyId } from "pi-libactions/sdk";
+import { loadActionKeybindings, isActionKeyId } from "@luan.sh/pi-libactions/sdk";
 
 const bindings = loadActionKeybindings(); // defaults to <agent dir>/keybindings.json
 const keys = bindings["example.open"] ?? []; // readonly KeyId[], frozen

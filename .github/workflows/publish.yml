@@ -1,17 +1,27 @@
 name: publish
+run-name: ${{ inputs.release_tag || github.ref_name }}
 
 on:
   push:
     tags:
-      - "pi-*/v*"
+      - "@luan.sh/pi-*@*"
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Package tag to build (defaults to the selected Git ref)
+        type: string
+        required: false
+      publish:
+        description: Publish after building (disable for initial npm registration)
+        type: boolean
+        default: true
 
 permissions:
   contents: read
   id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.release_tag || github.ref }}
 
 jobs:
   npm:
@@ -45,8 +55,25 @@ jobs:
       - name: Test release selection
         run: bun test ./.github/scripts/publish-package.test.ts
 
-      - name: Publish the tagged package
+      - name: Build package archive
+        id: archive
         env:
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+          RELEASE_ACTION: pack
+        run: |
+          archive="$(bash .github/scripts/publish-package.sh)"
+          echo "path=$archive" >> "$GITHUB_OUTPUT"
+
+      - name: Save package archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: ${{ steps.archive.outputs.path }}
+          if-no-files-found: error
+
+      - name: Publish the tagged package
+        if: github.event_name != 'workflow_dispatch' || inputs.publish
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
           NPM_PUBLISH_FLAGS: --provenance
         run: bash .github/scripts/publish-package.sh

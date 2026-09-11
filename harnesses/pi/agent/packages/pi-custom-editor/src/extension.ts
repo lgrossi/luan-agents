@@ -5,8 +5,8 @@ import {
 	requestPhaseAnimation,
 	sharedMotionScheduler,
 	subscribeTuiAppearance,
-} from "pi-libtui";
-import { editorCompositionCadenceMs, ensureEditorRegistry } from "pi-libtui/editor";
+} from "@luan.sh/pi-libtui";
+import { editorCompositionCadenceMs, ensureEditorRegistry } from "@luan.sh/pi-libtui/editor";
 import { getCustomEditorSettings, registerCustomEditorSettings } from "./config/settings.ts";
 import { defaultHighlightContributions } from "./contributions/default-highlights.ts";
 import { resolveEditorComposition } from "./core/composition.ts";

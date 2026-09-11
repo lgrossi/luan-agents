@@ -1,4 +1,4 @@
-import { TerminalProjection } from "pi-libtui/terminal";
+import { TerminalProjection } from "@luan.sh/pi-libtui/terminal";
 import type { ExecProcessSnapshot, ExecSessionManager, PtyDataEvent } from "../session-manager.ts";
 
 type ProcessControlMethods =

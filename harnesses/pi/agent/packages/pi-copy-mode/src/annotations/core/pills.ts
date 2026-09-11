@@ -1,4 +1,4 @@
-import { icon, type PillContent, renderPillText } from "pi-libtui";
+import { icon, type PillContent, renderPillText } from "@luan.sh/pi-libtui";
 import type { DraftAnnotation, ResponseAnnotation } from "./types.ts";
 
 const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });

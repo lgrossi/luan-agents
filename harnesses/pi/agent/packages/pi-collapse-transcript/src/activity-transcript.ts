@@ -1,7 +1,7 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, Spacer } from "@earendil-works/pi-tui";
-import { ComponentStack, sanitizeTuiFieldPreview } from "pi-libtui";
-import { ToolActivity, type TranscriptEntry } from "pi-libtui/tool";
+import { ComponentStack, sanitizeTuiFieldPreview } from "@luan.sh/pi-libtui";
+import { ToolActivity, type TranscriptEntry } from "@luan.sh/pi-libtui/tool";
 
 type ActivityEntry = Exclude<TranscriptEntry, { kind: "content" }>;
 

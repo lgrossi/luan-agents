@@ -1,5 +1,5 @@
 {
-  "name": "pi-xsettings",
+  "name": "@luan.sh/pi-xsettings",
   "version": "0.3.2",
   "license": "MIT",
   "repository": {
@@ -19,20 +19,20 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.mp4"
   },
   "dependencies": {
-    "pi-libactions": "workspace:*",
-    "pi-libtui": "workspace:*",
+    "@luan.sh/pi-libactions": "workspace:*",
+    "@luan.sh/pi-libtui": "workspace:*",
     "smol-toml": "1.8.0",
     "typebox": "1.3.15"
   },
   "bundledDependencies": [
-    "pi-libactions",
-    "pi-libtui"
+    "@luan.sh/pi-libactions",
+    "@luan.sh/pi-libtui"
   ],
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
@@ -49,5 +49,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "publishAliases": [
+    "pi-xsettings"
+  ]
 }

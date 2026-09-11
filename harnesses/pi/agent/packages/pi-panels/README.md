@@ -1,34 +1,34 @@
-# pi-panels
+# @luan.sh/pi-panels
 
-[Pi gallery](https://pi.dev/packages/pi-panels)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-panels)
 
-`pi-panels` is a generic side-panel host for Pi's TUI. It mounts
+`@luan.sh/pi-panels` is a generic side-panel host for Pi's TUI. It mounts
 a right-hand split pane and lets other Pi extensions contribute tabs to it.
 The host owns the split layout, focus, pointer resizing, persisted width and
 tab order, draggable pill tabs, the empty state, and the top-right show and
 zoom controls. It contains no feature content of its own: with nothing else
 installed the panel is empty. Tabs come from other packages, for example
-`pi-side`, `@cfcluan/pi-tuicr`, `pi-exec-command`,
-`@cfcluan/pi-subagents`, and `pi-xsettings`.
+`@luan.sh/pi-side`, `@luan.sh/pi-tuicr`, `@luan.sh/pi-exec-command`,
+`@luan.sh/pi-subagents`, and `@luan.sh/pi-xsettings`.
 
 ## Preview
 
-![pi-panels in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.png)
+![@luan.sh/pi-panels in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-panels
+pi install npm:@luan.sh/pi-panels
 ```
 
 The package ships its internal dependencies bundled and also loads the shared
-`pi-libtui` extension entry so the registries it relies on exist. It runs only
+`@luan.sh/pi-libtui` extension entry so the registries it relies on exist. It runs only
 in interactive TUI sessions; it does nothing in print mode, without a UI, or in
 a child process started with `PI_EMBEDDED_SIDE_CHAT=1`.
 
-Optional companion: `pi install npm:pi-xsettings` provides a
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` provides a
 shortcut host that binds the keys in your `keybindings.json` globally; without
 it, the panel's shortcuts only work while the panel itself has focus, and the
 panel is opened by contributed tabs or the top-right controls.
@@ -43,7 +43,7 @@ top-right corner of the screen toggle visibility and expand or restore the
 panel; the expand icon is shown only while the panel is visible. Resizing the
 divider while expanded returns the panel to its normal width.
 
-The extension registers these actions through `pi-libactions`. It adds no
+The extension registers these actions through `@luan.sh/pi-libactions`. It adds no
 slash commands.
 
 | Action | Effect |
@@ -85,12 +85,12 @@ an action are reported as a notification.
 
 ## Contribute a tab
 
-Providers register through `pi-libtui`, not through this package, so
-a contributor has no dependency on `pi-panels` and must keep working when
-no host is installed. The contract is exported from `pi-libtui`:
+Providers register through `@luan.sh/pi-libtui`, not through this package, so
+a contributor has no dependency on `@luan.sh/pi-panels` and must keep working when
+no host is installed. The contract is exported from `@luan.sh/pi-libtui`:
 
 ```ts
-import { registerSidePanelProvider, type SidePanelSession } from "pi-libtui";
+import { registerSidePanelProvider, type SidePanelSession } from "@luan.sh/pi-libtui";
 
 const dispose = registerSidePanelProvider(
 	{
@@ -136,7 +136,7 @@ button shown when no tabs exist, returning a disposer), `show`, `toggle`,
 
 ## Settings
 
-The package has no settings and does not use `pi-xsettings`. Layout is
+The package has no settings and does not use `@luan.sh/pi-xsettings`. Layout is
 persisted per session as a custom session entry of type
 `side-panel:layout-v1` holding `visible`, `width`, `order`, and
 `activeTabId`; the most recent valid entry on the current branch is restored
@@ -147,7 +147,7 @@ providers must re-add their tabs (usually with `restoreTab`).
 
 | Responsibility | Owner |
 | --- | --- |
-| Contribution protocol, registry, content types | `pi-libtui` (`panels.ts`) |
+| Contribution protocol, registry, content types | `@luan.sh/pi-libtui` (`panels.ts`) |
 | Pi registration, host install, top-right controls | `src/extension.ts` |
 | Panel lifecycle, tab bookkeeping, split-pane mount, zoom | `src/controller.ts` |
 | Persisted layout state and its parser | `src/state.ts` |

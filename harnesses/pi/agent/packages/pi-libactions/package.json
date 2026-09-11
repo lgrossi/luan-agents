@@ -1,5 +1,5 @@
 {
-  "name": "pi-libactions",
+  "name": "@luan.sh/pi-libactions",
   "version": "0.3.2",
   "license": "MIT",
   "repository": {
@@ -36,5 +36,8 @@
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
   },
-  "bundledDependencies": []
+  "bundledDependencies": [],
+  "publishAliases": [
+    "pi-libactions"
+  ]
 }

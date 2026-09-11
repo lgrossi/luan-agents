@@ -1,6 +1,6 @@
-# pi-thinking-binding
+# @luan.sh/pi-thinking-binding
 
-[Pi gallery](https://pi.dev/packages/pi-thinking-binding)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-thinking-binding)
 
 A Pi extension that drops Anthropic thinking blocks a system prompt or tool
 change has already invalidated, so the `prefix_binding_mismatch` warning
@@ -9,7 +9,7 @@ appears once instead of on every turn.
 ## Install
 
 ```
-pi install npm:pi-thinking-binding
+pi install npm:@luan.sh/pi-thinking-binding
 ```
 
 Nothing else is needed. The extension registers no tools, commands, settings,
@@ -51,7 +51,7 @@ A message whose only content is thinking is never emptied; it is left as is.
 
 ## State
 
-State lives in the session as `custom` entries of type `pi-thinking-binding`,
+State lives in the session as `custom` entries of type `@luan.sh/pi-thinking-binding`,
 one per prefix change on the branch:
 
 ```json
@@ -72,7 +72,7 @@ keybindings, or environment variables.
 
 ## Programmatic use
 
-`pi-thinking-binding` exports the core functions for reuse or
+`@luan.sh/pi-thinking-binding` exports the core functions for reuse or
 testing: `BINDING_ENTRY_TYPE`, `BindingState`, `fingerprintPrefix`,
 `newestAssistantTimestamp`, `parseAnthropicPayload`, `readBindingState`,
 `reportsPrefixMismatch`, `stripPayloadThinking`, `stripStaleThinking`.

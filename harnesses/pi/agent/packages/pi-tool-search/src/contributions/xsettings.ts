@@ -1,4 +1,4 @@
-import { createSettings, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import { createSettings, type SettingDefinitionInput, type SettingsOf } from "@luan.sh/pi-xsettings/sdk";
 
 export interface ToolSearchOption {
 	name: string;

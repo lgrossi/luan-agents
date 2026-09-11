@@ -7,7 +7,7 @@ import {
 	stripTerminalSequences,
 	TUI_KEYBINDINGS,
 } from "@earendil-works/pi-tui";
-import type { DialogHost, TuiTitleSource } from "pi-libtui";
+import type { DialogHost, TuiTitleSource } from "@luan.sh/pi-libtui";
 import { StringListEditor } from "../src/ui/string-list-editor.ts";
 
 const theme = {

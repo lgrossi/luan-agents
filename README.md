@@ -35,25 +35,25 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 
 | Package | What it adds | Gallery |
 | --- | --- | --- |
-| [`pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. | [Pi gallery](https://pi.dev/packages/pi-fileops) |
-| [`@cfcluan/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-code-mode) |
-| [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. | [Pi gallery](https://pi.dev/packages/pi-codex-native) |
-| [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. | [Pi gallery](https://pi.dev/packages/pi-copy-mode) |
-| [`pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. | [Pi gallery](https://pi.dev/packages/pi-collapse-transcript) |
-| [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. | [Pi gallery](https://pi.dev/packages/pi-developer-messages) |
-| [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. | [Pi gallery](https://pi.dev/packages/pi-exec-command) |
-| [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. | [Pi gallery](https://pi.dev/packages/pi-libtui) |
-| [`@cfcluan/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-skills) |
-| [`@cfcluan/pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-tool-search) |
-| [`pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. | [Pi gallery](https://pi.dev/packages/pi-view-image) |
-| [`pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. | [Pi gallery](https://pi.dev/packages/pi-xsettings) |
-| [`pi-custom-editor`](harnesses/pi/agent/packages/pi-custom-editor/README.md) | Custom editor layouts, file and skill tokens, and a semantic status footer. | [Pi gallery](https://pi.dev/packages/pi-custom-editor) |
-| [`pi-panels`](harnesses/pi/agent/packages/pi-panels/README.md) | Contributed side-panel tabs with focus, resize, reorder, and zoom controls. | [Pi gallery](https://pi.dev/packages/pi-panels) |
-| [`pi-prompt-storage`](harnesses/pi/agent/packages/pi-prompt-storage/README.md) | Draft stashing and searchable prompt history. | [Pi gallery](https://pi.dev/packages/pi-prompt-storage) |
-| [`pi-side`](harnesses/pi/agent/packages/pi-side/README.md) | Independent side conversations alongside the main session. | [Pi gallery](https://pi.dev/packages/pi-side) |
-| [`@cfcluan/pi-subagents`](harnesses/pi/agent/packages/pi-subagents/README.md) | Concurrent, nested subagents with an Agent Hub for inspecting their work. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-subagents) |
-| [`pi-thinking-binding`](harnesses/pi/agent/packages/pi-thinking-binding/README.md) | Drops Anthropic thinking blocks invalidated by system-prompt or tool changes. | [Pi gallery](https://pi.dev/packages/pi-thinking-binding) |
-| [`@cfcluan/pi-tuicr`](harnesses/pi/agent/packages/pi-tuicr/README.md) | Embedded Tuicr review with comments returned to Pi as prompt attachments. | [Pi gallery](https://pi.dev/packages/@cfcluan/pi-tuicr) |
+| [`@luan.sh/pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-fileops) |
+| [`@luan.sh/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-code-mode) |
+| [`@luan.sh/pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-codex-native) |
+| [`@luan.sh/pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-copy-mode) |
+| [`@luan.sh/pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-collapse-transcript) |
+| [`@luan.sh/pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-developer-messages) |
+| [`@luan.sh/pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-exec-command) |
+| [`@luan.sh/pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-libtui) |
+| [`@luan.sh/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-skills) |
+| [`@luan.sh/pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-tool-search) |
+| [`@luan.sh/pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-view-image) |
+| [`@luan.sh/pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-xsettings) |
+| [`@luan.sh/pi-custom-editor`](harnesses/pi/agent/packages/pi-custom-editor/README.md) | Custom editor layouts, file and skill tokens, and a semantic status footer. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-custom-editor) |
+| [`@luan.sh/pi-panels`](harnesses/pi/agent/packages/pi-panels/README.md) | Contributed side-panel tabs with focus, resize, reorder, and zoom controls. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-panels) |
+| [`@luan.sh/pi-prompt-storage`](harnesses/pi/agent/packages/pi-prompt-storage/README.md) | Draft stashing and searchable prompt history. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-prompt-storage) |
+| [`@luan.sh/pi-side`](harnesses/pi/agent/packages/pi-side/README.md) | Independent side conversations alongside the main session. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-side) |
+| [`@luan.sh/pi-subagents`](harnesses/pi/agent/packages/pi-subagents/README.md) | Concurrent, nested subagents with an Agent Hub for inspecting their work. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-subagents) |
+| [`@luan.sh/pi-thinking-binding`](harnesses/pi/agent/packages/pi-thinking-binding/README.md) | Drops Anthropic thinking blocks invalidated by system-prompt or tool changes. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-thinking-binding) |
+| [`@luan.sh/pi-tuicr`](harnesses/pi/agent/packages/pi-tuicr/README.md) | Embedded Tuicr review with comments returned to Pi as prompt attachments. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-tuicr) |
 
 ## Shared Pi libraries
 
@@ -61,9 +61,9 @@ These packages register no Pi extension by themselves.
 
 | Package | What it owns | Gallery |
 | --- | --- | --- |
-| [`pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. | [Pi gallery](https://pi.dev/packages/pi-libactions) |
+| [`@luan.sh/pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-libactions) |
 
-`pi-libtui` is the one deliberate dual-role package: imports expose reusable components without side effects, while its extension entry point installs generic terminal compatibility for Pi.
+`@luan.sh/pi-libtui` is the one deliberate dual-role package: imports expose reusable components without side effects, while its extension entry point installs generic terminal compatibility for Pi.
 
 ## Native tools
 
@@ -134,17 +134,18 @@ See [the package migration](docs/pi-package-migration.md) for renamed packages a
 ## Release
 
 Each package has its own version and release tag. Bump only the package being
-released, commit, then tag that commit with its package directory and version:
+released, commit, then tag that commit with its full npm name and version:
 
 ```sh
-git tag pi-codex-native/v0.3.8
-git push origin main pi-codex-native/v0.3.8
+git tag @luan.sh/pi-codex-native@0.3.8
+git push origin main @luan.sh/pi-codex-native@0.3.8
 ```
 
 `.github/workflows/publish.yml` publishes only the named package, checks that
 its version matches the tag, and skips versions already on npm. Other packages
-may have the same version without being released. Scoped npm names still use
-the unscoped directory in the tag, for example `pi-code-mode/v0.3.8`.
+may have the same version without being released. Tags include the scope, for example `@luan.sh/pi-code-mode@0.3.8`.
+Packages with `publishAliases` also publish the same release under the listed
+bare names. Existing versions are skipped independently for each name.
 
 CI authenticates with npm trusted publishing (OIDC); each package must list
 this repository's `publish.yml` as a trusted publisher on npmjs.com once.

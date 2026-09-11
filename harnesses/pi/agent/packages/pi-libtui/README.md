@@ -1,13 +1,13 @@
-# pi-libtui
+# @luan.sh/pi-libtui
 
-[Pi gallery](https://pi.dev/packages/pi-libtui)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-libtui)
 
 Shared terminal UI for Pi extensions: layouts, split panes, dialogs, pickers,
 selection actions, semantic colors, icons, cursors, syntax highlighting,
 animated tool surfaces, streamed output, diffs, terminal projection, and the
 protocols those pieces need. The primary audience is extension authors.
 
-The package has two surfaces. `import "pi-libtui"` is a
+The package has two surfaces. `import "@luan.sh/pi-libtui"` is a
 side-effect-free library: it does not start Pi, probe the terminal, register a
 tool, or install UI. `src/extension.ts` is a Pi extension (listed in the
 package's `pi.extensions`) that installs the generic mouse, cursor, and
@@ -20,24 +20,24 @@ registers no model-facing tools, keybindings, or feature-specific UI.
 
 The native palette diagnostic and shared picker components in Xsettings.
 
-![pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.png)
+![@luan.sh/pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-libtui
+pi install npm:@luan.sh/pi-libtui
 ```
 
 This loads the host extension and the `harmonious` theme on its own. Feature
-packages normally bundle their own copy instead: add `pi-libtui` to
+packages normally bundle their own copy instead: add `@luan.sh/pi-libtui` to
 both `dependencies` and `bundledDependencies` in `package.json`, and list
 `"./node_modules/pi-libtui/src/extension.ts"` in the package's
 `pi.extensions` so the mouse/cursor bridge is active. The host claims itself
 once per process, so several installed copies do not conflict.
 
-Optional companion: `pi install npm:pi-xsettings` adds the `/xsettings`
+Optional companion: `pi install npm:@luan.sh/pi-xsettings` adds the `/xsettings`
 UI that publishes the appearance settings below; without it the compiled
 defaults apply.
 
@@ -56,15 +56,15 @@ Pi-native behaviour also needs the extension loaded.
 
 | Import path | Principal exports / capability | Host required |
 | --- | --- | --- |
-| `pi-libtui` | Layouts, split panes, side-panel protocol, dialogs, pickers, inputs, selection actions, semantic colors, icons, cursors, `PtyProcess`, `PtyPane`, `applyScrollbar`, `PointerInteractionController`, `RenderedLinesCache`, `SyntaxText`, motion/progress, appearance (`getTuiAppearance`, `configureTuiAppearance`, `subscribeTuiAppearance`), `ensureNativeBinary` | Rendering no; panes, PTYs, and bridges yes |
-| `pi-libtui/diff` | `createUnifiedDiffModel`, `parseUnifiedDiff`, `renderUnifiedDiff`, `UnifiedDiffView`, bounded diff models/viewports | No |
-| `pi-libtui/editor` | `ensureEditorRegistry`, `dispatchEditorPaste`, `dispatchEditorRender`, `SemanticEditor`, `semanticEditorTheme`, editor registry contracts | Only to connect the registry to Pi's editor |
-| `pi-libtui/folding` | `ensureFoldingRegistry`, `foldTargetAt`, `clearFoldingCurrent`, fold-target contracts | Only for copy-mode keyboard integration |
-| `pi-libtui/mouse` | `ensureMouseRegistry`, `registerModalPointerShield`, viewport handlers, pointer contracts, `getFullscreenLayoutCapability`, `publishFullscreenLayoutCapability`, `resolveFullscreenLayout` | Yes for terminal pointer events and layout geometry |
-| `pi-libtui/selection` | `ensureSelectionRegistry`, native selection geometry, completion events, action contracts | Yes for Pi-native selection events |
-| `pi-libtui/stream` | `BoundedStreamBuffer`, bounded UTF-8/ANSI-safe stream snapshots | No |
-| `pi-libtui/terminal` | `TerminalProjection`, incremental `TerminalOutput` for bounded PTY/ANSI projection | No |
-| `pi-libtui/tool` | `ToolAction`, `LiveToolAction`, `ToolDisclosureAction`, `ToolActivity`, `ToolOutput`, `ToolTranscript`, `ToolViewRegion`, tool-call preview helpers | No for rendering |
+| `@luan.sh/pi-libtui` | Layouts, split panes, side-panel protocol, dialogs, pickers, inputs, selection actions, semantic colors, icons, cursors, `PtyProcess`, `PtyPane`, `applyScrollbar`, `PointerInteractionController`, `RenderedLinesCache`, `SyntaxText`, motion/progress, appearance (`getTuiAppearance`, `configureTuiAppearance`, `subscribeTuiAppearance`), `ensureNativeBinary` | Rendering no; panes, PTYs, and bridges yes |
+| `@luan.sh/pi-libtui/diff` | `createUnifiedDiffModel`, `parseUnifiedDiff`, `renderUnifiedDiff`, `UnifiedDiffView`, bounded diff models/viewports | No |
+| `@luan.sh/pi-libtui/editor` | `ensureEditorRegistry`, `dispatchEditorPaste`, `dispatchEditorRender`, `SemanticEditor`, `semanticEditorTheme`, editor registry contracts | Only to connect the registry to Pi's editor |
+| `@luan.sh/pi-libtui/folding` | `ensureFoldingRegistry`, `foldTargetAt`, `clearFoldingCurrent`, fold-target contracts | Only for copy-mode keyboard integration |
+| `@luan.sh/pi-libtui/mouse` | `ensureMouseRegistry`, `registerModalPointerShield`, viewport handlers, pointer contracts, `getFullscreenLayoutCapability`, `publishFullscreenLayoutCapability`, `resolveFullscreenLayout` | Yes for terminal pointer events and layout geometry |
+| `@luan.sh/pi-libtui/selection` | `ensureSelectionRegistry`, native selection geometry, completion events, action contracts | Yes for Pi-native selection events |
+| `@luan.sh/pi-libtui/stream` | `BoundedStreamBuffer`, bounded UTF-8/ANSI-safe stream snapshots | No |
+| `@luan.sh/pi-libtui/terminal` | `TerminalProjection`, incremental `TerminalOutput` for bounded PTY/ANSI projection | No |
+| `@luan.sh/pi-libtui/tool` | `ToolAction`, `LiveToolAction`, `ToolDisclosureAction`, `ToolActivity`, `ToolOutput`, `ToolTranscript`, `ToolViewRegion`, tool-call preview helpers | No for rendering |
 
 The `ensure*Registry` functions create or reuse a process-global capability
 keyed by `Symbol.for`, so feature packages and the host share one instance.
@@ -127,8 +127,8 @@ shape is absent.
 
 This package has no settings store of its own. It exposes an appearance
 registry with compiled defaults (`DEFAULT_TUI_APPEARANCE`) that a settings host
-such as `pi-xsettings` overrides through `configureTuiAppearance()`;
-with pi-xsettings installed they are edited live via `/xsettings`. Keys and
+such as `@luan.sh/pi-xsettings` overrides through `configureTuiAppearance()`;
+with @luan.sh/pi-xsettings installed they are edited live via `/xsettings`. Keys and
 defaults:
 
 | Key | Default | Values |
@@ -190,7 +190,7 @@ through `src/color/resolver.ts`. Feature code uses only the root color API:
 ## Troubleshooting
 
 - A feature renders but clicks do nothing: the host extension is not loaded.
-  Install `pi-libtui` as a Pi package or list its `src/extension.ts`
+  Install `@luan.sh/pi-libtui` as a Pi package or list its `src/extension.ts`
   in the feature package's `pi.extensions`.
 - Nerd Font or Powerline glyphs are missing: set the icon pack to `unicode` and
   disable Powerline in `/xsettings`. Those are also the compiled defaults.
@@ -204,5 +204,5 @@ harnesses/pi/agent/packages/pi-libtui. Run `bun run typecheck` and
 `bun test test` in that directory. When running from that checkout,
 `ensureNativeBinary` also looks for `target/{release,debug}/<name>` in the Cargo
 workspace and reports an unbuilt checkout instead of building. `just pi-pack`
-records the checkout commit in every bundled `pi-libtui/native-revision` file,
+records the checkout commit in every bundled `@luan.sh/pi-libtui/native-revision` file,
 so native builds do not depend on npm versions or repository-wide release tags.

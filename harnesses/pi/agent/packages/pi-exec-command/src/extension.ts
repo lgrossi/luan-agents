@@ -5,7 +5,11 @@ import {
 	getAgentDir,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
-import { registerSidePanelProvider, type ActivityAnimationOverrides, terminalBridgeBinaryPath } from "pi-libtui";
+import {
+	registerSidePanelProvider,
+	type ActivityAnimationOverrides,
+	terminalBridgeBinaryPath,
+} from "@luan.sh/pi-libtui";
 import { registerCodeModeExecAdapters } from "./code-mode-adapters.ts";
 import { openRegisteredProcessHub, registerProcessHubHost, retainProcessHubAction } from "./contributions/actions.ts";
 import {

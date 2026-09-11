@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan.sh/pi-libactions/sdk";
 import {
 	DEFAULT_CODEX_NATIVE_SETTINGS,
 	type CodexNativeSettings,

@@ -1,4 +1,9 @@
-import { createSettings, stringListSetting, type SettingDefinitionInput, type SettingsOf } from "pi-xsettings/sdk";
+import {
+	createSettings,
+	stringListSetting,
+	type SettingDefinitionInput,
+	type SettingsOf,
+} from "@luan.sh/pi-xsettings/sdk";
 
 export const DEFAULT_REACTIONS = [
 	"👍 Looks good",

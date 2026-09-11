@@ -1,5 +1,5 @@
 {
-  "name": "pi-codex-native",
+  "name": "@luan.sh/pi-codex-native",
   "version": "0.3.8",
   "license": "MIT",
   "repository": {
@@ -19,7 +19,7 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.mp4"
@@ -33,18 +33,18 @@
   },
   "dependencies": {
     "partial-json": "^0.1.7",
-    "pi-libactions": "workspace:*",
-    "pi-libtui": "workspace:*",
-    "@cfcluan/pi-code-mode": "workspace:*",
-    "pi-xsettings": "workspace:*",
+    "@luan.sh/pi-libactions": "workspace:*",
+    "@luan.sh/pi-libtui": "workspace:*",
+    "@luan.sh/pi-code-mode": "workspace:*",
+    "@luan.sh/pi-xsettings": "workspace:*",
     "proxy-from-env": "^2.1.0",
     "undici": "^8.10.0"
   },
   "bundledDependencies": [
-    "pi-libactions",
-    "pi-libtui",
-    "@cfcluan/pi-code-mode",
-    "pi-xsettings"
+    "@luan.sh/pi-libactions",
+    "@luan.sh/pi-libtui",
+    "@luan.sh/pi-code-mode",
+    "@luan.sh/pi-xsettings"
   ],
   "devDependencies": {
     "@earendil-works/pi-agent-core": "0.84.2",
@@ -57,5 +57,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "publishAliases": [
+    "pi-codex-native"
+  ]
 }

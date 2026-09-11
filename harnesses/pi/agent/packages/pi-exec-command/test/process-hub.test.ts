@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences } from "@earendil-works/pi-tui";
-import { ensureActionsRegistry } from "pi-libactions/sdk";
+import { ensureActionsRegistry } from "@luan.sh/pi-libactions/sdk";
 import {
 	openRegisteredProcessHub,
 	registerProcessHubHost,

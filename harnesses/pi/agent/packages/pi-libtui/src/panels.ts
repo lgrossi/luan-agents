@@ -1,7 +1,7 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import type { Component, Focusable } from "@earendil-works/pi-tui";
-import type { SplitPaneHost, TuiIconName } from "pi-libtui";
-import type { TuiMouseEvent } from "pi-libtui/mouse";
+import type { SplitPaneHost, TuiIconName } from "@luan.sh/pi-libtui";
+import type { TuiMouseEvent } from "@luan.sh/pi-libtui/mouse";
 
 export const SIDE_PANEL_REGISTRY_KEY = Symbol.for("pi-panels/registry/v1");
 export const SIDE_PANEL_PROTOCOL = "pi-panels/registry/v1" as const;

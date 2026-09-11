@@ -1,12 +1,12 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext, SessionBeforeCompactEvent } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
+import { registerAction } from "@luan.sh/pi-libactions/sdk";
 import {
 	CONTEXT_WINDOW_PRESETS,
 	type ContextWindowPreset,
 	requestedContextWindowPreset,
 } from "./protocol/context-window.ts";
-import { tuiTheme } from "pi-libtui";
+import { tuiTheme } from "@luan.sh/pi-libtui";
 import {
 	CODEX_CONTEXT_COLORS,
 	CODEX_CONTEXT_WINDOWS,

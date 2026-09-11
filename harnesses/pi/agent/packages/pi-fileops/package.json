@@ -1,5 +1,5 @@
 {
-  "name": "pi-fileops",
+  "name": "@luan.sh/pi-fileops",
   "version": "0.3.7",
   "license": "MIT",
   "repository": {
@@ -18,18 +18,18 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.mp4"
   },
   "dependencies": {
-    "@cfcluan/pi-code-mode": "workspace:*",
-    "pi-libtui": "workspace:*"
+    "@luan.sh/pi-code-mode": "workspace:*",
+    "@luan.sh/pi-libtui": "workspace:*"
   },
   "bundledDependencies": [
-    "@cfcluan/pi-code-mode",
-    "pi-libtui"
+    "@luan.sh/pi-code-mode",
+    "@luan.sh/pi-libtui"
   ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
@@ -42,5 +42,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "publishAliases": [
+    "pi-fileops"
+  ]
 }

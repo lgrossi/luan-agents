@@ -1,8 +1,8 @@
-# pi-side
+# @luan.sh/pi-side
 
-[Pi gallery](https://pi.dev/packages/pi-side)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-side)
 
-`pi-side` opens independent, interactive Pi sessions next to the
+`@luan.sh/pi-side` opens independent, interactive Pi sessions next to the
 one you are working in. Each side chat is a real child `pi` process running in
 a PTY. It starts with a copy of the parent session's model-visible history,
 followed by a hidden boundary message that tells the model the inherited
@@ -16,20 +16,20 @@ It is a Pi extension, not a model-facing tool. It registers one command
 
 Independent side conversation beside the main Pi session.
 
-![pi-side in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.png)
+![@luan.sh/pi-side in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-side
+pi install npm:@luan.sh/pi-side
 ```
 
 The package requires Pi's interactive TUI. In print or non-UI mode the `/side`
 command reports that side chat is unavailable.
 
-Optional companion: `pi install npm:pi-panels` hosts each side
+Optional companion: `pi install npm:@luan.sh/pi-panels` hosts each side
 chat as a tab in a side panel; without it, side chats open in a fullscreen
 overlay instead (see below).
 
@@ -61,7 +61,7 @@ two surfaces are distinguishable. The environment variable
 Child sessions are stored in `side-chats/<uuid>/` under the parent's session
 directory, together with the generated theme file
 `side-chat-<uuid>.json`. When the parent runs without a session file
-(`--no-session`), they go under `pi-side/<parent-session-id>/` in the OS
+(`--no-session`), they go under `@luan.sh/pi-side/<parent-session-id>/` in the OS
 temporary directory instead.
 
 ### Inherited history
@@ -75,7 +75,7 @@ off-limits, and that it must not modify files or state unless the user
 explicitly asks after the boundary. The child session records the parent
 session file as its parent.
 
-### With and without `pi-panels`
+### With and without `@luan.sh/pi-panels`
 
 The package registers a side-panel provider. When a side-panel host is
 present, each chat appears as a tab labelled `Side N` with a `󱐒` icon, and the
@@ -117,7 +117,7 @@ value is a key ID string or an array of them:
 Key IDs are a base key optionally preceded by `ctrl`, `shift`, `alt`, or
 `super`, joined with `+`. The file is read on load, so reload extensions after
 editing. Bindings only take effect when a shortcut host is installed
-(`pi install npm:pi-xsettings` provides one). `/side` works without
+(`pi install npm:@luan.sh/pi-xsettings` provides one). `/side` works without
 any binding.
 
 ## Layout

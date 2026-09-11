@@ -1,7 +1,7 @@
 # Context-window preference capability
 
 The Codex provider owns this UI-free protocol. Import its public helpers from
-`pi-codex-native/context-window`, or contribute through the versioned
+`@luan.sh/pi-codex-native/context-window`, or contribute through the versioned
 structural registry without a runtime dependency on the provider. The original
 `pi-codex-native/sources/v1` identity is retained so older SDK copies continue to
 interoperate.
@@ -35,7 +35,7 @@ A source has an `id` and a `preset(ctx)` function that derives a preset for the
 current `ExtensionContext`, or returns `undefined` to make no request:
 
 ```ts
-import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "pi-codex-native/context-window";
+import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "@luan.sh/pi-codex-native/context-window";
 
 const unregister = ensureContextWindowSourceRegistry().register({
   id: "example",

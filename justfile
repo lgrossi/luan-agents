@@ -33,7 +33,7 @@ pi-test:
     bun run --cwd "{{ repo }}" test:pi
 
 # Build a publishable npm tarball for one Pi package. Workspace deps are bundled from sibling packages.
-pi-pack package dest="target/npm":
+pi-pack package dest="target/npm" publish_name="":
     @stage="$(mktemp -d)"; \
     trap 'rm -rf "$stage"' EXIT; \
     package_path="$(cd "$(dirname "{{ package }}")" && pwd)/$(basename "{{ package }}")"; \
@@ -48,6 +48,7 @@ pi-pack package dest="target/npm":
     git -C "{{ repo }}" rev-parse HEAD > "$stage/packages/pi-libtui/native-revision"; \
     cd "$stage/packages/$package_name"; \
     npm install --ignore-scripts --package-lock=false --install-links --omit=dev --no-audit --no-fund >/dev/null; \
+    if test -n "{{ publish_name }}"; then bun -e 'const name=process.argv[1]; const manifest=await Bun.file("package.json").json(); if(name !== manifest.name && !(manifest.publishAliases ?? []).includes(name)) throw new Error("unconfigured publish alias: " + name); manifest.name=name; await Bun.write("package.json",JSON.stringify(manifest,null,2) + "\n");' "{{ publish_name }}"; fi; \
     archive="$(npm pack --ignore-scripts --pack-destination "$dest" 2>/dev/null | tail -n 1)"; test -f "$dest/$archive"; echo "$dest/$archive"
 
 # Publish one package from its package-specific tag. CI supplies npm trusted publishing credentials.
@@ -55,13 +56,16 @@ pi-pack package dest="target/npm":
 pi-publish package:
     @manifest="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log(m.name + " " + m.version);' "{{ package }}")"; \
     name="${manifest% *}"; version="${manifest#* }"; \
-    tag="$(basename "{{ package }}")/v$version"; \
+    tag="$name@$version"; \
     tagged_revision="$(git -C "{{ repo }}" rev-parse --verify "refs/tags/$tag^{commit}")"; \
     if test "$tagged_revision" != "$(git -C "{{ repo }}" rev-parse HEAD)"; then echo "check out $tag before publishing" >&2; exit 1; fi; \
     git -C "{{ repo }}" diff --exit-code HEAD -- Cargo.toml Cargo.lock crates harnesses/pi/agent/packages >/dev/null; \
-    if test -n "$(npm view "$name@$version" version 2>/dev/null)"; then echo "$name@$version is already published"; exit 0; fi; \
-    archive="$(just repo="{{ repo }}" pi-pack "{{ package }}")"; \
-    npm publish --access public ${NPM_PUBLISH_FLAGS:-} "$archive"
+    names="$(bun -e 'const m=await Bun.file(process.argv[1] + "/package.json").json(); console.log([m.name,...(m.publishAliases ?? [])].join("\n"));' "{{ package }}")"; \
+    for publish_name in $names; do \
+        if test -n "$(npm view "$publish_name@$version" version 2>/dev/null)"; then echo "$publish_name@$version is already published"; continue; fi; \
+        archive="$(just repo="{{ repo }}" pi-pack "{{ package }}" "{{ repo }}/target/npm" "$publish_name")"; \
+        npm publish --access public ${NPM_PUBLISH_FLAGS:-} "$archive"; \
+    done
 
 # Pack one Pi package, then install and load it from a temporary agent directory.
 pi-install-check package:

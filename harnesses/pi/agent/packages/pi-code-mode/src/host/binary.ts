@@ -1,4 +1,4 @@
-import { ensureNativeBinary, type NativeBinary } from "pi-libtui";
+import { ensureNativeBinary, type NativeBinary } from "@luan.sh/pi-libtui";
 
 export const CODE_MODE_HOST_ENV = "PI_CODE_MODE_HOST_BINARY";
 

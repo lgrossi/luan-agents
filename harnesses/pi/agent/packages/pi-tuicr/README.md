@@ -1,8 +1,8 @@
-# @cfcluan/pi-tuicr
+# @luan.sh/pi-tuicr
 
-[Pi gallery](https://pi.dev/packages/@cfcluan/pi-tuicr)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-tuicr)
 
-`@cfcluan/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
+`@luan.sh/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
 opens a picker of git review targets, launches `tuicr` in an embedded terminal,
 and watches tuicr's session files for review comments. Comments written in
 tuicr appear in Pi's editor as a single attachment pill and expand into a
@@ -13,14 +13,14 @@ no settings.
 
 ## Preview
 
-![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.png)
+![@luan.sh/pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@cfcluan/pi-tuicr
+pi install npm:@luan.sh/pi-tuicr
 ```
 
 ### Requirements
@@ -37,7 +37,7 @@ pi install npm:@cfcluan/pi-tuicr
 
 ### Optional companion
 
-`pi install npm:pi-panels` adds a side panel; when it is present,
+`pi install npm:@luan.sh/pi-panels` adds a side panel; when it is present,
 reviews open as panel tabs, and when it is absent, they open in a fullscreen
 overlay. Both modes are described below.
 
@@ -120,7 +120,7 @@ on macOS, `%LOCALAPPDATA%\tuicr\reviews\sessions` on Windows, and
 
 ## Keybindings
 
-`panels.tuicr.open` is registered through `pi-libactions` and has no
+`panels.tuicr.open` is registered through `@luan.sh/pi-libactions` and has no
 default key. Bind it in `keybindings.json` in Pi's agent directory (normally
 `~/.pi/agent/keybindings.json`). The file maps action IDs to a key ID or an
 array of key IDs:
@@ -132,12 +132,12 @@ array of key IDs:
 ```
 
 Bindings take effect only when a shortcut host is installed
-(`pi install npm:pi-xsettings` provides one). The file is read on
+(`pi install npm:@luan.sh/pi-xsettings` provides one). The file is read on
 load, so `/reload` after editing it.
 
 ## Settings
 
-None. The package does not read `pi-xsettings` or any configuration file.
+None. The package does not read `@luan.sh/pi-xsettings` or any configuration file.
 
 ## Library API
 

@@ -1,5 +1,5 @@
 {
-  "name": "pi-exec-command",
+  "name": "@luan.sh/pi-exec-command",
   "version": "0.3.7",
   "license": "MIT",
   "repository": {
@@ -18,7 +18,7 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.mp4"
@@ -29,16 +29,16 @@
     "typebox": "*"
   },
   "dependencies": {
-    "@cfcluan/pi-code-mode": "workspace:*",
-    "pi-libactions": "workspace:*",
-    "pi-libtui": "workspace:*",
-    "pi-xsettings": "workspace:*"
+    "@luan.sh/pi-code-mode": "workspace:*",
+    "@luan.sh/pi-libactions": "workspace:*",
+    "@luan.sh/pi-libtui": "workspace:*",
+    "@luan.sh/pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "@cfcluan/pi-code-mode",
-    "pi-libactions",
-    "pi-libtui",
-    "pi-xsettings"
+    "@luan.sh/pi-code-mode",
+    "@luan.sh/pi-libactions",
+    "@luan.sh/pi-libtui",
+    "@luan.sh/pi-xsettings"
   ],
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.84.2",
@@ -49,5 +49,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "publishAliases": [
+    "pi-exec-command"
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "pi-prompt-storage",
+  "name": "@luan.sh/pi-prompt-storage",
   "version": "0.3.2",
   "license": "MIT",
   "repository": {
@@ -18,16 +18,16 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-prompt-storage.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-prompt-storage.mp4"
   },
   "dependencies": {
-    "pi-libtui": "workspace:*"
+    "@luan.sh/pi-libtui": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-libtui"
+    "@luan.sh/pi-libtui"
   ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
@@ -42,5 +42,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures test"
-  }
+  },
+  "publishAliases": [
+    "pi-prompt-storage"
+  ]
 }

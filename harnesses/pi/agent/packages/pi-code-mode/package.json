@@ -1,5 +1,5 @@
 {
-  "name": "@cfcluan/pi-code-mode",
+  "name": "@luan.sh/pi-code-mode",
   "version": "0.3.8",
   "license": "MIT",
   "repository": {
@@ -19,7 +19,7 @@
   "pi": {
     "extensions": [
       "./src/extension.ts",
-      "./node_modules/pi-libtui/src/extension.ts"
+      "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
     "image": "https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.png",
     "video": "https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.mp4"
@@ -30,12 +30,12 @@
     "typebox": "*"
   },
   "dependencies": {
-    "pi-libtui": "workspace:*",
-    "pi-xsettings": "workspace:*"
+    "@luan.sh/pi-libtui": "workspace:*",
+    "@luan.sh/pi-xsettings": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-libtui",
-    "pi-xsettings"
+    "@luan.sh/pi-libtui",
+    "@luan.sh/pi-xsettings"
   ],
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.84.2",
@@ -46,5 +46,8 @@
   "scripts": {
     "typecheck": "tsc --build",
     "test": "bun test --only-failures \"$PWD/test\""
-  }
+  },
+  "publishAliases": [
+    "pi-code-mode"
+  ]
 }

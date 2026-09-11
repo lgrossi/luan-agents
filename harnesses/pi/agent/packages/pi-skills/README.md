@@ -1,8 +1,8 @@
-# @cfcluan/pi-skills
+# @luan.sh/pi-skills
 
-[Pi gallery](https://pi.dev/packages/@cfcluan/pi-skills)
+[Pi gallery](https://pi.dev/packages/@luan.sh/pi-skills)
 
-`pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
+`@luan.sh/pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
 into the conversation by exact name, so the model can pull in detailed
 instructions only when a task needs them. The package also lists available
 skills in the developer prompt, autocompletes `$skill` references in the
@@ -10,14 +10,14 @@ editor, and shows loaded skills as compact rows in the transcript.
 
 ## Preview
 
-![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.png)
+![@luan.sh/pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.png)
 
 [Watch the demo](https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@cfcluan/pi-skills
+pi install npm:@luan.sh/pi-skills
 ```
 
 Code Mode is bundled. It requires a Rust toolchain (https://rustup.rs). The
@@ -27,12 +27,12 @@ prebuilt binary.
 
 Optional companions:
 
-- `pi install npm:pi-xsettings` adds the `/xsettings` editor for the
+- `pi install npm:@luan.sh/pi-xsettings` adds the `/xsettings` editor for the
   setting listed below; without it the default applies.
-- `pi install npm:pi-developer-messages` renders the skill catalogue
+- `pi install npm:@luan.sh/pi-developer-messages` renders the skill catalogue
   into the developer prompt; without it the catalogue contribution is
   registered but nothing displays it.
-- `pi install npm:pi-custom-editor` renders known `$skill` references
+- `pi install npm:@luan.sh/pi-custom-editor` renders known `$skill` references
   in the editor as pills; without it they stay plain text while typing.
 
 ## How skills are discovered
@@ -62,7 +62,7 @@ Call the tool with the exact name:
 ```
 
 The tool reads the `SKILL.md`, removes YAML frontmatter, and sends the body to
-Pi as a steering message with custom type `pi-skills/loaded`:
+Pi as a steering message with custom type `@luan.sh/pi-skills/loaded`:
 
 ```xml
 <skill>
@@ -121,7 +121,7 @@ Skills flagged `disableModelInvocation` are omitted.
 
 ## Settings
 
-Namespace `pi-skills`. Edited via `/xsettings` when `pi-xsettings` is
+Namespace `@luan.sh/pi-skills`. Edited via `/xsettings` when `@luan.sh/pi-xsettings` is
 installed; otherwise the default applies.
 
 | Key | Default | Meaning |
@@ -178,7 +178,7 @@ This package registers no keyboard actions.
   discovered `SKILL.md` exactly, including case and punctuation.
 - **No catalogue in the prompt:** check `catalogVisibility`, make sure `skill`
   or `exec` is active when it is `when-active`, and install
-  `pi-developer-messages`.
+  `@luan.sh/pi-developer-messages`.
 - **Loaded text not visible:** expand the skill row; the text is already in
   model context.
 
