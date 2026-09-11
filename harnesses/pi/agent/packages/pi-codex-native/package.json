@@ -1,6 +1,6 @@
 {
   "name": "pi-codex-native",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
     "partial-json": "^0.1.7",
     "pi-libactions": "workspace:*",
     "pi-libtui": "workspace:*",
-    "pi-codemode": "workspace:*",
+    "@cfcluan/pi-code-mode": "workspace:*",
     "pi-xsettings": "workspace:*",
     "proxy-from-env": "^2.1.0",
     "undici": "^8.10.0"
@@ -43,7 +43,7 @@
   "bundledDependencies": [
     "pi-libactions",
     "pi-libtui",
-    "pi-codemode",
+    "@cfcluan/pi-code-mode",
     "pi-xsettings"
   ],
   "devDependencies": {

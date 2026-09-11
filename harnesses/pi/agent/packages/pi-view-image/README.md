@@ -26,8 +26,8 @@ itself on first use under Pi's agent directory (`native/view-image/<version>/`).
 Set `PI_VIEW_IMAGE_BIN` to use a prebuilt binary; it must point to an
 executable file. Pi shows an info notification while the first build runs.
 
-Code Mode support is bundled. If `pi-codemode` is also installed
-(`pi install npm:pi-codemode`), `view_image` is callable from inside
+Code Mode support is bundled. If `pi-code-mode` is also installed
+(`pi install npm:@cfcluan/pi-code-mode`), `view_image` is callable from inside
 Code Mode scripts as described below; without it the tool is still available as
 a normal Pi tool.
 
@@ -68,7 +68,7 @@ Behaviour:
 
 ### Inside Code Mode
 
-The tool is also registered through `pi-codemode/sdk`. In a Code Mode
+The tool is also registered through `pi-code-mode/sdk`. In a Code Mode
 script, `view_image` returns `{ image_url, detail }`, where `image_url` is a
 base64 `data:` URL. Forward it with `image(result)` so the model sees the image:
 

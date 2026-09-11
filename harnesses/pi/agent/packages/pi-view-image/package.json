@@ -1,6 +1,6 @@
 {
   "name": "pi-view-image",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -24,11 +24,11 @@
     "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.mp4"
   },
   "dependencies": {
-    "pi-codemode": "workspace:*",
+    "@cfcluan/pi-code-mode": "workspace:*",
     "pi-libtui": "workspace:*"
   },
   "bundledDependencies": [
-    "pi-codemode",
+    "@cfcluan/pi-code-mode",
     "pi-libtui"
   ],
   "peerDependencies": {

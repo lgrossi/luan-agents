@@ -1,11 +1,11 @@
 {
-  "name": "pi-codemode",
-  "version": "0.3.2",
+  "name": "@cfcluan/pi-code-mode",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/luan/agents.git",
-    "directory": "harnesses/pi/agent/packages/pi-codemode"
+    "directory": "harnesses/pi/agent/packages/pi-code-mode"
   },
   "description": "Restricted JavaScript tool composition for Pi",
   "type": "module",
@@ -21,8 +21,8 @@
       "./src/extension.ts",
       "./node_modules/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-codemode.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-codemode.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

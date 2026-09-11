@@ -1,6 +1,6 @@
 import type { NestedToolPreflight, NestedToolPreflightCall } from "./types.ts";
 
-export const NESTED_TOOL_PREFLIGHT_PROTOCOL = "pi-codemode/nested-tool-preflights/v1" as const;
+export const NESTED_TOOL_PREFLIGHT_PROTOCOL = "pi-code-mode/nested-tool-preflights/v1" as const;
 export const NESTED_TOOL_PREFLIGHTS = Symbol.for(NESTED_TOOL_PREFLIGHT_PROTOCOL);
 
 export interface NestedToolPreflightRegistry {

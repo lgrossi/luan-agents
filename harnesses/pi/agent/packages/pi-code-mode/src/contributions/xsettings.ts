@@ -66,7 +66,7 @@ export function createCodeModeSettings(
 	})),
 ) {
 	return createSettings({
-		namespace: "pi-codemode",
+		namespace: "pi-code-mode",
 		label: "Code Mode",
 		definitions: definitions(execToolOptions),
 	});
