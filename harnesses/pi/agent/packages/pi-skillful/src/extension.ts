@@ -15,7 +15,7 @@ import {
 	stripSkillTranscriptMarkers,
 } from "./ui/transcript-skills.ts";
 
-const AUTOCOMPLETE_INSTALLED = Symbol.for("pi-skills/autocomplete-installed/v1");
+const AUTOCOMPLETE_INSTALLED = Symbol.for("pi-skillful/autocomplete-installed/v1");
 
 export default function skillsExtension(pi: ExtensionAPI): void {
 	const mouse = ensureMouseRegistry();
@@ -42,7 +42,7 @@ export default function skillsExtension(pi: ExtensionAPI): void {
 		disposeEditorHighlights = registerSkillEditorHighlights(() => skills);
 		disposeTranscriptPills();
 		disposeTranscriptPills = mouse.registerScreenDecorator({
-			id: "pi-skills.transcript-pills",
+			id: "pi-skillful.transcript-pills",
 			priority: 5,
 			decorate: (screen, context) =>
 				context.hasOverlay || context.selectionActive

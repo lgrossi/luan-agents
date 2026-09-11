@@ -1,4 +1,4 @@
-export const LOADED_SKILL_CONTEXT_MESSAGE_TYPE = "pi-skills/loaded";
+export const LOADED_SKILL_CONTEXT_MESSAGE_TYPE = "pi-skillful/loaded";
 
 export function renderLoadedSkillContext(skill: { name: string; filePath: string; content: string }): string {
 	return [

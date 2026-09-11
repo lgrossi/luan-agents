@@ -1,6 +1,6 @@
-# pi-collapse
+# pi-collapse-transcript
 
-`pi-collapse` folds runs of tool calls and thinking blocks in Pi's fullscreen
+`pi-collapse-transcript` folds runs of tool calls and thinking blocks in Pi's fullscreen
 transcript into one collapsed activity row. The row shows the latest tool action
 or the latest provider-supplied thinking heading, a step count, and a failure
 count. Click it to expand the run back into the original tool renderers and
@@ -13,14 +13,14 @@ model-visible content are never rewritten.
 
 ## Preview
 
-![pi-collapse in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-collapse.png)
+![pi-collapse-transcript in Bootty](https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-collapse.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.mp4).
 
 ## Install
 
 ```sh
-pi install npm:pi-collapse
+pi install npm:pi-collapse-transcript
 ```
 
 That is the only step. The package ships its rendering library and mouse host
@@ -38,7 +38,7 @@ defaults apply.
 There are no commands, tools, actions, or side-panel tabs. The extension does
 its work on `session_start`:
 
-- In interactive TUI mode it installs a hidden widget (`pi-collapse.host`)
+- In interactive TUI mode it installs a hidden widget (`pi-collapse-transcript.host`)
   that mounts a transcript projection over Pi's chat container.
 - In fullscreen mode, consecutive `thinking` and tool entries become one
   `ActivitySection`. Its header row shows the summary, a `N steps` count, and
@@ -83,7 +83,7 @@ otherwise the defaults apply.
 
 ## Library API
 
-`import { ActivityTranscript } from "pi-collapse"` gives a
+`import { ActivityTranscript } from "pi-collapse-transcript"` gives a
 `ComponentStack` that takes an entry reader, a Pi `Theme`, and a
 `requestRender` callback. It groups `TranscriptEntry` values from
 `pi-libtui/tool` and owns the fold state of each section. Pass it to
@@ -113,7 +113,7 @@ left untouched. Unknown nodes and native error notices render as they are.
 ## Develop
 
 Source: https://github.com/luan/agents, directory
-`harnesses/pi/agent/packages/pi-collapse`. Run `bun run typecheck` and
+`harnesses/pi/agent/packages/pi-collapse-transcript`. Run `bun run typecheck` and
 `bun test test` in that directory.
 
 `test/transcript.test.ts` drives a real `TuiAltScreen` with native
