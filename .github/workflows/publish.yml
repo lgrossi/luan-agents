@@ -44,7 +44,7 @@ jobs:
 
       - name: Publish every package at the tagged version
         env:
-          NPM_CONFIG_PROVENANCE: "true"
+          NPM_PUBLISH_FLAGS: --provenance
         run: |
           set -eu
           version="${GITHUB_REF_NAME#v}"
