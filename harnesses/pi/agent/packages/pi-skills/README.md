@@ -1,4 +1,4 @@
-# @luan-pi/pi-skills
+# pi-skills
 
 `pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
 into the conversation by exact name, so the model can pull in detailed
@@ -8,14 +8,14 @@ editor, and shows loaded skills as compact rows in the transcript.
 
 ## Preview
 
-![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-skills.png)
+![pi-skills in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-skills.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-skills.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-skills.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-skills
+pi install npm:pi-skills
 ```
 
 Code Mode is bundled. It requires a Rust toolchain (https://rustup.rs). The
@@ -25,12 +25,12 @@ prebuilt binary.
 
 Optional companions:
 
-- `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings` editor for the
+- `pi install npm:pi-xsettings` adds the `/xsettings` editor for the
   setting listed below; without it the default applies.
-- `pi install npm:@luan-pi/pi-developer-prompt` renders the skill catalogue
+- `pi install npm:pi-developer-messages` renders the skill catalogue
   into the developer prompt; without it the catalogue contribution is
   registered but nothing displays it.
-- `pi install npm:@luan-pi/pi-custom-editor` renders known `$skill` references
+- `pi install npm:pi-custom-editor` renders known `$skill` references
   in the editor as pills; without it they stay plain text while typing.
 
 ## How skills are discovered
@@ -119,7 +119,7 @@ Skills flagged `disableModelInvocation` are omitted.
 
 ## Settings
 
-Namespace `pi-skills`. Edited via `/xsettings` when `@luan-pi/pi-xsettings` is
+Namespace `pi-skills`. Edited via `/xsettings` when `pi-xsettings` is
 installed; otherwise the default applies.
 
 | Key | Default | Meaning |
@@ -176,7 +176,7 @@ This package registers no keyboard actions.
   discovered `SKILL.md` exactly, including case and punctuation.
 - **No catalogue in the prompt:** check `catalogVisibility`, make sure `skill`
   or `exec` is active when it is `when-active`, and install
-  `@luan-pi/pi-developer-prompt`.
+  `pi-developer-messages`.
 - **Loaded text not visible:** expand the skill row; the text is already in
   model context.
 

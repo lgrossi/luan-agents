@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test } from "bun:test";
 import { convertToLlm } from "@earendil-works/pi-coding-agent";
-import { registerDeveloperPromptExtension } from "../../pi-developer-prompt/src/extension.ts";
+import { registerDeveloperPromptExtension } from "../../pi-developer-messages/src/extension.ts";
 import { registerSkillsPromptContribution } from "../../pi-skills/src/prompt.ts";
 import { registerCodexPromptPayloadAdapter } from "../src/prompt-payload-adapter.ts";
 import { buildRequestBody } from "../src/provider/request-body.ts";

@@ -1,6 +1,6 @@
-# @luan-pi/pi-codex-native
+# pi-codex-native
 
-`@luan-pi/pi-codex-native` adds the `openai-codex` provider to Pi. It talks
+`pi-codex-native` adds the `openai-codex` provider to Pi. It talks
 to the ChatGPT-backed Codex Responses endpoint, keeps the provider's native
 request and response format, and registers the `web__run` tool.
 
@@ -13,23 +13,23 @@ Upstream attribution for the ported transport and conversion code is in
 
 ## Preview
 
-![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-codex-native.png)
+![pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-codex-native.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-codex-native.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-codex-native
+pi install npm:pi-codex-native
 ```
 
 Optional companions:
 
-- `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings` UI for the
+- `pi install npm:pi-xsettings` adds the `/xsettings` UI for the
   settings below and binds the package's actions to keys from
   `keybindings.json`. Without it, compiled defaults apply and no keys are
   bound.
-- `pi install npm:@luan-pi/pi-code-mode` exposes `web__run` inside Code Mode
+- `pi install npm:pi-code-mode` exposes `web__run` inside Code Mode
   scripts as well as directly. Without it, `web__run` is only a direct tool.
 
 ## Sign in and use
@@ -114,13 +114,13 @@ example:
 }
 ```
 
-Keys take effect only when `@luan-pi/pi-xsettings` is installed; the file is
+Keys take effect only when `pi-xsettings` is installed; the file is
 read on load, so reload extensions after editing it.
 
 ## Settings
 
 Settings use namespace `pi-codex-native` (label "Codex Native"), all in the
-`behavior` category. Edit them with `/xsettings` when `@luan-pi/pi-xsettings`
+`behavior` category. Edit them with `/xsettings` when `pi-xsettings`
 is installed; otherwise the defaults apply.
 
 | Key | Default | Values |

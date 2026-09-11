@@ -1,25 +1,25 @@
-# @luan-pi/pi-xsettings
+# pi-xsettings
 
-`@luan-pi/pi-xsettings` is a settings host for Pi extensions. It adds the
+`pi-xsettings` is a settings host for Pi extensions. It adds the
 `/xsettings` editor to Pi's interactive TUI, persists Pi and extension settings
 in one `xsettings.toml` file, exposes a UI-free SDK
-(`@luan-pi/pi-xsettings/sdk`) that other extensions use to declare typed
+(`pi-xsettings/sdk`) that other extensions use to declare typed
 settings, and binds keys from `keybindings.json` to actions that extensions
 register through pi-libactions.
 
 ## Preview
 
-![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.png)
+![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-xsettings
+pi install npm:pi-xsettings
 ```
 
-Optional companion: `pi install npm:@luan-pi/pi-side-panel`. When a side-panel
+Optional companion: `pi install npm:pi-panels`. When a side-panel
 host is present, `/xsettings` opens as a "Settings" tab beside the session;
 without it, the editor opens as a fullscreen overlay.
 
@@ -132,7 +132,7 @@ configured for that action ID. Other extensions' READMEs list their action IDs.
 Import the UI-free SDK, not the extension entry point:
 
 ```ts
-import { createSettings } from "@luan-pi/pi-xsettings/sdk";
+import { createSettings } from "pi-xsettings/sdk";
 
 const settings = createSettings({
   namespace: "pi-example",
@@ -177,7 +177,7 @@ values resolve to a valid option, and multi-enum values drop stale choices.
 
 Registration works before the host loads or when it is absent: values arrive
 when the host publishes them, and without a host the extension keeps its
-defaults. Add `@luan-pi/pi-xsettings` to your package's `dependencies`; do not
+defaults. Add `pi-xsettings` to your package's `dependencies`; do not
 create a separate settings file or settings screen.
 
 ## Layout

@@ -5,7 +5,7 @@ import {
 	type CodeModeToolInput,
 	type CodeModeToolScope,
 	registerCodeModeToolAdapter,
-} from "@luan-pi/pi-code-mode/sdk";
+} from "pi-code-mode/sdk";
 import { type createToolSearchTool, executeToolSearch } from "./tools/tool-search/definition.ts";
 import { renderToolSearchResult } from "./tools/tool-search/presentation.ts";
 import type { ToolSearchDetails } from "./tools/tool-search/result.ts";

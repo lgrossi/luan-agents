@@ -16,3 +16,4 @@ export {
 	scrollTopForCursor,
 	type VirtualCursorDocument,
 } from "./core/cursor.ts";
+export * from "./annotations/index.ts";

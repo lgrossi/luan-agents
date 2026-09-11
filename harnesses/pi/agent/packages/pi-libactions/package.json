@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-libactions",
-  "version": "0.2.2",
+  "name": "pi-libactions",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,15 +9,17 @@
   },
   "description": "UI-free action registry capability for Pi extensions",
   "type": "module",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package"
+  ],
   "exports": {
     ".": "./src/index.ts",
     "./sdk": "./src/sdk.ts"
   },
   "pi": {
     "extensions": [],
-    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-libactions.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-libactions.mp4"
+    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-libactions.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-libactions.mp4"
   },
   "dependencies": {},
   "peerDependencies": {

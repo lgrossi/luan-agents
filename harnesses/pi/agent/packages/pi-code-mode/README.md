@@ -1,4 +1,4 @@
-# @luan-pi/pi-code-mode
+# pi-code-mode
 
 Code Mode adds two tools to Pi:
 
@@ -13,12 +13,14 @@ for the ported host and protocol is in `UPSTREAM.md`.
 
 ## Preview
 
-![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-code-mode.png)
+![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-code-mode.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-code-mode.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-code-mode
+pi install npm:pi-code-mode
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
@@ -26,7 +28,7 @@ builds itself on first use under Pi's agent directory
 (`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
 prebuilt binary.
 
-Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the
+Optional companion: `pi install npm:pi-xsettings` adds the
 `/xsettings` editor for the settings listed below; without it the defaults
 apply.
 
@@ -53,7 +55,7 @@ changing the hierarchy; session shutdown releases it.
 ## Settings
 
 Settings use the `pi-code-mode` namespace and are edited with `/xsettings` when
-`@luan-pi/pi-xsettings` is installed; otherwise the defaults apply.
+`pi-xsettings` is installed; otherwise the defaults apply.
 
 | Key | Default | Meaning |
 | --- | --- | --- |
@@ -135,7 +137,7 @@ output bounds, errors, and bounded nested call traces.
 
 ## SDK for other extensions
 
-Depend on `@luan-pi/pi-code-mode` and import from `@luan-pi/pi-code-mode/sdk`
+Depend on `pi-code-mode` and import from `pi-code-mode/sdk`
 (UI-free). Registering an adapter makes a tool eligible for lifting; the user
 still selects it in `pi-code-mode.tools`.
 
@@ -144,7 +146,7 @@ The bridge reuses the tool's `execute`, `prepareArguments`, `renderCall`, and
 `renderResult`, so direct and nested calls share one execution path:
 
 ```ts
-import { registerCodeModeFunctionTool } from "@luan-pi/pi-code-mode/sdk";
+import { registerCodeModeFunctionTool } from "pi-code-mode/sdk";
 
 const dispose = registerCodeModeFunctionTool(tool, {
   outputSchema: { type: "object", properties: { value: { type: "string" } }, required: ["value"] },
@@ -160,7 +162,7 @@ Use `registerCodeModeToolAdapter` for freeform tools or behaviour a
 `ToolDefinition` cannot express:
 
 ```ts
-import { registerCodeModeToolAdapter } from "@luan-pi/pi-code-mode/sdk";
+import { registerCodeModeToolAdapter } from "pi-code-mode/sdk";
 
 const dispose = registerCodeModeToolAdapter({
   name: "example_tool",

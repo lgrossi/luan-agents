@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { stripTerminalSequences, visibleWidth } from "@earendil-works/pi-tui";
-import { tuiTheme } from "@luan-pi/pi-libtui";
+import { tuiTheme } from "pi-libtui";
 import {
 	type EditorCompositionStyle,
 	renderEditorComposition,
 	renderEditorCompositionPreview,
 	renderEditorCompositionStatus,
-} from "@luan-pi/pi-libtui/editor";
+} from "pi-libtui/editor";
 
 const theme = {
 	name: "editor-chrome-test",

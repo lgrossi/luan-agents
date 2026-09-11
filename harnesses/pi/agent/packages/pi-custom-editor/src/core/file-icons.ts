@@ -1,4 +1,4 @@
-import type { TuiForegroundColor } from "@luan-pi/pi-libtui";
+import type { TuiForegroundColor } from "pi-libtui";
 
 export interface FileIcon {
 	readonly glyph: string;

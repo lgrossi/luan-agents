@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { TerminalBridgeClient } from "@luan-pi/pi-libtui";
+import type { TerminalBridgeClient } from "pi-libtui";
 import {
 	createExecSessionManager,
 	type ExecProcessSnapshot,

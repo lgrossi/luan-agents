@@ -18,8 +18,8 @@ import {
 	SemanticInput,
 	type SelectableListRenderContext,
 	tuiTheme,
-} from "@luan-pi/pi-libtui";
-import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+} from "pi-libtui";
+import type { TuiMouseEvent } from "pi-libtui/mouse";
 import {
 	filterPrompts,
 	preview,

@@ -19,8 +19,8 @@ import {
 	type TuiTextEffectStyle,
 	tuiTheme,
 	whenSyntaxReady,
-} from "@luan-pi/pi-libtui";
-import type { ToolTranscriptStatus } from "@luan-pi/pi-libtui/tool";
+} from "pi-libtui";
+import type { ToolTranscriptStatus } from "pi-libtui/tool";
 import type { ShellAction } from "../core/shell-summary.ts";
 
 export interface ShellCommandActionView {

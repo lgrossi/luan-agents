@@ -1,6 +1,6 @@
 # pi-prompt-storage
 
-`@luan-pi/pi-prompt-storage` is a Pi extension that adds a per-directory prompt
+`pi-prompt-storage` is a Pi extension that adds a per-directory prompt
 stash and a searchable history of past user prompts to Pi's editor. It stores
 both in a local SQLite database, indexes session files lazily, and merges the
 current session's prompts live.
@@ -11,14 +11,14 @@ widget above the editor.
 
 ## Preview
 
-![pi-prompt-storage in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-prompt-storage.png)
+![pi-prompt-storage in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-prompt-storage.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-prompt-storage.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-prompt-storage.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-prompt-storage
+pi install npm:pi-prompt-storage
 ```
 
 That is the only step. The shared editor layer, picker panel, and theme helpers
@@ -104,7 +104,7 @@ text content are indexed; prompts starting with `/` are included.
 ## Settings
 
 There are no user-facing settings and the package does not use
-`@luan-pi/pi-xsettings`. Configuration is hard-coded in `src/config.ts`:
+`pi-xsettings`. Configuration is hard-coded in `src/config.ts`:
 
 | Key | Value | Effect |
 | --- | --- | --- |
