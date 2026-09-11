@@ -17,16 +17,15 @@ model-visible content are never rewritten.
 pi install npm:@luan-pi/pi-transcript
 ```
 
-To load a checkout of this repository instead:
+That is the only step. The package ships its rendering library and mouse host
+with it and registers both through `package.json`; nothing else needs to be
+installed. It runs inside Pi (`@earendil-works/pi-coding-agent` with
+`@earendil-works/pi-tui`); 0.84.2 is the tested version.
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-transcript
-```
-
-The package bundles `@luan-pi/pi-libtui` and registers both its own extension
-and the libtui host extension through `package.json`. It requires
-`@earendil-works/pi-coding-agent` and `@earendil-works/pi-tui` as peers;
-0.84.2 is the tested version.
+Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the
+`/xsettings` UI for the shared appearance settings (activity indicator, text
+effects, animation speed) that the collapsed row uses; without it the compiled
+defaults apply.
 
 ## Use it
 
@@ -68,21 +67,26 @@ transcript controls need the fullscreen surface.
 
 The package registers no settings, no actions, and no keybindings. The only
 input it handles is a mouse press on the activity row, provided by
-`pi-libtui`'s mouse host. The running indicator and text effects follow
-`pi-libtui`'s shared appearance settings, which `pi-xsettings` exposes when it
-is installed; see the `pi-libtui` README.
+the bundled `pi-libtui` mouse host. There is nothing to add to
+`~/.pi/agent/keybindings.json` for this package. The running indicator and
+text effects follow `pi-libtui`'s shared appearance settings (`activityIndicator`,
+default `spinner`; `textEffect`, default `off`; `animationSpeed`, default
+`normal`; and the other keys documented in the `@luan-pi/pi-libtui` README).
+These are edited via `/xsettings` when `@luan-pi/pi-xsettings` is installed;
+otherwise the defaults apply.
 
 ## Library API
 
-`src/index.ts` exports `ActivityTranscript`, a `ComponentStack` that takes an
-entry reader, a Pi `Theme`, and a `requestRender` callback. It groups
-`TranscriptEntry` values from `pi-libtui/tool` and owns the fold state of each
-section. Pass it to `mountTranscriptProjection` to use it outside this
-extension, or render it directly in tests.
+`import { ActivityTranscript } from "@luan-pi/pi-transcript"` gives a
+`ComponentStack` that takes an entry reader, a Pi `Theme`, and a
+`requestRender` callback. It groups `TranscriptEntry` values from
+`@luan-pi/pi-libtui/tool` and owns the fold state of each section. Pass it to
+`mountTranscriptProjection` to use it outside this extension, or render it
+directly in tests. It has no native binary.
 
 ## Native boundary
 
-`pi-libtui/tool` supplies the versioned transcript bridge. It reads Pi 0.84–0.85
+`@luan-pi/pi-libtui/tool` supplies the versioned transcript bridge. It reads Pi 0.84–0.85
 private transcript fields, guards each node's shape, and fails open: when the
 document layout does not match, when a node is not a recognised assistant or
 tool component, or when a projection is already installed, the transcript is
@@ -102,12 +106,9 @@ left untouched. Unknown nodes and native error notices render as they are.
 
 ## Develop
 
-From the package directory:
-
-```sh
-bun run typecheck
-bun test test
-```
+Source: https://github.com/luan/agents, directory
+`harnesses/pi/agent/packages/pi-transcript`. Run `bun run typecheck` and
+`bun test test` in that directory.
 
 `test/transcript.test.ts` drives a real `TuiAltScreen` with native
 `AssistantMessageComponent` and `ToolExecutionComponent` instances and checks

@@ -1,47 +1,85 @@
 # pi-annotations
 
 `pi-annotations` turns a transcript selection into a comment attached to your
-next request. It keeps the selected text and the comment together, then sends
-them in the `response-annotations` envelope that Codex understands.
+next request. It keeps the selected text and the comment together and sends
+them in a `response-annotations` envelope at the top of the prompt.
 
-It is a Pi extension and a small library. It does not add a model-facing tool
-or a shortcut of its own, and it cannot select transcript text by itself: it
-acts on selections published through the `pi-libtui/selection` capability.
-`pi-copy-mode` is the extension that publishes them, so install both.
+The package installs three Pi extensions together: the annotation extension,
+copy mode (`@luan-pi/pi-copy-mode`, which selects transcript text and offers
+the comment/react actions), and the shared TUI layer they both use. It adds no
+model-facing tool. Any extension that publishes `selection.comment` and
+`selection.reaction` requests through the `pi-libtui/selection` capability can
+trigger it; copy mode is the one that ships in the box.
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-copy-mode
 pi install npm:@luan-pi/pi-annotations
 ```
 
-From a checkout of this repository:
+Optional companions:
 
-```sh
-pi install ./harnesses/pi/agent/packages/pi-annotations
+- `pi install npm:@luan-pi/pi-xsettings` adds the `/xsettings` UI for editing
+  the reaction list and acts as the global shortcut host that binds
+  `copy-mode.enter`. Without it the default reactions apply and copy mode is
+  entered from the mouse action bar only.
+- `pi install npm:@luan-pi/pi-developer-prompt` routes the annotation guidance
+  for the model through its developer-message envelope. Without it the same
+  guidance is appended to the system prompt when a prompt contains an envelope.
+
+## Keybindings
+
+Copy mode registers its actions through the action registry, which has no
+default keys. Bind them in Pi's agent directory, normally
+`~/.pi/agent/keybindings.json`. The file is a JSON object mapping action IDs to
+one key ID or an array of key IDs (`modifier+base`, for example `alt+z`).
+
+```json
+{
+  "copy-mode.enter": "alt+z",
+  "copy-mode.toggleSelection": "v",
+  "copy-mode.annotate": "c",
+  "copy-mode.react": "r",
+  "copy-mode.copy": "y",
+  "copy-mode.cancel": "escape"
+}
 ```
 
-The package bundles `pi-libtui` and `pi-xsettings`. Without a selection
-provider such as `pi-copy-mode`, the extension loads but nothing can trigger
-it.
+| Action | Where it applies | What it does |
+| --- | --- | --- |
+| `copy-mode.enter` | Global (needs `@luan-pi/pi-xsettings` as host) | Enter transcript copy mode |
+| `copy-mode.toggleSelection` | Inside copy mode | Start or end a selection at the cursor |
+| `copy-mode.annotate` | Inside copy mode, with a selection | Open a comment draft for the selection |
+| `copy-mode.react` | Inside copy mode, with a selection | Open the reaction picker |
+| `copy-mode.copy` | Inside copy mode, with a selection | Copy the selection |
+| `copy-mode.cancel` | Inside copy mode | Leave copy mode |
+
+Copy mode also has motion, line/column selection, and fold actions
+(`copy-mode.up`, `copy-mode.wordForward`, `copy-mode.lineSelection`, and so
+on); all follow the same `copy-mode.*` naming and are bound the same way.
+`/reload` refreshes the keybinding snapshot. The keys above are examples, not
+defaults.
 
 ## Use it
 
-With `pi-copy-mode` loaded:
+1. Trigger `copy-mode.enter` and select text with `copy-mode.toggleSelection`
+   plus motions, or select transcript text with the mouse. Either way a small
+   action bar with comment, react, and copy appears next to the selection.
+2. Press your `copy-mode.annotate` key (or click "comment") to write a
+   comment, or press `copy-mode.react` (or click "react") to pick a reaction.
+3. Enter saves the draft. Escape cancels. The comment dialog also has
+   Save/Cancel buttons; when editing an existing draft it adds Delete
+   (`ctrl+d`).
+4. Submit the prompt normally. The drafts become part of the request.
 
-1. Enter copy mode (`alt+z` with this repository's keybindings) and select
-   text in the transcript.
-2. Press `c` to write a comment or `r` to choose a reaction.
-3. Enter saves the draft. Escape cancels it.
-4. Submit the prompt normally. The draft becomes part of the request.
+A draft appears as a numbered pill in the editor and as a handle in the
+transcript, and the status line shows how many annotations are pending. Hover
+a pill to see the selected text and comment; click it to edit or delete the
+draft. Deleting a draft removes only its editor token and keeps the
+surrounding prompt unchanged. If you remove a pill's token from the editor
+text, the draft is dropped. Drafts are cleared once the message is sent.
 
-The action bar also supports mouse clicks. A draft appears as a numbered pill
-in the editor. Hover it to see the selected text and comment; open it to edit
-or delete the draft. Deleting a draft removes only its editor token and keeps
-the surrounding prompt unchanged.
-
-Reactions are just preset comment text. The default choices are:
+Reactions are preset comment text. The defaults are:
 
 - `👍 Looks good`
 - `🚫 Rejected`
@@ -56,38 +94,34 @@ Assistant text containing `:pi-annotation{index="N"}` or the imported
 `:codex-annotation{index="N"}` directive renders the corresponding annotation
 as a hoverable pill. Directives inside inline or fenced code remain text.
 
-## Settings and keybindings
+## Settings
 
-Open `/xsettings` (bound to `ctrl+,` in this repository) and edit
-`Interaction → Annotations → Reactions`. This is an ordered string list, so
-you can add, edit, delete, and reorder choices. An empty list disables the
-reaction picker until at least one choice is configured.
+Settings are registered with `pi-xsettings` under namespace `pi-annotations`
+(label "Annotations", category Interaction):
 
-Keys belong to `keybindings.json`, not this package. The relevant copy-mode
-actions are:
-
-| Action | Repository default | What it does |
+| Key | Type | Default |
 | --- | --- | --- |
-| `copy-mode.annotate` | `c` | Open a comment draft for the selection |
-| `copy-mode.react` | `r` | Open the reaction picker |
+| `reactions` | ordered string list | the seven reactions listed above |
 
-Change those bindings in the managed `harnesses/pi/agent/keybindings.json`
-file. `/reload` refreshes the keybinding snapshot.
+Edit them via `/xsettings` when `@luan-pi/pi-xsettings` is installed;
+otherwise the defaults apply. An empty list disables the reaction picker with
+a warning until at least one choice is configured. Copy mode contributes its
+own `pi-copy-mode` namespace (`copyOnSelect`).
 
 ## Library API
 
-The package export surface is intentionally pure and does not start Pi:
+`@luan-pi/pi-annotations` also exports pure helpers that do not start Pi:
 
-- Envelope helpers: `serializeEnvelope`, `parseEnvelope`,
-  `projectEnvelope`, `responseAnnotations`, and `annotationText`.
-- Directive projection: `projectAnnotationDirectives`.
+- Envelope: `serializeEnvelope`, `parseEnvelope`, `projectEnvelope`,
+  `responseAnnotations`, `annotationText`.
+- Directives: `projectAnnotationDirectives`.
 - Draft state: `AnnotationStore`, `tokenInsertion`, `tokenPreview`,
   `removeTokenAtom`.
-- Presentation helpers and types: `plainPill`, `composerPillLabel`,
-  `responsePillLabel`, `transcriptPillLabel`, `AnnotationPresentationGroups`,
-  and the annotation types.
-
-For example:
+- Presentation: `plainPill`, `composerPillContent`, `responsePillContent`,
+  `transcriptPillContent`, `AnnotationPresentationGroups`.
+- Settings: `DEFAULT_REACTIONS`, `getReactions`.
+- Types: `AnnotationSelection`, `DraftAnnotation`, `ResponseAnnotation`,
+  `ParsedResponseAnnotations`, `ResolvedAnnotationLink`.
 
 ```ts
 import { parseEnvelope, projectEnvelope } from "@luan-pi/pi-annotations";
@@ -95,12 +129,6 @@ import { parseEnvelope, projectEnvelope } from "@luan-pi/pi-annotations";
 const parsed = parseEnvelope(messageText);
 const readable = parsed ? projectEnvelope(messageText) : messageText;
 ```
-
-The extension itself composes Pi's editor, session, and Markdown hooks. It
-uses `pi-libtui` for overlays and selection actions, `pi-xsettings` for the
-reaction list, and contributes to the `pi-developer-prompt` capability when
-that optional host is present. It does not import `pi-copy-mode`; any extension
-that publishes `selection.comment` and `selection.reaction` actions works.
 
 ## Wire format
 
@@ -121,36 +149,40 @@ ordinary prompt text
 ```
 
 Reactions are serialized as ordinary annotation text. Older envelopes that
-used the previous reaction spelling are still read when Pi redraws a session.
-
-## Architecture
-
-| Responsibility | Owner |
-| --- | --- |
-| Tool definition | None; this package adds no model-facing tool |
-| Execution owner | `src/runtime/annotations.ts` |
-| State owner | Session-scoped `AnnotationStore` |
-| Native boundary | Pi's selection, editor, session, and Markdown APIs |
-| Presentation owner | `src/ui/` overlays, editor projection, and transcript markers |
-| Public capabilities | `src/index.ts` envelope, directive, store, presentation, and type exports |
+used the previous `Reaction: “…”` spelling are still read when Pi redraws a
+session.
 
 ## Troubleshooting and limits
 
-- `c` and `r` do nothing unless a loaded extension has published a completed
-  selection. In the default setup, load `pi-copy-mode` and use its action bar.
-- If the reaction picker says to configure a reaction, add one under
-  `/xsettings → Interaction → Annotations`.
-- A selection without a stable message ID can use a best-effort screen anchor.
-  A unique match in the preceding assistant text gets a stable source offset.
-- On Pi 0.84.2, the package installs its custom editor only when another
-  custom editor is not already configured. Pi has no composable editor
-  middleware API.
-- The package requires an interactive TUI for its overlays. It leaves Pi's
-  normal tool execution unchanged.
+- The comment and react keys do nothing unless a selection is active in copy
+  mode; the action bar only appears next to a completed selection.
+- "Configure at least one annotation reaction first" means the `reactions`
+  list is empty.
+- A selection without a stable message ID gets a best-effort screen anchor. A
+  unique match in earlier assistant text upgrades it to a stable source
+  offset.
+- The package installs its custom editor only when no other custom editor is
+  already configured, and it requires an interactive TUI session.
 
-Run package checks from the package directory:
+## Layout
 
-```sh
-bun run typecheck
-bun test test
-```
+| Responsibility | File |
+| --- | --- |
+| Extension wiring (hooks, decorators, editor install) | `src/extension.ts` |
+| Public exports | `src/index.ts` |
+| Reaction settings | `src/config/settings.ts` |
+| Developer-prompt / system-prompt guidance | `src/contributions/developer-prompt.ts` |
+| Envelope serialize/parse/project | `src/core/envelope.ts` |
+| `:pi-annotation` directive projection | `src/core/directives.ts` |
+| Draft store and editor tokens | `src/core/store.ts` |
+| Pill text and transcript presentation | `src/core/pills.ts`, `src/core/presentation.ts` |
+| Selection resolution, compose and edit flows | `src/runtime/annotations.ts` |
+| Comment and reaction dialogs | `src/ui/composer-overlays.ts` |
+| Custom editor with draft pills | `src/ui/editor.ts` |
+| Transcript handles, reference pills, markers | `src/ui/screen-markers.ts`, `src/ui/reference-pills.ts`, `src/ui/annotation-markers.ts` |
+
+## Develop
+
+Source: https://github.com/luan/agents, directory
+harnesses/pi/agent/packages/pi-annotations. Run `bun run typecheck` and
+`bun test test` in that directory.

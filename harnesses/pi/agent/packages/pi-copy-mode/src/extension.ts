@@ -6,6 +6,19 @@ import { registerCopyModeSettings } from "./config/settings.ts";
 import { createCopyModeHost, type CopyModeHost } from "./runtime/copy-mode.ts";
 
 const WIDGET_KEY = "pi-copy-mode.host";
+// Feature packages such as pi-annotations bundle copy mode. Only one loaded copy may own the
+// action, settings, and widget; later copies stay inert until the owner releases on reload/quit.
+const OWNER_KEY = Symbol.for("pi-copy-mode/owner/v1");
+
+function claimOwnership(): (() => void) | undefined {
+	const slots = globalThis as Record<PropertyKey, unknown>;
+	if (slots[OWNER_KEY] !== undefined) return undefined;
+	const token = Symbol("pi-copy-mode owner");
+	slots[OWNER_KEY] = token;
+	return () => {
+		if (slots[OWNER_KEY] === token) Reflect.deleteProperty(slots, OWNER_KEY);
+	};
+}
 
 class CopyModeWidget implements Component {
 	readonly host: CopyModeHost;
@@ -24,6 +37,8 @@ class CopyModeWidget implements Component {
 }
 
 export default function copyModeExtension(pi: ExtensionAPI): void {
+	const release = claimOwnership();
+	if (!release) return;
 	let host: CopyModeHost | undefined;
 	let removeSelectionListener: (() => void) | undefined;
 	const unregisterSettings = registerCopyModeSettings();
@@ -58,6 +73,7 @@ export default function copyModeExtension(pi: ExtensionAPI): void {
 		if (event.reason === "reload" || event.reason === "quit") {
 			unregisterAction();
 			unregisterSettings();
+			release();
 		}
 	});
 }
