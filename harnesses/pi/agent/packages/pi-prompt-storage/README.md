@@ -9,6 +9,12 @@ It is not a model-facing tool. It registers no tools and no side-panel tabs; it
 wraps the editor's input handling, adds one slash command, and draws a one-line
 widget above the editor.
 
+## Preview
+
+![pi-prompt-storage in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-prompt-storage.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-prompt-storage.mp4).
+
 ## Install
 
 ```sh

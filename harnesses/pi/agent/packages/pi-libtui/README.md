@@ -14,6 +14,14 @@ colors, applies the `harmonious` theme fallback, drives Pi's streaming status
 row, and registers the `/libtui:colors` 256-color palette diagnostic. It
 registers no model-facing tools, keybindings, or feature-specific UI.
 
+## Preview
+
+The native palette diagnostic and shared picker components in Xsettings.
+
+![pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-libtui.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-libtui.mp4).
+
 ## Install
 
 ```sh

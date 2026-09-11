@@ -7,6 +7,10 @@ a file that is already on disk. The same package makes pasted image paths in the
 Pi editor attach as images and labels image attachments in the Codex format
 before they reach the provider.
 
+## Preview
+
+![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-view-image.png)
+
 ## Install
 
 ```sh

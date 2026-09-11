@@ -10,6 +10,10 @@ Tools moved under `exec` are removed from Pi's direct tool list, which keeps
 the model's tool catalog small. Other Pi extensions can make their tools
 available inside `exec` through the SDK described below.
 
+## Preview
+
+![pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-code-mode.png)
+
 ## Install
 
 ```sh

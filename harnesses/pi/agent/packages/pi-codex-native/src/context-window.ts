@@ -5,7 +5,7 @@ import {
 	CONTEXT_WINDOW_PRESETS,
 	type ContextWindowPreset,
 	requestedContextWindowPreset,
-} from "@luan-pi/pi-libcontext/sdk";
+} from "./protocol/context-window.ts";
 import { tuiTheme } from "@luan-pi/pi-libtui";
 import {
 	CODEX_CONTEXT_COLORS,

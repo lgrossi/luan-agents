@@ -11,6 +11,12 @@ model-facing tool. Any extension that publishes `selection.comment` and
 `selection.reaction` requests through the `pi-libtui/selection` capability can
 trigger it; copy mode is the one that ships in the box.
 
+## Preview
+
+![pi-annotations in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-annotations.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-annotations.mp4).
+
 ## Install
 
 ```sh

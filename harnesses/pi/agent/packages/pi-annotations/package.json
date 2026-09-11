@@ -1,6 +1,6 @@
 {
 	"name": "@luan-pi/pi-annotations",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -16,7 +16,9 @@
 			"./src/extension.ts",
 			"./node_modules/@luan-pi/pi-copy-mode/src/extension.ts",
 			"./node_modules/@luan-pi/pi-libtui/src/extension.ts"
-		]
+		],
+		"image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-annotations.png",
+		"video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-annotations.mp4"
 	},
 	"dependencies": {
 		"@luan-pi/pi-copy-mode": "workspace:*",

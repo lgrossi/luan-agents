@@ -9,6 +9,12 @@ installed the panel is empty. Tabs come from other packages, for example
 `@luan-pi/pi-side-chat`, `@luan-pi/pi-tuicr`, `@luan-pi/pi-exec-command`,
 `@luan-pi/pi-subagents`, and `@luan-pi/pi-xsettings`.
 
+## Preview
+
+![pi-side-panel in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-side-panel.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-side-panel.mp4).
+
 ## Install
 
 ```sh

@@ -1,6 +1,6 @@
 {
   "name": "@luan-pi/pi-code-mode",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,7 +15,8 @@
     "./sdk": "./src/sdk.ts"
   },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"]
+    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
+    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-code-mode.png"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

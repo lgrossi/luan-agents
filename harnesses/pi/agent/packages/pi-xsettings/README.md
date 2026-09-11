@@ -7,6 +7,12 @@ in one `xsettings.toml` file, exposes a UI-free SDK
 settings, and binds keys from `keybindings.json` to actions that extensions
 register through pi-libactions.
 
+## Preview
+
+![pi-xsettings in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.mp4).
+
 ## Install
 
 ```sh

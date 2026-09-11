@@ -8,7 +8,7 @@ import {
 	CONTEXT_WINDOW_SOURCES_KEY,
 	ensureContextWindowSourceRegistry,
 	requestedContextWindowPreset,
-} from "../src/sdk.ts";
+} from "../src/protocol/context-window.ts";
 
 describe("context-window source registry", () => {
 	test("supports consumer-first registration and disposal", () => {
@@ -41,17 +41,17 @@ describe("context-window source registry", () => {
 
 	test("shares sources across separately loaded package copies", async () => {
 		const original = Reflect.get(globalThis, CONTEXT_WINDOW_SOURCES_KEY);
-		const temporary = await mkdtemp(join(tmpdir(), "pi-libcontext-copy-"));
+		const temporary = await mkdtemp(join(tmpdir(), "pi-codex-context-copy-"));
 		try {
 			Reflect.deleteProperty(globalThis, CONTEXT_WINDOW_SOURCES_KEY);
 			const registry = ensureContextWindowSourceRegistry();
 			registry.register({ id: "role", preset: () => "large" });
 
-			const copiedSource = join(temporary, "src");
-			await cp(resolve(import.meta.dir, "../src"), copiedSource, { recursive: true });
+			const copiedSource = join(temporary, "context-window.ts");
+			await cp(resolve(import.meta.dir, "../src/protocol/context-window.ts"), copiedSource);
 			const copiedSdk = (await import(
-				pathToFileURL(join(copiedSource, "sdk.ts")).href
-			)) as typeof import("../src/sdk.ts");
+				pathToFileURL(copiedSource).href
+			)) as typeof import("../src/protocol/context-window.ts");
 			expect(copiedSdk.requestedContextWindowPreset({} as ExtensionContext)).toBe("large");
 		} finally {
 			if (original === undefined) Reflect.deleteProperty(globalThis, CONTEXT_WINDOW_SOURCES_KEY);

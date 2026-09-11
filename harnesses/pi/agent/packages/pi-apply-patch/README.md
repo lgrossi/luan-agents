@@ -6,6 +6,10 @@ binary applies it: parsing, context matching, filesystem writes, and
 partial-failure tracking. The same operation is available as a direct Pi tool
 and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
 
+## Preview
+
+![pi-apply-patch in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-apply-patch.png)
+
 ## Install
 
 ```sh

@@ -7,6 +7,12 @@ clipboard copy, and a small action bar next to the selected text.
 It is a Pi extension, not a model-facing tool. It adds no tools and no slash
 commands.
 
+## Preview
+
+![pi-copy-mode in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-copy-mode.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-copy-mode.mp4).
+
 ## Install
 
 ```sh

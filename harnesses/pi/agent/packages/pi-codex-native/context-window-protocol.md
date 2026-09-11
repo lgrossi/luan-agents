@@ -1,49 +1,10 @@
-# @luan-pi/pi-libcontext
+# Context-window preference capability
 
-`@luan-pi/pi-libcontext` is a small TypeScript library for Pi extension
-authors. It defines a shared, UI-free protocol for context-window preferences:
-one extension can publish a requested preset (for example `"large"`), and a
-provider extension that owns the model can read that request and decide what
-it means for the current model. Neither side has to import the other.
-
-This is a library, not a Pi extension. It has no settings, persistence,
-commands, keybindings, tools, or UI, and it does nothing on its own until a
-provider calls `requestedContextWindowPreset()`.
-
-## Install
-
-Add it to the extension package that will register or read presets. Bundle it
-so the installed extension carries its own copy:
-
-```json
-{
-  "dependencies": {
-    "@luan-pi/pi-libcontext": "^0.1.0"
-  },
-  "bundledDependencies": ["@luan-pi/pi-libcontext"]
-}
-```
-
-Then import the public SDK:
-
-```ts
-import {
-  CONTEXT_WINDOW_PRESETS,
-  ensureContextWindowSourceRegistry,
-  requestedContextWindowPreset,
-  type ContextWindowPreset,
-} from "@luan-pi/pi-libcontext/sdk";
-```
-
-The package root (`@luan-pi/pi-libcontext`) re-exports the same names. It has
-no runtime dependencies. Its only peer dependency is
-`@earendil-works/pi-coding-agent`, which supplies the `ExtensionContext` type
-passed to sources.
-
-Optional companion: `pi install npm:@luan-pi/pi-codex-native` is a provider
-that reads the first valid request from this registry and applies it to
-eligible Codex models; without it (or another provider), registered sources
-are stored but never consulted.
+The Codex provider owns this UI-free protocol. Import its public helpers from
+`@luan-pi/pi-codex-native/context-window`, or contribute through the versioned
+structural registry without a runtime dependency on the provider. The original
+`pi-libcontext/sources/v1` identity is retained so older SDK copies continue to
+interoperate.
 
 ## Presets
 
@@ -74,7 +35,7 @@ A source has an `id` and a `preset(ctx)` function that derives a preset for the
 current `ExtensionContext`, or returns `undefined` to make no request:
 
 ```ts
-import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "@luan-pi/pi-libcontext/sdk";
+import { ensureContextWindowSourceRegistry, type ContextWindowPreset } from "@luan-pi/pi-codex-native/context-window";
 
 const unregister = ensureContextWindowSourceRegistry().register({
   id: "example",
@@ -136,18 +97,3 @@ instead of `globalThis` when an isolated registry is needed, such as in tests.
 The SDK also exports the `ContextWindowSource` and
 `ContextWindowSourceRegistry` types for hosts that inspect the capability
 directly.
-
-## Layout
-
-| Responsibility | File |
-| --- | --- |
-| Preset constants, validator, registry, resolution | `src/protocol/context-window.ts` |
-| Public SDK surface (`@luan-pi/pi-libcontext/sdk`) | `src/sdk.ts` |
-| Package root re-export | `src/index.ts` |
-| Registry behaviour tests | `test/registry.test.ts` |
-
-## Develop
-
-Source: https://github.com/luan/agents, directory
-`harnesses/pi/agent/packages/pi-libcontext`. Run `bun run typecheck` and
-`bun test test` in that directory.
