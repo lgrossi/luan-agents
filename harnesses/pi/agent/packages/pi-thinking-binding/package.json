@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-thinking-binding",
-  "version": "0.2.2",
+  "name": "pi-thinking-binding",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,10 +9,16 @@
   },
   "description": "Drop Anthropic thinking blocks that a system prompt or tool change has already invalidated",
   "type": "module",
-  "keywords": ["pi-package"],
-  "exports": { ".": "./src/index.ts" },
+  "keywords": [
+    "pi-package"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "pi": {
-    "extensions": ["./src/extension.ts"]
+    "extensions": [
+      "./src/extension.ts"
+    ]
   },
   "peerDependencies": {
     "@earendil-works/pi-agent-core": "*",

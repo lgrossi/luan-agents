@@ -35,13 +35,12 @@ Each extension can be loaded from this checkout or installed on its own. Its REA
 
 | Package | What it adds |
 | --- | --- |
-| [`pi-annotations`](harnesses/pi/agent/packages/pi-annotations/README.md) | Comments and reactions attached to transcript selections, sent back as response annotations. |
-| [`pi-apply-patch`](harnesses/pi/agent/packages/pi-apply-patch/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. |
+| [`pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. |
 | [`pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. |
 | [`pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. |
-| [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Keyboard-driven character, line, and column selection in Pi's fullscreen transcript. |
-| [`pi-transcript`](harnesses/pi/agent/packages/pi-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. |
-| [`pi-developer-prompt`](harnesses/pi/agent/packages/pi-developer-prompt/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
+| [`pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. |
+| [`pi-collapse`](harnesses/pi/agent/packages/pi-collapse/README.md) | Collapsible tools and thinking sections with a live activity summary. |
+| [`pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. |
 | [`pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. |
 | [`pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. |
 | [`pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. |
@@ -123,13 +122,16 @@ bun run test:pi
 cargo nextest run --locked
 ```
 
+See [the 0.3.0 package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
+
 ## Release
 
-Pi packages publish to npm under `@luan-pi` from GitHub Actions. Bump every
+Pi packages publish under their unscoped names, except `@cfcluan/pi-subagents`,
+`@cfcluan/pi-tuicr`, and `@cfcluan/pi-tool-search`. Bump every
 package version, commit, then tag and push:
 
 ```sh
-git tag v0.2.0 && git push origin main v0.2.0
+git tag v0.3.0 && git push origin main v0.3.0
 ```
 
 `.github/workflows/publish.yml` publishes each package whose version matches the

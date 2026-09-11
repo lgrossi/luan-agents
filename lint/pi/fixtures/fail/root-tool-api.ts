@@ -1,3 +1,3 @@
-import { ToolActivity } from "@luan-pi/pi-libtui";
+import { ToolActivity } from "pi-libtui";
 
 export const activity = ToolActivity;

@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { type EnsureNativeBinaryHooks, ensureNativeBinary, type NativeBinary } from "@luan-pi/pi-libtui";
+import { type EnsureNativeBinaryHooks, ensureNativeBinary, type NativeBinary } from "pi-libtui";
 import type { WebRunParameters } from "./schema.ts";
 
 const MAX_DIAGNOSTIC_CHARS = 8_192;

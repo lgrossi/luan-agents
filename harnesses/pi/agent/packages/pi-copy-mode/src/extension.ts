@@ -1,17 +1,20 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { Component, TUI } from "@earendil-works/pi-tui";
-import { ensureSelectionRegistry } from "@luan-pi/pi-libtui/selection";
+import { ensureSelectionRegistry } from "pi-libtui/selection";
+import registerAnnotations from "./annotations/extension.ts";
 import { registerCopyModeAction } from "./contributions/actions.ts";
 import { registerCopyModeSettings } from "./config/settings.ts";
 import { createCopyModeHost, type CopyModeHost } from "./runtime/copy-mode.ts";
 
 const WIDGET_KEY = "pi-copy-mode.host";
-// Feature packages such as pi-annotations bundle copy mode. Only one loaded copy may own the
+// Bundled or repeated installs may load multiple copies. Only one loaded copy may own the
 // action, settings, and widget; later copies stay inert until the owner releases on reload/quit.
+// type-boundary: Global capability slots are checked for ownership before use.
+type OwnershipBoundary = unknown;
 const OWNER_KEY = Symbol.for("pi-copy-mode/owner/v1");
 
 function claimOwnership(): (() => void) | undefined {
-	const slots = globalThis as Record<PropertyKey, unknown>;
+	const slots = globalThis as Record<PropertyKey, OwnershipBoundary>;
 	if (slots[OWNER_KEY] !== undefined) return undefined;
 	const token = Symbol("pi-copy-mode owner");
 	slots[OWNER_KEY] = token;
@@ -39,6 +42,7 @@ class CopyModeWidget implements Component {
 export default function copyModeExtension(pi: ExtensionAPI): void {
 	const release = claimOwnership();
 	if (!release) return;
+	registerAnnotations(pi);
 	let host: CopyModeHost | undefined;
 	let removeSelectionListener: (() => void) | undefined;
 	const unregisterSettings = registerCopyModeSettings();
@@ -64,12 +68,11 @@ export default function copyModeExtension(pi: ExtensionAPI): void {
 	});
 
 	pi.on("session_shutdown", (event, ctx) => {
-		if (ctx.mode !== "tui") return;
 		removeSelectionListener?.();
 		removeSelectionListener = undefined;
 		host?.dispose();
 		host = undefined;
-		ctx.ui.setWidget(WIDGET_KEY, undefined);
+		if (ctx.mode === "tui") ctx.ui.setWidget(WIDGET_KEY, undefined);
 		if (event.reason === "reload" || event.reason === "quit") {
 			unregisterAction();
 			unregisterSettings();

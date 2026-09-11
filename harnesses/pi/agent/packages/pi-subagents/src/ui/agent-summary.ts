@@ -4,7 +4,7 @@ import {
 	icon,
 	type TuiForegroundToken,
 	type TuiTheme,
-} from "@luan-pi/pi-libtui";
+} from "pi-libtui";
 import type { SubagentSnapshot, SubagentStatus, TranscriptPreview } from "../runtime/coordinator.ts";
 
 type AgentRowSummary = Pick<

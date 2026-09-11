@@ -1,6 +1,6 @@
 import type { AgentToolResult, Theme, ToolRenderResultOptions } from "@earendil-works/pi-coding-agent";
-import { type ActivityAnimationOverrides, ComponentStack } from "@luan-pi/pi-libtui";
-import type { TuiMouseEvent } from "@luan-pi/pi-libtui/mouse";
+import { type ActivityAnimationOverrides, ComponentStack } from "pi-libtui";
+import type { TuiMouseEvent } from "pi-libtui/mouse";
 import {
 	settleToolCallPreview,
 	type TerminalOutputUpdate,
@@ -9,7 +9,7 @@ import {
 	type ToolOutputUpdate,
 	type ToolTranscriptStatus,
 	toolCallPreview,
-} from "@luan-pi/pi-libtui/tool";
+} from "pi-libtui/tool";
 import { type ShellAction, summarizeShellCommand } from "../core/shell-summary.ts";
 import type { ExecProcessSnapshot, ExecSessionManager } from "../session-manager.ts";
 import type { ExecToolPresentationDetails } from "../tools/presentation.ts";
@@ -29,19 +29,21 @@ interface RendererContext {
 }
 
 export function renderExecCommandCall(
-	args: { cmd: string; shell?: string },
+	args: { cmd?: string; shell?: string },
 	theme: Theme,
 	context: RendererContext,
 	animation?: Readonly<ActivityAnimationOverrides>,
 ) {
 	if (context.executionStarted) return new ComponentStack();
+	// Pi renders streamed arguments before the required command has arrived.
+	const command = args.cmd ?? "";
 	return toolCallPreview(
 		context.state ?? context,
 		new CommandTranscript({
 			theme,
 			requestRender: context.invalidate,
 			animation,
-			view: { command: args.cmd, shell: args.shell, status: "queued", actions: explorationActions(args.cmd) },
+			view: { command, shell: args.shell, status: "queued", actions: explorationActions(command) },
 		}),
 	);
 }

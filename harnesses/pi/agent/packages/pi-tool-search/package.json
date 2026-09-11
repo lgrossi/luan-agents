@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-tool-search",
-  "version": "0.2.2",
+  "name": "@cfcluan/pi-tool-search",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,23 +9,34 @@
   },
   "description": "Dynamic tool search and loading for Pi",
   "type": "module",
-  "keywords": ["pi-package"],
-  "exports": { ".": "./src/index.ts" },
+  "keywords": [
+    "pi-package"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
-    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.mp4"
+    "extensions": [
+      "./src/extension.ts",
+      "./node_modules/pi-libtui/src/extension.ts"
+    ],
+    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.mp4"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"
   },
   "dependencies": {
-    "@luan-pi/pi-code-mode": "workspace:*",
-    "@luan-pi/pi-libtui": "workspace:*",
-    "@luan-pi/pi-xsettings": "workspace:*"
+    "pi-code-mode": "workspace:*",
+    "pi-libtui": "workspace:*",
+    "pi-xsettings": "workspace:*"
   },
-  "bundledDependencies": ["@luan-pi/pi-code-mode", "@luan-pi/pi-libtui", "@luan-pi/pi-xsettings"],
+  "bundledDependencies": [
+    "pi-code-mode",
+    "pi-libtui",
+    "pi-xsettings"
+  ],
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.84.2",
     "@earendil-works/pi-tui": "0.84.2",

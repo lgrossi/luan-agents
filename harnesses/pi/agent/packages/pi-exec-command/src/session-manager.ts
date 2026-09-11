@@ -6,7 +6,7 @@ import {
 	parseTerminalBridgeReadResponse,
 	type TerminalBridgeClient,
 	type TerminalBridgeReadResponse,
-} from "@luan-pi/pi-libtui";
+} from "pi-libtui";
 import {
 	appendBounded,
 	chunkId,

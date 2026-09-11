@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-view-image",
-  "version": "0.2.2",
+  "name": "pi-view-image",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,17 +9,28 @@
   },
   "description": "Codex-compatible native image attachment tool for Pi",
   "type": "module",
-  "keywords": ["pi-package"],
-  "exports": { ".": "./src/index.ts" },
+  "keywords": [
+    "pi-package"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
-    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-view-image.png"
+    "extensions": [
+      "./src/extension.ts",
+      "./node_modules/pi-libtui/src/extension.ts"
+    ],
+    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.mp4"
   },
   "dependencies": {
-    "@luan-pi/pi-code-mode": "workspace:*",
-    "@luan-pi/pi-libtui": "workspace:*"
+    "pi-code-mode": "workspace:*",
+    "pi-libtui": "workspace:*"
   },
-  "bundledDependencies": ["@luan-pi/pi-code-mode", "@luan-pi/pi-libtui"],
+  "bundledDependencies": [
+    "pi-code-mode",
+    "pi-libtui"
+  ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "typebox": "*"

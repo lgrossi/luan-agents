@@ -1,8 +1,4 @@
-import {
-	configureTuiAppearance,
-	TUI_ACTIVITY_INDICATOR_OPTIONS,
-	TUI_STATUS_PRESENTATION_OPTIONS,
-} from "@luan-pi/pi-libtui";
+import { configureTuiAppearance, TUI_ACTIVITY_INDICATOR_OPTIONS, TUI_STATUS_PRESENTATION_OPTIONS } from "pi-libtui";
 import { createSettings } from "../sdk.ts";
 
 const textEffectOptions = [

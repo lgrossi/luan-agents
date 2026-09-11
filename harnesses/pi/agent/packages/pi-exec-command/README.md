@@ -1,4 +1,4 @@
-# @luan-pi/pi-exec-command
+# pi-exec-command
 
 Bounded shell execution for Pi with persistent PTY sessions, backed by the
 native `terminal_bridge` binary. `exec_command` starts a shell command and
@@ -8,14 +8,14 @@ and its subagents, shows their bounded output, attaches to retained PTY state,
 forwards terminal input, and exposes interrupt and terminate actions.
 ## Preview
 
-![pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-exec-command.png)
+![pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-exec-command.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-exec-command.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-exec-command.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-exec-command
+pi install npm:pi-exec-command
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `terminal_bridge` binary
@@ -25,11 +25,11 @@ a prebuilt binary; it must point to an executable file.
 
 Optional companions:
 
-- `pi install npm:@luan-pi/pi-xsettings` adds a `/xsettings` UI for the
+- `pi install npm:pi-xsettings` adds a `/xsettings` UI for the
   settings below; without it the compiled defaults apply.
-- `pi install npm:@luan-pi/pi-side-panel` lets the Process Hub open as a side
+- `pi install npm:pi-panels` lets the Process Hub open as a side
   panel tab; without it the hub opens as a fullscreen overlay.
-- `pi install npm:@luan-pi/pi-subagents` lets the hub include processes owned
+- `pi install npm:@cfcluan/pi-subagents` lets the hub include processes owned
   by descendant agents; without it the hub shows only the current session.
 
 ## `exec_command`
@@ -151,7 +151,7 @@ value is a key ID string or an array of them:
 ## Settings
 
 Settings live in the `pi-exec-command` namespace and are edited via
-`/xsettings` when `@luan-pi/pi-xsettings` is installed; otherwise the defaults
+`/xsettings` when `pi-xsettings` is installed; otherwise the defaults
 apply. Changes apply live and republish the tool definitions.
 
 | Key | Default | Choices |

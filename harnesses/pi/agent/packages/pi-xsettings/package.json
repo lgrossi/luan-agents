@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-xsettings",
-  "version": "0.2.2",
+  "name": "pi-xsettings",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,23 +9,31 @@
   },
   "description": "Shared typed settings and settings UI for Pi extensions",
   "type": "module",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package"
+  ],
   "exports": {
     ".": "./src/index.ts",
     "./sdk": "./src/sdk.ts"
   },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
-    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-xsettings.mp4"
+    "extensions": [
+      "./src/extension.ts",
+      "./node_modules/pi-libtui/src/extension.ts"
+    ],
+    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-xsettings.mp4"
   },
   "dependencies": {
-    "@luan-pi/pi-libactions": "workspace:*",
-    "@luan-pi/pi-libtui": "workspace:*",
+    "pi-libactions": "workspace:*",
+    "pi-libtui": "workspace:*",
     "smol-toml": "1.8.0",
     "typebox": "1.3.15"
   },
-  "bundledDependencies": ["@luan-pi/pi-libactions", "@luan-pi/pi-libtui"],
+  "bundledDependencies": [
+    "pi-libactions",
+    "pi-libtui"
+  ],
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*",

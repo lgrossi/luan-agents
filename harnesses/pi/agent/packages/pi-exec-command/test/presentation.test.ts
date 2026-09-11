@@ -1,4 +1,5 @@
 import { afterEach, beforeAll, describe, expect, test } from "bun:test";
+import { Check } from "typebox/value";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import {
 	configureTuiAppearance,
@@ -7,7 +8,7 @@ import {
 	icon,
 	sharedMotionScheduler,
 	whenSyntaxReady,
-} from "@luan-pi/pi-libtui";
+} from "pi-libtui";
 import { DEFAULT_EXEC_COMMAND_SETTINGS } from "../src/contributions/xsettings.ts";
 import type { ExecProcessSnapshot } from "../src/session-manager.ts";
 import { createExecCommandTool } from "../src/tools/exec-command/definition.ts";
@@ -28,6 +29,7 @@ afterEach(() => configureTuiAppearance(DEFAULT_TUI_APPEARANCE));
 
 interface ContextOverrides {
 	readonly executionStarted?: boolean;
+	readonly argsComplete?: boolean;
 	readonly isPartial?: boolean;
 	readonly isError?: boolean;
 	readonly invalidate?: () => void;
@@ -106,6 +108,25 @@ beforeAll(async () => {
 });
 
 describe("exec tool presentation", () => {
+	test("renders incomplete command arguments before execution without weakening the tool schema", () => {
+		const tool = createExecCommandTool({} as never, TEST_EXEC_COMMAND_PREPARATION_RUNTIME);
+		const partials = [{}, { shell: "/bin/zsh" }, { cmd: "" }, { cmd: "printf" }, { cmd: "printf ok" }];
+		for (const args of partials) {
+			const component = tool.renderCall?.(
+				args as never,
+				theme,
+				context(args, undefined, { executionStarted: false, argsComplete: false }),
+			);
+			expect(component).toBeDefined();
+			const rendered = Bun.stripANSI(component!.render(106).join("\n")).trimEnd();
+			expect(rendered).toBe(args.cmd ? `$ ${args.cmd}` : "$");
+		}
+		expect(Check(tool.parameters, {})).toBe(false);
+		expect(Check(tool.parameters, { shell: "/bin/zsh" })).toBe(false);
+		expect(Check(tool.parameters, { cmd: 42 })).toBe(false);
+		expect(Check(tool.parameters, { cmd: "printf ok" })).toBe(true);
+	});
+
 	test("syntax-colors shell commands through shared Shiki without changing their source", () => {
 		const tool = createExecCommandTool({} as never, TEST_EXEC_COMMAND_PREPARATION_RUNTIME);
 		const source = "echo \"$HOME\" && printf '%s\\n' ok";

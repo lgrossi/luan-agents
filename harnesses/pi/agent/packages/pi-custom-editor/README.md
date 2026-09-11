@@ -1,4 +1,4 @@
-# @luan-pi/pi-custom-editor
+# pi-custom-editor
 
 A Pi extension that replaces the built-in input editor chrome and footer with a
 configurable composition: semantic surfaces, top and bottom rules, left and
@@ -10,20 +10,20 @@ type.
 
 ## Preview
 
-![pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-custom-editor.png)
+![pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-custom-editor.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-custom-editor.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-custom-editor.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-custom-editor
+pi install npm:pi-custom-editor
 ```
 
 The extension is active in the TUI on the next session start. No configuration
 is required; the `compact-field` preset is used until you change it.
 
-Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the
+Optional companion: `pi install npm:pi-xsettings` adds the
 `/xsettings` command with a live preview UI for every setting listed below;
 without it the defaults apply and there is no in-app way to change them.
 
@@ -80,9 +80,9 @@ Nothing is highlighted inside inline or fenced Markdown code.
 
 ## Settings
 
-Settings are defined with `@luan-pi/pi-xsettings` under namespace
+Settings are defined with `pi-xsettings` under namespace
 `pi-custom-editor` (label "Custom Editor", page "Editor", applied live). Edit
-them with `/xsettings` when `@luan-pi/pi-xsettings` is installed; otherwise the
+them with `/xsettings` when `pi-xsettings` is installed; otherwise the
 defaults below apply.
 
 | Key | Default | Values |
@@ -116,10 +116,10 @@ This package registers no actions, commands, or keybindings.
 ## Highlight API
 
 Other extensions can add editor highlights through a process-wide, versioned
-registry. Import from `@luan-pi/pi-custom-editor`:
+registry. Import from `pi-custom-editor`:
 
 ```ts
-import { ensureEditorHighlightRegistry } from "@luan-pi/pi-custom-editor";
+import { ensureEditorHighlightRegistry } from "pi-custom-editor";
 
 const registry = ensureEditorHighlightRegistry(); // protocol "pi-custom-editor/highlights/v1"
 const dispose = registry.register({

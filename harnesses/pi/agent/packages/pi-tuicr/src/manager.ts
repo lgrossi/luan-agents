@@ -11,7 +11,7 @@ import {
 	type SidePanelTab,
 	type SplitPaneHost,
 	tuiThemeAppearance,
-} from "@luan-pi/pi-libtui";
+} from "pi-libtui";
 import {
 	listTuicrTargets,
 	prepareTuicrReview,

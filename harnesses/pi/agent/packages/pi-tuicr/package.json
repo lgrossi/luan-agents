@@ -1,6 +1,6 @@
 {
-  "name": "@luan-pi/pi-tuicr",
-  "version": "0.2.2",
+  "name": "@cfcluan/pi-tuicr",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,18 +9,28 @@
   },
   "description": "Tuicr review integration with optional side-panel tabs",
   "type": "module",
-  "keywords": ["pi-package"],
-  "exports": { ".": "./src/index.ts" },
+  "keywords": [
+    "pi-package"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "pi": {
-    "extensions": ["./src/extension.ts", "./node_modules/@luan-pi/pi-libtui/src/extension.ts"],
-    "image": "https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.mp4"
+    "extensions": [
+      "./src/extension.ts",
+      "./node_modules/pi-libtui/src/extension.ts"
+    ],
+    "image": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.png",
+    "video": "https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.mp4"
   },
   "dependencies": {
-    "@luan-pi/pi-libactions": "workspace:*",
-    "@luan-pi/pi-libtui": "workspace:*"
+    "pi-libactions": "workspace:*",
+    "pi-libtui": "workspace:*"
   },
-  "bundledDependencies": ["@luan-pi/pi-libactions", "@luan-pi/pi-libtui"],
+  "bundledDependencies": [
+    "pi-libactions",
+    "pi-libtui"
+  ],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"

@@ -1,19 +1,19 @@
 # pi-tool-search
 
-`@luan-pi/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
+`@cfcluan/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
 activates tools which are currently inactive. It searches only the scope
 assigned to it. It does not inspect or modify the global tool hierarchy.
 
 ## Preview
 
-![pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.png)
+![pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-tool-search.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-tool-search.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-tool-search
+pi install npm:@cfcluan/pi-tool-search
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `code-mode-host` binary
@@ -21,7 +21,7 @@ builds itself on first use under Pi's agent directory
 (`native/code-mode-host/<version>/`). Set `PI_CODE_MODE_HOST_BINARY` to use a
 prebuilt binary.
 
-Optional companion: `pi install npm:@luan-pi/pi-xsettings` adds the
+Optional companion: `pi install npm:pi-xsettings` adds the
 `/xsettings` editor for the deferred-tool picker described below; without it
 the default (no deferred tools) applies.
 
@@ -72,7 +72,7 @@ owner changes the scope.
 ## Settings
 
 Settings live in the `pi-tool-search` namespace (label "Tool Search",
-category `tools`). Edit them with `/xsettings` when `@luan-pi/pi-xsettings` is
+category `tools`). Edit them with `/xsettings` when `pi-xsettings` is
 installed; otherwise the defaults apply.
 
 | Key | Type | Default | Meaning |

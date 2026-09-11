@@ -1,6 +1,6 @@
-# @luan-pi/pi-tuicr
+# @cfcluan/pi-tuicr
 
-`@luan-pi/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
+`@cfcluan/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
 opens a picker of git review targets, launches `tuicr` in an embedded terminal,
 and watches tuicr's session files for review comments. Comments written in
 tuicr appear in Pi's editor as a single attachment pill and expand into a
@@ -11,14 +11,14 @@ no settings.
 
 ## Preview
 
-![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.png)
+![pi-tuicr in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-tuicr.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-tuicr.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-tuicr
+pi install npm:@cfcluan/pi-tuicr
 ```
 
 ### Requirements
@@ -35,7 +35,7 @@ pi install npm:@luan-pi/pi-tuicr
 
 ### Optional companion
 
-`pi install npm:@luan-pi/pi-side-panel` adds a side panel; when it is present,
+`pi install npm:pi-panels` adds a side panel; when it is present,
 reviews open as panel tabs, and when it is absent, they open in a fullscreen
 overlay. Both modes are described below.
 
@@ -130,7 +130,7 @@ array of key IDs:
 ```
 
 Bindings take effect only when a shortcut host is installed
-(`pi install npm:@luan-pi/pi-xsettings` provides one). The file is read on
+(`pi install npm:pi-xsettings` provides one). The file is read on
 load, so `/reload` after editing it.
 
 ## Settings

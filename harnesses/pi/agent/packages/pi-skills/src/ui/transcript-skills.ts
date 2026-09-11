@@ -7,7 +7,7 @@ import {
 	renderPill,
 	renderPillText,
 	tuiTheme,
-} from "@luan-pi/pi-libtui";
+} from "pi-libtui";
 import type { SkillReference } from "../skills.ts";
 
 const SKILL_REFERENCE = /(?:^|\s)(\$[a-zA-Z][\w-]*(?::[\w-]+)*)/gu;

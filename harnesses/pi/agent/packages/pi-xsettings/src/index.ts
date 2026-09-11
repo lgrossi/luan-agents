@@ -2,7 +2,7 @@ export {
 	type ActionRegistration,
 	type ActionsRegistry,
 	ensureActionsRegistry,
-} from "@luan-pi/pi-libactions/sdk";
+} from "pi-libactions/sdk";
 export {
 	ensureXSettingsRegistry,
 	type SettingDefinition,

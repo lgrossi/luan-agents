@@ -3,12 +3,12 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { convertToLlm, type ToolDefinition } from "@earendil-works/pi-coding-agent";
-import { getCodeModeToolAdapterRegistry } from "@luan-pi/pi-code-mode/sdk";
-import { icon } from "@luan-pi/pi-libtui";
+import { getCodeModeToolAdapterRegistry } from "pi-code-mode/sdk";
+import { icon } from "pi-libtui";
 import {
 	getDeveloperMessageContributionRegistry,
 	renderDeveloperMessages,
-} from "../../pi-developer-prompt/src/developer-messages.ts";
+} from "../../pi-developer-messages/src/developer-messages.ts";
 import skillsExtension from "../src/extension.ts";
 import { registerSkillsPromptContribution, renderSkillsCatalog } from "../src/prompt.ts";
 import { createSkillTool } from "../src/tools/skill/definition.ts";

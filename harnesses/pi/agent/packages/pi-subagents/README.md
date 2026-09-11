@@ -1,6 +1,6 @@
-# @luan-pi/pi-subagents
+# @cfcluan/pi-subagents
 
-`@luan-pi/pi-subagents` is a Pi extension that adds one root-scoped tree of
+`@cfcluan/pi-subagents` is a Pi extension that adds one root-scoped tree of
 concurrent, nested agents. Each agent runs in its own Pi session and can
 receive follow-up work, direct messages, or an interrupt without blocking
 unrelated agents in the tree.
@@ -16,24 +16,24 @@ The extension registers six collaboration tools for the model:
 
 ## Preview
 
-![pi-subagents in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-subagents.png)
+![pi-subagents in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.2.2/pi-subagents.mp4).
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-subagents.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-subagents
+pi install npm:@cfcluan/pi-subagents
 ```
 
 Optional companions:
 
-- `pi install npm:@luan-pi/pi-xsettings` adds a `/xsettings` UI for the
+- `pi install npm:pi-xsettings` adds a `/xsettings` UI for the
   settings below and binds keys from `keybindings.json`; without it the
   defaults apply and no key is bound.
-- `pi install npm:@luan-pi/pi-side-panel` lets the Agent Hub open as a
+- `pi install npm:pi-panels` lets the Agent Hub open as a
   side-panel tab; without it the Agent Hub always opens as a fullscreen overlay.
-- `pi install npm:@luan-pi/pi-developer-prompt` makes the delegation
+- `pi install npm:pi-developer-messages` makes the delegation
   instructions arrive as developer messages; without it they are appended to
   the system prompt.
 
@@ -95,7 +95,7 @@ Code Mode.
 ## Settings
 
 Settings use the `pi-subagents` namespace. Edit them via `/xsettings` when
-`@luan-pi/pi-xsettings` is installed; otherwise the defaults apply.
+`pi-xsettings` is installed; otherwise the defaults apply.
 
 | Key | Default | Values |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ array of key IDs:
 ```
 
 Bindings take effect only when a shortcut host such as
-`@luan-pi/pi-xsettings` is installed. The file is read on load; reload
+`pi-xsettings` is installed. The file is read on load; reload
 extensions after editing. `/subagents` always works without a binding.
 
 ## Layout
@@ -165,7 +165,7 @@ extensions after editing. `/subagents` always works without a binding.
 - **The depth limit is reached:** continue in the current agent or spawn from
   a shallower ancestor.
 - **The bound key does nothing:** check `subagents.open` in
-  `keybindings.json`, confirm `@luan-pi/pi-xsettings` is installed, and reload.
+  `keybindings.json`, confirm `pi-xsettings` is installed, and reload.
 - **A requested model is unavailable:** use the exact `provider/model-id` and
   confirm the provider is configured in Pi.
 - **A collaboration tool is missing inside `exec`:** call it directly; the

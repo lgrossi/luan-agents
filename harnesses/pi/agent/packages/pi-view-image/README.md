@@ -1,6 +1,6 @@
 # pi-view-image
 
-`@luan-pi/pi-view-image` adds a Codex-compatible `view_image` tool to Pi. A
+`pi-view-image` adds a Codex-compatible `view_image` tool to Pi. A
 native Rust binary reads and validates a local PNG, JPEG, GIF, or WebP file and
 returns it as a Pi image content block, so any vision-capable model can look at
 a file that is already on disk. The same package makes pasted image paths in the
@@ -9,12 +9,14 @@ before they reach the provider.
 
 ## Preview
 
-![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.2.2/pi-view-image.png)
+![pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.png)
+
+[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.0/pi-view-image.mp4).
 
 ## Install
 
 ```sh
-pi install npm:@luan-pi/pi-view-image
+pi install npm:pi-view-image
 ```
 
 Requires a Rust toolchain (https://rustup.rs). The `view_image` binary builds
@@ -22,8 +24,8 @@ itself on first use under Pi's agent directory (`native/view-image/<version>/`).
 Set `PI_VIEW_IMAGE_BIN` to use a prebuilt binary; it must point to an
 executable file. Pi shows an info notification while the first build runs.
 
-Code Mode support is bundled. If `@luan-pi/pi-code-mode` is also installed
-(`pi install npm:@luan-pi/pi-code-mode`), `view_image` is callable from inside
+Code Mode support is bundled. If `pi-code-mode` is also installed
+(`pi install npm:pi-code-mode`), `view_image` is callable from inside
 Code Mode scripts as described below; without it the tool is still available as
 a normal Pi tool.
 
@@ -64,7 +66,7 @@ Behaviour:
 
 ### Inside Code Mode
 
-The tool is also registered through `@luan-pi/pi-code-mode/sdk`. In a Code Mode
+The tool is also registered through `pi-code-mode/sdk`. In a Code Mode
 script, `view_image` returns `{ image_url, detail }`, where `image_url` is a
 base64 `data:` URL. Forward it with `image(result)` so the model sees the image:
 
