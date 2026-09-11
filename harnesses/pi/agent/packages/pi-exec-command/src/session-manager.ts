@@ -126,7 +126,7 @@ interface CompletedSession {
 
 export interface ExecSessionManagerOptions {
 	bridge?: TerminalBridgeClient;
-	binaryPath?: () => string;
+	binaryPath?: () => Promise<string>;
 	env?: NodeJS.ProcessEnv;
 	maxSessionBufferChars?: number;
 	maxExecYieldTimeMs?: number;
