@@ -8,9 +8,9 @@ and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
 
 ## Preview
 
-![@luan.sh/pi-fileops in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.png)
+![@luan.sh/pi-fileops in Bootty](https://pi.luan.sh/media/previews/pi-fileops-fd6d191a4760.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-fileops.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-fileops-fcf6128b5f4c.mp4).
 
 ## Install
 

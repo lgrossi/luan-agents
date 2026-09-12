@@ -14,9 +14,9 @@ It is a Pi extension, not a model-facing tool. It registers one command
 
 Independent side conversation beside the main Pi session.
 
-![@luan.sh/pi-side in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.png)
+![@luan.sh/pi-side in Bootty](https://pi.luan.sh/media/previews/pi-side-8c1a712df319.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-side.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-side-21f6936fdecf.mp4).
 
 ## Install
 

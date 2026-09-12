@@ -11,9 +11,9 @@ widget above the editor.
 
 ## Preview
 
-![@luan.sh/pi-prompt-storage in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-prompt-storage.png)
+![@luan.sh/pi-prompt-storage in Bootty](https://pi.luan.sh/media/previews/pi-prompt-storage-5627a140e645.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-prompt-storage.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-prompt-storage-8e5eab2e63de.mp4).
 
 ## Install
 

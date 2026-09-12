@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-skills",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.5/pi-skills.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-skills-024c32055582.png",
+    "video": "https://pi.luan.sh/media/previews/pi-skills-b834329672d2.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-code-mode": "workspace:*",

@@ -18,9 +18,9 @@ registers no model-facing tools, keybindings, or feature-specific UI.
 
 The native palette diagnostic and shared picker components in Xsettings.
 
-![@luan.sh/pi-libtui in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.png)
+![@luan.sh/pi-libtui in Bootty](https://pi.luan.sh/media/previews/pi-libtui-1820a03ca387.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-libtui.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-libtui-e7ff85f140d3.mp4).
 
 ## Install
 

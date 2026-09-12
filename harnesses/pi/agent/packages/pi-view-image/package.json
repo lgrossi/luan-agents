@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-view-image",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-view-image-3b76f3119bb5.png",
+    "video": "https://pi.luan.sh/media/previews/pi-view-image-62df21208d2a.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-code-mode": "workspace:*",

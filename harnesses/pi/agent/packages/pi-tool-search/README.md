@@ -6,9 +6,9 @@ assigned to it. It does not inspect or modify the global tool hierarchy.
 
 ## Preview
 
-![@luan.sh/pi-tool-search in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-tool-search.png)
+![@luan.sh/pi-tool-search in Bootty](https://pi.luan.sh/media/previews/pi-tool-search-350d7d9bacad.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-tool-search.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-tool-search-14df51a672aa.mp4).
 
 ## Install
 

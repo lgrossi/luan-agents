@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-xsettings",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,8 +21,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-xsettings.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-xsettings-25c1f13ef32f.png",
+    "video": "https://pi.luan.sh/media/previews/pi-xsettings-6661ed0cbe89.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-libactions": "workspace:*",

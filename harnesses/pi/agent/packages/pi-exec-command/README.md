@@ -8,9 +8,9 @@ and its subagents, shows their bounded output, attaches to retained PTY state,
 forwards terminal input, and exposes interrupt and terminate actions.
 ## Preview
 
-![@luan.sh/pi-exec-command in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.png)
+![@luan.sh/pi-exec-command in Bootty](https://pi.luan.sh/media/previews/pi-exec-command-bdc338239909.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-exec-command.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-exec-command-00eaa4fd94c5.mp4).
 
 ## Install
 

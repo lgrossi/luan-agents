@@ -10,9 +10,9 @@ type.
 
 ## Preview
 
-![@luan.sh/pi-custom-editor in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-custom-editor.png)
+![@luan.sh/pi-custom-editor in Bootty](https://pi.luan.sh/media/previews/pi-custom-editor-35442b4cbba0.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-custom-editor.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-custom-editor-08e00ee47814.mp4).
 
 ## Install
 

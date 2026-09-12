@@ -10,9 +10,9 @@ or image-generation tools.
 
 ## Preview
 
-![@luan.sh/pi-codex-native in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.png)
+![@luan.sh/pi-codex-native in Bootty](https://pi.luan.sh/media/previews/pi-codex-native-695375265293.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-codex-native.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-codex-native-38742cb8baf1.mp4).
 
 ## Install
 

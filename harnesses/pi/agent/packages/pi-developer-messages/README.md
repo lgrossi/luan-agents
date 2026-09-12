@@ -8,9 +8,9 @@ commands, and it does not decide how a provider serializes its request.
 
 ## Preview
 
-![@luan.sh/pi-developer-messages in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.png)
+![@luan.sh/pi-developer-messages in Bootty](https://pi.luan.sh/media/previews/pi-developer-messages-226e149b6757.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-developer-messages.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-developer-messages-607e0b92fe92.mp4).
 
 ## Install
 

@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-collapse-transcript",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.4/pi-collapse-transcript.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-collapse-transcript-d3924989e5a1.png",
+    "video": "https://pi.luan.sh/media/previews/pi-collapse-transcript-f4ea1478db8c.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-libtui": "workspace:*"

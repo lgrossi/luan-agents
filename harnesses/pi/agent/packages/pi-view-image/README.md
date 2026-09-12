@@ -9,9 +9,9 @@ before they reach the provider.
 
 ## Preview
 
-![@luan.sh/pi-view-image in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.png)
+![@luan.sh/pi-view-image in Bootty](https://pi.luan.sh/media/previews/pi-view-image-3b76f3119bb5.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-view-image.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-view-image-62df21208d2a.mp4).
 
 ## Install
 

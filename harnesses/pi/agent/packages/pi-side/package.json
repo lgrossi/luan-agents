@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-side",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-side.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-side.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-side-8c1a712df319.png",
+    "video": "https://pi.luan.sh/media/previews/pi-side-21f6936fdecf.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-libactions": "workspace:*",

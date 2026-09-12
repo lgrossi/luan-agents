@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-tuicr",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-tuicr.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-tuicr-c744ed90681b.png",
+    "video": "https://pi.luan.sh/media/previews/pi-tuicr-511d01fc6494.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-libactions": "workspace:*",

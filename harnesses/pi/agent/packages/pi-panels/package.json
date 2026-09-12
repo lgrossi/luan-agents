@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-panels",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -17,8 +17,8 @@
       "./src/extension.ts",
       "./node_modules/@luan.sh/pi-libtui/src/extension.ts"
     ],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-panels-e69474de1ee3.png",
+    "video": "https://pi.luan.sh/media/previews/pi-panels-ae3c28bfa509.mp4"
   },
   "dependencies": {
     "@luan.sh/pi-libactions": "workspace:*",

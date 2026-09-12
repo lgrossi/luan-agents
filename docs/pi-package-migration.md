@@ -54,3 +54,10 @@ with these exceptions:
 Library consumers can use the canonical `@luan.sh` imports. The supported
 bare library names remain available. Settings, action IDs, tool names, and
 cross-extension registry keys keep their existing identities.
+
+## Retired repository-wide release tags
+
+Preview media is served from `pi.luan.sh`; native builds use a source commit
+recorded in each package. Update older installed or pinned packages before
+using versions that depended on repository-wide `v0.3.x` tags or GitHub release
+media. Those old references are retired after replacement versions are available.

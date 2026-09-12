@@ -29,7 +29,9 @@ sample or a separate showcase renderer. Keep UI-free libraries free of extension
 entry points; declare an empty `pi.extensions` array so gallery metadata does
 not trigger extension auto-discovery.
 
-After content review, host the media as GitHub release assets, verify the public
-URLs, then publish a new npm version using the repository release workflow.
+After content review, store previews in `site/media/previews/` with a content
+hash in each filename. Use absolute `https://pi.luan.sh/media/previews/` URLs in
+package metadata and READMEs. Verify the deployed public URLs before publishing
+a new npm version through the repository release workflow.
 
 Reference: [Pi gallery metadata](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md#gallery-metadata).

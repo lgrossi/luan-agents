@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-libactions",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,8 +18,8 @@
   },
   "pi": {
     "extensions": [],
-    "image": "https://github.com/luan/agents/releases/download/v0.3.2/pi-libactions.png",
-    "video": "https://github.com/luan/agents/releases/download/v0.3.2/pi-libactions.mp4"
+    "image": "https://pi.luan.sh/media/previews/pi-libactions-bbaab600e262.png",
+    "video": "https://pi.luan.sh/media/previews/pi-libactions-c0f46f189045.mp4"
   },
   "dependencies": {},
   "peerDependencies": {

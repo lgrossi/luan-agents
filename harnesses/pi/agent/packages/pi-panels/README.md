@@ -11,9 +11,9 @@ installed the panel is empty. Tabs come from other packages, for example
 
 ## Preview
 
-![@luan.sh/pi-panels in Bootty](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.png)
+![@luan.sh/pi-panels in Bootty](https://pi.luan.sh/media/previews/pi-panels-e69474de1ee3.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.2/pi-panels.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-panels-ae3c28bfa509.mp4).
 
 ## Install
 

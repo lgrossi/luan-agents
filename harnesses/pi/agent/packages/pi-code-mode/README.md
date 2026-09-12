@@ -12,9 +12,9 @@ available inside `exec` through the SDK described below.
 
 ## Preview
 
-![@luan.sh/pi-code-mode in Bootty](https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.png)
+![@luan.sh/pi-code-mode in Bootty](https://pi.luan.sh/media/previews/pi-code-mode-1fb9bf32cd5a.png)
 
-[Watch the demo](https://github.com/luan/agents/releases/download/v0.3.3/pi-code-mode.mp4).
+[Watch the demo](https://pi.luan.sh/media/previews/pi-code-mode-90738a72b416.mp4).
 
 ## Install
 
