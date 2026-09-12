@@ -1,6 +1,4 @@
-# @luan.sh/pi-skills
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-skills)
+# @luan.sh/pi-skills&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-skills)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-skills)
 
 `@luan.sh/pi-skills` adds a `skill` tool to Pi. The tool loads a skill's `SKILL.md`
 into the conversation by exact name, so the model can pull in detailed

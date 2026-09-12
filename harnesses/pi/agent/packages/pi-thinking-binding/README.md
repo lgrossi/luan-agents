@@ -1,6 +1,4 @@
-# @luan.sh/pi-thinking-binding
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-thinking-binding)
+# @luan.sh/pi-thinking-binding&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-thinking-binding)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-thinking-binding)
 
 A Pi extension that drops Anthropic thinking blocks a system prompt or tool
 change has already invalidated, so the `prefix_binding_mismatch` warning
@@ -42,10 +40,12 @@ The extension does the drop itself, once. It only acts on models whose API is
 4. On later turns, the `context` hook removes thinking from assistant messages
    at or before the cutoff before they reach the provider. Newer reasoning is
    left alone.
-5. For sessions that were already broken before a fingerprint was recorded,
-   the `message_end` hook trusts Anthropic's own
+5. Prefix changes the fingerprint cannot see (a session already broken before
+   a fingerprint was recorded, or an extension rewriting earlier message
+   content such as resizing an image in history) are caught by the
+   `message_end` hook: it trusts Anthropic's own
    `thinking_dropped` / `prefix_binding_mismatch` diagnostic once and records
-   the cutoff from it.
+   the cutoff from it. Those cases cost one warning instead of one per turn.
 
 A message whose only content is thinking is never emptied; it is left as is.
 

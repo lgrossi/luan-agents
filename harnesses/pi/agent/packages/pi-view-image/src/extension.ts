@@ -1,6 +1,7 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { type ExtensionAPI, resizeImage } from "@earendil-works/pi-coding-agent";
 import { registerViewImageCodeModeAdapter } from "./code-mode-adapter.ts";
 import { ImageAttachmentStore } from "./core/attachments.ts";
+import { createImageClamp, MAX_IMAGE_DIMENSION } from "./image-limits.ts";
 import { resolveViewImageBinary } from "./native/binary.ts";
 import { labelNativeImageAttachments } from "./native-attachments.ts";
 import { runViewImageBinary } from "./native/view-image.ts";
@@ -11,6 +12,13 @@ import { configureViewImageToolForModel, createViewImageTool } from "./tools/vie
 export default function viewImageExtension(pi: ExtensionAPI): void {
 	const tool = createViewImageTool();
 	const attachments = new ImageAttachmentStore();
+	const clampImages = createImageClamp(async (image) => {
+		const resized = await resizeImage(Buffer.from(image.data, "base64"), image.mimeType, {
+			maxWidth: MAX_IMAGE_DIMENSION,
+			maxHeight: MAX_IMAGE_DIMENSION,
+		});
+		return resized?.wasResized ? { type: "image", data: resized.data, mimeType: resized.mimeType } : null;
+	});
 	let removeImagePasteSession: (() => void) | undefined;
 	pi.registerTool(tool);
 	pi.on("session_start", (_event, context) => {
@@ -26,7 +34,8 @@ export default function viewImageExtension(pi: ExtensionAPI): void {
 	pi.on("input", async (event, context) => {
 		const transformed = await transformPendingImageAttachments(event, attachments, (path) =>
 			resolveViewImageBinary({ onBuild: (message) => context.ui.notify(message, "info") }).then((binary) =>
-				runViewImageBinary(binary, { path, detail: "original" }, context.cwd),
+				// Pasted screenshots are attached at `high` so oversized captures are resized within provider limits.
+				runViewImageBinary(binary, { path, detail: "high" }, context.cwd),
 			),
 		);
 		if (!transformed) return { action: "continue" };
@@ -35,8 +44,10 @@ export default function viewImageExtension(pi: ExtensionAPI): void {
 		}
 		return { action: "transform", text: transformed.text, images: transformed.images };
 	});
-	pi.on("context", (event) => {
-		const messages = labelNativeImageAttachments(event.messages);
+	pi.on("context", async (event) => {
+		const labelled = labelNativeImageAttachments(event.messages);
+		const clamped = await clampImages(labelled ?? event.messages);
+		const messages = clamped ?? labelled;
 		return messages ? { messages } : undefined;
 	});
 	const disposeCodeModeAdapter = registerViewImageCodeModeAdapter(tool);

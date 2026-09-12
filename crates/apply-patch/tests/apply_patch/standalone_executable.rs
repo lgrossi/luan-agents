@@ -48,7 +48,7 @@ fn json_result_contains_native_unified_diffs_for_separated_changes() {
     std::fs::write(cwd.path().join("separated.txt"), contents).expect("write fixture");
 
     let patch = "*** Begin Patch\n*** Update File: separated.txt\n@@\n-line 03\n+line 03 changed\n@@\n-line 15\n+line 15 changed\n@@\n-line 28\n+line 28 changed\n*** End Patch\n";
-    let mut child = Command::new(env!("CARGO_BIN_EXE_apply_patch"))
+    let mut child = Command::new(env!("CARGO_BIN_EXE_apply-patch"))
         .current_dir(cwd.path())
         .env("PI_APPLY_PATCH_JSON", "1")
         .stdin(Stdio::piped())

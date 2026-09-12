@@ -1,6 +1,4 @@
-# @luan.sh/pi-collapse-transcript
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-collapse-transcript)
+# @luan.sh/pi-collapse-transcript&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-collapse-transcript)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-collapse-transcript)
 
 `@luan.sh/pi-collapse-transcript` folds runs of tool calls and thinking blocks in Pi's fullscreen
 transcript into one collapsed activity row. The row shows the latest tool action

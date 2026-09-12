@@ -1,6 +1,4 @@
-# @luan.sh/pi-tool-search
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-tool-search)
+# @luan.sh/pi-tool-search&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-tool-search)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-tool-search)
 
 `@luan.sh/pi-tool-search` adds `tool_search`, a normal Pi tool that finds and
 activates tools which are currently inactive. It searches only the scope

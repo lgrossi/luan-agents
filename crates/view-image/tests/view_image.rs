@@ -33,8 +33,8 @@ fn returns_a_native_image_attachment() {
 }
 
 #[rstest]
-#[case(None, "high", 2048)]
-#[case(Some("high"), "high", 2048)]
+#[case(None, "high", 2000)]
+#[case(Some("high"), "high", 2000)]
 #[case(Some("original"), "original", 2050)]
 fn applies_requested_image_detail(
     #[case] detail: Option<&str>,
@@ -72,7 +72,7 @@ fn rejects_text_files() {
 }
 
 fn run(input: &str) -> std::process::Output {
-    let mut child = Command::new(env!("CARGO_BIN_EXE_view_image"))
+    let mut child = Command::new(env!("CARGO_BIN_EXE_view-image"))
         .arg("-")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

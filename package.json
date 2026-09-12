@@ -7,6 +7,8 @@
     "lint:pi": "bun run test:lint:pi && biome check --skip=complexity --assist-enabled=false --error-on-warnings",
     "test:lint:pi": "bun test lint/pi/lint.test.ts",
     "typecheck": "tsc --build",
+    "build:site": "bun run site/build.ts",
+    "dev:site": "bun run site/serve.ts",
     "test": "cargo build --locked --release && bun run test:pi",
     "test:pi": "bun run --filter '@luan.sh/*' --parallel --elide-lines=0 test",
     "check:ts": "bun run lint:pi && bun run typecheck && bun run test"
@@ -16,6 +18,8 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
+    "@types/bun": "^1.3.0",
+    "shiki": "^4.4.3",
     "typescript": "6.0.3"
   },
   "packageManager": "bun@1.3.14"

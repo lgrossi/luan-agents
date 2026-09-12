@@ -33,35 +33,31 @@ just unlink
 
 Each extension can be loaded from this checkout or installed on its own. Its README explains its settings and public API.
 
-| Package | What it adds | Gallery |
-| --- | --- | --- |
-| [`@luan.sh/pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md) | A Codex-compatible `apply_patch` tool backed by the Rust patch parser. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-fileops) |
-| [`@luan.sh/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md) | Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-code-mode) |
-| [`@luan.sh/pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md) | The Codex Responses provider, models, native web tool, compaction, and provider controls. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-codex-native) |
-| [`@luan.sh/pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md) | Vim-style transcript selection, copying, comments, and reactions. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-copy-mode) |
-| [`@luan.sh/pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md) | Collapsible tools and thinking sections with a live activity summary. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-collapse-transcript) |
-| [`@luan.sh/pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md) | Provider instructions, developer messages, environment context, and prompt inspection. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-developer-messages) |
-| [`@luan.sh/pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md) | Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-exec-command) |
-| [`@luan.sh/pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md) | Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-libtui) |
-| [`@luan.sh/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md) | Exact-name skill loading through the `skill` tool. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-skills) |
-| [`@luan.sh/pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md) | Search and activation for a configured set of deferred tools. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-tool-search) |
-| [`@luan.sh/pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md) | A Codex-compatible native image attachment tool. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-view-image) |
-| [`@luan.sh/pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md) | Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-xsettings) |
-| [`@luan.sh/pi-custom-editor`](harnesses/pi/agent/packages/pi-custom-editor/README.md) | Custom editor layouts, file and skill tokens, and a semantic status footer. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-custom-editor) |
-| [`@luan.sh/pi-panels`](harnesses/pi/agent/packages/pi-panels/README.md) | Contributed side-panel tabs with focus, resize, reorder, and zoom controls. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-panels) |
-| [`@luan.sh/pi-prompt-storage`](harnesses/pi/agent/packages/pi-prompt-storage/README.md) | Draft stashing and searchable prompt history. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-prompt-storage) |
-| [`@luan.sh/pi-side`](harnesses/pi/agent/packages/pi-side/README.md) | Independent side conversations alongside the main session. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-side) |
-| [`@luan.sh/pi-subagents`](harnesses/pi/agent/packages/pi-subagents/README.md) | Concurrent, nested subagents with an Agent Hub for inspecting their work. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-subagents) |
-| [`@luan.sh/pi-thinking-binding`](harnesses/pi/agent/packages/pi-thinking-binding/README.md) | Drops Anthropic thinking blocks invalidated by system-prompt or tool changes. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-thinking-binding) |
-| [`@luan.sh/pi-tuicr`](harnesses/pi/agent/packages/pi-tuicr/README.md) | Embedded Tuicr review with comments returned to Pi as prompt attachments. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-tuicr) |
+- [`@luan.sh/pi-fileops`](harnesses/pi/agent/packages/pi-fileops/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-fileops)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-fileops) — A Codex-compatible `apply_patch` tool backed by the Rust patch parser.
+- [`@luan.sh/pi-code-mode`](harnesses/pi/agent/packages/pi-code-mode/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-code-mode)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-code-mode) — Restricted JavaScript composition through `exec`, with selected tools available under `tools.*`.
+- [`@luan.sh/pi-codex-native`](harnesses/pi/agent/packages/pi-codex-native/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-codex-native)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-codex-native) — The Codex Responses provider, models, native web tool, compaction, and provider controls.
+- [`@luan.sh/pi-copy-mode`](harnesses/pi/agent/packages/pi-copy-mode/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-copy-mode)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-copy-mode) — Vim-style transcript selection, copying, comments, and reactions.
+- [`@luan.sh/pi-collapse-transcript`](harnesses/pi/agent/packages/pi-collapse-transcript/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-collapse-transcript)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-collapse-transcript) — Collapsible tools and thinking sections with a live activity summary.
+- [`@luan.sh/pi-developer-messages`](harnesses/pi/agent/packages/pi-developer-messages/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-developer-messages)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-developer-messages) — Provider instructions, developer messages, environment context, and prompt inspection.
+- [`@luan.sh/pi-exec-command`](harnesses/pi/agent/packages/pi-exec-command/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-exec-command)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-exec-command) — Bounded shell commands and persistent PTY sessions through `exec_command` and `write_stdin`.
+- [`@luan.sh/pi-libtui`](harnesses/pi/agent/packages/pi-libtui/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-libtui)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-libtui) — Shared terminal components, semantic colors, mouse handling, selection bridges, and tool presentation.
+- [`@luan.sh/pi-skills`](harnesses/pi/agent/packages/pi-skills/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-skills)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-skills) — Exact-name skill loading through the `skill` tool.
+- [`@luan.sh/pi-tool-search`](harnesses/pi/agent/packages/pi-tool-search/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-tool-search)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-tool-search) — Search and activation for a configured set of deferred tools.
+- [`@luan.sh/pi-view-image`](harnesses/pi/agent/packages/pi-view-image/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-view-image)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-view-image) — A Codex-compatible native image attachment tool.
+- [`@luan.sh/pi-xsettings`](harnesses/pi/agent/packages/pi-xsettings/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-xsettings)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-xsettings) — Typed settings registration, TOML persistence, keybindings, and the `/xsettings` editor.
+- [`@luan.sh/pi-custom-editor`](harnesses/pi/agent/packages/pi-custom-editor/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-custom-editor)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-custom-editor) — Custom editor layouts, file and skill tokens, and a semantic status footer.
+- [`@luan.sh/pi-panels`](harnesses/pi/agent/packages/pi-panels/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-panels)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-panels) — Contributed side-panel tabs with focus, resize, reorder, and zoom controls.
+- [`@luan.sh/pi-prompt-storage`](harnesses/pi/agent/packages/pi-prompt-storage/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-prompt-storage)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-prompt-storage) — Draft stashing and searchable prompt history.
+- [`@luan.sh/pi-side`](harnesses/pi/agent/packages/pi-side/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-side)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-side) — Independent side conversations alongside the main session.
+- [`@luan.sh/pi-subagents`](harnesses/pi/agent/packages/pi-subagents/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-subagents)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-subagents) — Concurrent, nested subagents with an Agent Hub for inspecting their work.
+- [`@luan.sh/pi-thinking-binding`](harnesses/pi/agent/packages/pi-thinking-binding/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-thinking-binding)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-thinking-binding) — Drops Anthropic thinking blocks invalidated by system-prompt or tool changes.
+- [`@luan.sh/pi-tuicr`](harnesses/pi/agent/packages/pi-tuicr/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-tuicr)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-tuicr) — Embedded Tuicr review with comments returned to Pi as prompt attachments.
 
 ## Shared Pi libraries
 
 These packages register no Pi extension by themselves.
 
-| Package | What it owns | Gallery |
-| --- | --- | --- |
-| [`@luan.sh/pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md) | The UI-free custom-action registry and validated `keybindings.json` loader. | [Pi gallery](https://pi.dev/packages/@luan.sh/pi-libactions) |
+- [`@luan.sh/pi-libactions`](harnesses/pi/agent/packages/pi-libactions/README.md)&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-libactions)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-libactions) — The UI-free custom-action registry and validated `keybindings.json` loader.
 
 `@luan.sh/pi-libtui` is the one deliberate dual-role package: imports expose reusable components without side effects, while its extension entry point installs generic terminal compatibility for Pi.
 
@@ -130,6 +126,20 @@ cargo nextest run --locked
 ```
 
 See [the package migration](docs/pi-package-migration.md) for renamed packages and upgrade instructions.
+
+## Documentation site
+
+[pi.luan.sh](https://pi.luan.sh) renders the package READMEs and `docs/` into a static site. `site/build.ts` uses
+`Bun.markdown` plus Shiki for code blocks; `site/fonts` holds the bundled IBM Plex Sans and Maple Mono NF faces (OFL 1.1).
+
+```sh
+just site        # writes site/dist
+just site-dev    # serves it on http://localhost:4321 and rebuilds on change
+```
+
+Cloudflare builds it with `bun run build:site` and serves `site/dist` as static
+assets per `wrangler.jsonc`. The explicit config is required because Cloudflare
+refuses to auto-detect a project at the root of a Bun workspace.
 
 ## Release
 

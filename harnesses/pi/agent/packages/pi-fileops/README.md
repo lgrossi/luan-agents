@@ -1,6 +1,4 @@
-# @luan.sh/pi-fileops
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-fileops)
+# @luan.sh/pi-fileops&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-fileops)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-fileops)
 
 `@luan.sh/pi-fileops` adds an `apply_patch` tool to Pi. The model writes a
 Codex-style patch (`*** Begin Patch` ... `*** End Patch`) and a native Rust
@@ -20,7 +18,7 @@ and, when Code Mode is installed, as `tools.apply_patch(...)` inside `exec`.
 pi install npm:@luan.sh/pi-fileops
 ```
 
-Requires a Rust toolchain (<https://rustup.rs>). The `apply_patch` binary builds
+Requires a Rust toolchain (<https://rustup.rs>). The `apply-patch` binary builds
 itself on first use under Pi's agent directory (`native/apply-patch/<version>/`).
 Set `PI_APPLY_PATCH_BIN` to use a prebuilt binary.
 

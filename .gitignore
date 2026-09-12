@@ -3,6 +3,7 @@
 /.tmp/
 node_modules/
 target/
+/site/dist/
 
 # Harness runtime state
 /harnesses/pi/agent/logs/

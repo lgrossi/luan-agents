@@ -1,6 +1,4 @@
-# @luan.sh/pi-subagents
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-subagents)
+# @luan.sh/pi-subagents&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-subagents)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-subagents)
 
 `@luan.sh/pi-subagents` is a Pi extension that adds one root-scoped tree of
 concurrent, nested agents. Each agent runs in its own Pi session and can

@@ -1,6 +1,4 @@
-# @luan.sh/pi-xsettings
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-xsettings)
+# @luan.sh/pi-xsettings&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-xsettings)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-xsettings)
 
 `@luan.sh/pi-xsettings` is a settings host for Pi extensions. It adds the
 `/xsettings` editor to Pi's interactive TUI, persists Pi and extension settings

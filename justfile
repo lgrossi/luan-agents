@@ -25,6 +25,14 @@ lint:
 typecheck:
     bun run --cwd "{{ repo }}" typecheck
 
+# Build the documentation site (pi.luan.sh) into site/dist.
+site:
+    bun run --cwd "{{ repo }}" build:site
+
+# Serve the documentation site locally and rebuild on changes.
+site-dev:
+    bun run --cwd "{{ repo }}" dev:site
+
 test:
     @bun run --cwd "{{ repo }}" test
 
@@ -117,7 +125,7 @@ _build:
 _harness-check:
     cargo xtask harness check --home "{{ home }}"
 
-check: _build lint typecheck pi-test rust-fmt rust-lint rust-test _harness-check
+check: _build lint typecheck site pi-test rust-fmt rust-lint rust-test _harness-check
     @echo "All checks passed."
 
 unlink:

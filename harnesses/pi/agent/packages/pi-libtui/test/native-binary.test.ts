@@ -10,7 +10,7 @@ const options = (executables: readonly string[], environment: Record<string, str
 	rev: "v1.2.3",
 	isExecutable: (path: string) => executables.includes(path),
 });
-const managed = join("/agent/native", "terminal-bridge", "v1.2.3", "bin", "terminal_bridge");
+const managed = join("/agent/native", "terminal-bridge", "v1.2.3", "bin", "terminal-bridge");
 
 test("env override wins and must be executable", () => {
 	expect(locateNativeBinary(TERMINAL_BRIDGE, options(["/x/bridge"], { [ENV]: "/x/bridge" }))).toEqual({

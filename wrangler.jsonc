@@ -1,0 +1,10 @@
+{
+	// Cloudflare deploys pi.luan.sh as static assets from the site build.
+	// Build command: bun run build:site
+	"name": "agents",
+	"compatibility_date": "2026-09-01",
+	"assets": {
+		"directory": "./site/dist",
+		"not_found_handling": "404-page"
+	}
+}

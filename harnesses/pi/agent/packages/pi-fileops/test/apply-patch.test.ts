@@ -19,7 +19,7 @@ const releaseBinary = join(
 	workspaceRoot,
 	"target",
 	"release",
-	process.platform === "win32" ? "apply_patch.exe" : "apply_patch",
+	process.platform === "win32" ? "apply-patch.exe" : "apply-patch",
 );
 const originalOverride = process.env["PI_APPLY_PATCH_BIN"];
 const codeModeAdaptersKey = Symbol.for("pi-code-mode/nested-tool-adapters/v2");

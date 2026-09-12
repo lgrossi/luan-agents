@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 
 // Deliberate sanity limit. Raise it only if the model input boundary accepts larger images.
 const MAX_INPUT_BYTES: u64 = 1024 * 1024 * 1024;
-const MAX_HIGH_DETAIL_DIMENSION: u32 = 2048;
+// Anthropic rejects any image over 2000 pixels on either axis once a request carries more than
+// 20 images, which long sessions reach quickly. Raise only if every supported provider allows more.
+const MAX_HIGH_DETAIL_DIMENSION: u32 = 2000;
 
 #[derive(Deserialize)]
 struct ViewImageArgs {

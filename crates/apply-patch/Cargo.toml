@@ -11,7 +11,7 @@ path = "src/lib.rs"
 doctest = false
 
 [[bin]]
-name = "apply_patch"
+name = "apply-patch"
 path = "src/main.rs"
 
 [dependencies]

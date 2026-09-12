@@ -1,6 +1,4 @@
-# @luan.sh/pi-prompt-storage
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-prompt-storage)
+# @luan.sh/pi-prompt-storage&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-prompt-storage)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-prompt-storage)
 
 `@luan.sh/pi-prompt-storage` is a Pi extension that adds a per-directory prompt
 stash and a searchable history of past user prompts to Pi's editor. It stores

@@ -1,6 +1,4 @@
-# @luan.sh/pi-code-mode
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-code-mode)
+# @luan.sh/pi-code-mode&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-code-mode)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-code-mode)
 
 Code Mode adds two tools to Pi:
 

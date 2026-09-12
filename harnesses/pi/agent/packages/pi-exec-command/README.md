@@ -1,9 +1,7 @@
-# @luan.sh/pi-exec-command
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-exec-command)
+# @luan.sh/pi-exec-command&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-exec-command)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-exec-command)
 
 Bounded shell execution for Pi with persistent PTY sessions, backed by the
-native `terminal_bridge` binary. `exec_command` starts a shell command and
+native `terminal-bridge` binary. `exec_command` starts a shell command and
 returns output or a session ID; `write_stdin` sends input to, or polls, a
 running command. A Process Hub lists the commands owned by the current agent
 and its subagents, shows their bounded output, attaches to retained PTY state,
@@ -20,7 +18,7 @@ forwards terminal input, and exposes interrupt and terminate actions.
 pi install npm:@luan.sh/pi-exec-command
 ```
 
-Requires a Rust toolchain (https://rustup.rs). The `terminal_bridge` binary
+Requires a Rust toolchain (https://rustup.rs). The `terminal-bridge` binary
 builds itself on first use under Pi's agent directory
 (`native/terminal-bridge/<version>/`). Set `PI_TERMINAL_BRIDGE_BINARY` to use
 a prebuilt binary; it must point to an executable file.

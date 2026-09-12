@@ -1,6 +1,4 @@
-# @luan.sh/pi-libtui
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-libtui)
+# @luan.sh/pi-libtui&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-libtui)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-libtui)
 
 Shared terminal UI for Pi extensions: layouts, split panes, dialogs, pickers,
 selection actions, semantic colors, icons, cursors, syntax highlighting,
@@ -49,6 +47,59 @@ neither a generated 256-color palette nor an ANSI base-16 palette, the host
 switches to Pi's built-in theme for the detected light or dark scheme (dark if
 the measurement fails).
 
+## Components
+
+Captures of the shared components inside the extensions that use them. The
+images are served from the documentation site.
+
+`ActionPanel` with a `DialogButtonBar` footer in a `DialogOverlay`: the
+pi-copy-mode reaction picker.
+
+![ActionPanel and DialogButtonBar in pi-copy-mode](https://pi.luan.sh/media/libtui/action-panel.png)
+
+`MultiSelect` with ordered checkboxes, a filter `SemanticInput`, and a
+`DialogButtonBar`: the pi-xsettings segment editor.
+
+![MultiSelect in pi-xsettings](https://pi.luan.sh/media/libtui/multi-select.png)
+
+`mountSplitPane` with side-panel tabs from `registerSidePanelProvider`:
+pi-panels hosting a pi-side conversation.
+
+![Split pane and side-panel tabs in pi-panels](https://pi.luan.sh/media/libtui/split-panes.png)
+
+`UnifiedDiffView` from `pi-libtui/diff`: the pi-fileops `apply_patch` result.
+
+![UnifiedDiffView in pi-fileops](https://pi.luan.sh/media/libtui/unified-diff.png)
+
+`PtyPane` over `TerminalProjection` from `pi-libtui/terminal`: the
+pi-exec-command Process Hub attached to a running server.
+
+![PtyPane in pi-exec-command](https://pi.luan.sh/media/libtui/terminal.png)
+
+`renderDetailCard` as an anchored overlay: a pi-copy-mode annotation.
+
+![Detail card in pi-copy-mode](https://pi.luan.sh/media/libtui/detail-card.png)
+
+`ToolActivity` and `ToolTranscript` from `pi-libtui/tool`: pi-tool-search
+and pi-exec-command rows collapsed into an `Explored` group.
+
+![ToolActivity rows in pi-tool-search](https://pi.luan.sh/media/libtui/tool-activity.png)
+
+`ProgressBar`, `renderPill`, and `renderEditorTokenPills`: the
+pi-custom-editor status row and file tokens.
+
+![Status row and editor pills in pi-custom-editor](https://pi.luan.sh/media/libtui/status-row.png)
+
+`TransientPill`: the pi-tuicr confirmation after a review comment is added.
+
+![TransientPill in pi-tuicr](https://pi.luan.sh/media/libtui/transient-pill.png)
+
+Components without a capture in a shipped extension: `PickerPanel`
+(pi-prompt-storage), `SearchableSelect` and `SelectBox` (pi-xsettings
+editors), `SelectionActionBar` (pi-copy-mode), `FramedEditorOverlay`,
+`mountHoverTooltip`, `FloatingOverlay`, `ActivityIndicator` styles, and
+`applyScrollbar`. Add them here when a gallery recording shows them in use.
+
 ## Public modules
 
 Every entry point is a side-effect-free import. "Host required" means the
@@ -76,9 +127,9 @@ guarded Pi 0.84–0.85 adapter; unsupported hosts keep their native transcript.
 
 ## Native binaries
 
-Feature packages shell out to Rust binaries such as `terminal_bridge` (the
+Feature packages shell out to Rust binaries such as `terminal-bridge` (the
 exported `TERMINAL_BRIDGE` descriptor). Requires a Rust toolchain
-(https://rustup.rs). The `terminal_bridge` binary builds itself on first use
+(https://rustup.rs). The `terminal-bridge` binary builds itself on first use
 under Pi's agent directory (`native/terminal-bridge/<revision>/`), where
 `<revision>` is the source commit recorded in the packaged `native-revision` file. Set `PI_TERMINAL_BRIDGE_BINARY` to use
 a prebuilt binary; it must point at an executable file.

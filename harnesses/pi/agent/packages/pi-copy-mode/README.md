@@ -1,6 +1,4 @@
-# @luan.sh/pi-copy-mode
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-copy-mode)
+# @luan.sh/pi-copy-mode&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-copy-mode)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-copy-mode)
 
 `@luan.sh/pi-copy-mode` adds Vim-style transcript selection, copying,
 annotations, and reactions to Pi. Select characters, lines, or columns, copy

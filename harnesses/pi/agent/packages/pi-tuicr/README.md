@@ -1,6 +1,4 @@
-# @luan.sh/pi-tuicr
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-tuicr)
+# @luan.sh/pi-tuicr&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-tuicr)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-tuicr)
 
 `@luan.sh/pi-tuicr` runs the `tuicr` code review TUI inside Pi. One action
 opens a picker of git review targets, launches `tuicr` in an embedded terminal,
@@ -30,7 +28,7 @@ pi install npm:@luan.sh/pi-tuicr
   reports "Could not start tuicr — is it on your PATH?" if that fails.
 - `git` on `PATH`, used to discover a base branch for the branch-comparison
   targets. Without it those two targets are simply omitted.
-- Requires a Rust toolchain (https://rustup.rs). The `terminal_bridge` binary
+- Requires a Rust toolchain (https://rustup.rs). The `terminal-bridge` binary
   builds itself on first use under Pi's agent directory
   (`native/terminal-bridge/<version>/`). Set `PI_TERMINAL_BRIDGE_BINARY` to use
   a prebuilt binary. This binary backs the embedded terminal pane.

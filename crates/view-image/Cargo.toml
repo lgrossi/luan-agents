@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [[bin]]
-name = "view_image"
+name = "view-image"
 path = "src/main.rs"
 
 [dependencies]

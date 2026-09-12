@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [[bin]]
-name = "terminal_bridge"
+name = "terminal-bridge"
 path = "src/main.rs"
 
 [dependencies]

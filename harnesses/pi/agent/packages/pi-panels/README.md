@@ -1,6 +1,4 @@
-# @luan.sh/pi-panels
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-panels)
+# @luan.sh/pi-panels&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-panels)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-panels)
 
 `@luan.sh/pi-panels` is a generic side-panel host for Pi's TUI. It mounts
 a right-hand split pane and lets other Pi extensions contribute tabs to it.

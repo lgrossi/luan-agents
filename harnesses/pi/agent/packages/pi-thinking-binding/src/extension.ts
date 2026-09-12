@@ -38,7 +38,8 @@ export default function thinkingBindingExtension(pi: ExtensionAPI): void {
 		return previous && newestAssistant !== undefined ? stripPayloadThinking(payload) : undefined;
 	});
 
-	// Sessions broken before the fingerprint was recorded: trust Anthropic's own drop report once.
+	// Prefix changes the fingerprint cannot see (pre-existing breakage, rewritten message content):
+	// trust Anthropic's own drop report once.
 	pi.on("message_end", (event, ctx) => {
 		if (ctx.model?.api !== "anthropic-messages" || fingerprint === undefined || newestAssistant === undefined) return;
 		if (!reportsPrefixMismatch(event.message)) return;

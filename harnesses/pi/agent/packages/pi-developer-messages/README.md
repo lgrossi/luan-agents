@@ -1,6 +1,4 @@
-# @luan.sh/pi-developer-messages
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-developer-messages)
+# @luan.sh/pi-developer-messages&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-developer-messages)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-developer-messages)
 
 `@luan.sh/pi-developer-messages` is a Pi extension that builds the provider-ready prompt
 envelope for each turn. It keeps three kinds of instructions in their intended

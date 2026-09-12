@@ -35,7 +35,7 @@ export type NativeBinaryLocation =
 
 export const TERMINAL_BRIDGE: NativeBinary = {
 	crate: "terminal-bridge",
-	binaryName: "terminal_bridge",
+	binaryName: "terminal-bridge",
 	env: "PI_TERMINAL_BRIDGE_BINARY",
 };
 

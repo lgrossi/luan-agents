@@ -1,6 +1,4 @@
-# @luan.sh/pi-side
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-side)
+# @luan.sh/pi-side&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-side)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-side)
 
 `@luan.sh/pi-side` opens independent, interactive Pi sessions next to the
 one you are working in. Each side chat is a real child `pi` process running in
@@ -33,10 +31,10 @@ Optional companion: `pi install npm:@luan.sh/pi-panels` hosts each side
 chat as a tab in a side panel; without it, side chats open in a fullscreen
 overlay instead (see below).
 
-### Native binary: `terminal_bridge`
+### Native binary: `terminal-bridge`
 
-Side chats are driven by the native `terminal_bridge` binary. Requires a Rust
-toolchain (https://rustup.rs). The `terminal_bridge` binary builds itself on
+Side chats are driven by the native `terminal-bridge` binary. Requires a Rust
+toolchain (https://rustup.rs). The `terminal-bridge` binary builds itself on
 first use under Pi's agent directory (`native/terminal-bridge/<version>/`).
 Set `PI_TERMINAL_BRIDGE_BINARY` to use a prebuilt binary.
 

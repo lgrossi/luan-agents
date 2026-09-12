@@ -1,6 +1,4 @@
-# @luan.sh/pi-view-image
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-view-image)
+# @luan.sh/pi-view-image&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-view-image)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-view-image)
 
 `@luan.sh/pi-view-image` adds a Codex-compatible `view_image` tool to Pi. A
 native Rust binary reads and validates a local PNG, JPEG, GIF, or WebP file and
@@ -21,7 +19,7 @@ before they reach the provider.
 pi install npm:@luan.sh/pi-view-image
 ```
 
-Requires a Rust toolchain (https://rustup.rs). The `view_image` binary builds
+Requires a Rust toolchain (https://rustup.rs). The `view-image` binary builds
 itself on first use under Pi's agent directory (`native/view-image/<version>/`).
 Set `PI_VIEW_IMAGE_BIN` to use a prebuilt binary; it must point to an
 executable file. Pi shows an info notification while the first build runs.
@@ -48,7 +46,8 @@ Example call:
 
 Behaviour:
 
-- `high` resizes images larger than 2048 pixels on either axis. Resized
+- `high` resizes images larger than 2000 pixels on either axis (Anthropic's
+  limit for requests carrying more than 20 images). Resized
   images and GIF input are re-encoded as PNG; PNG, JPEG, and WebP files that
   are not resized keep their original bytes and MIME type.
 - `original` keeps the source dimensions and bytes.
@@ -89,7 +88,7 @@ paste a file path on Command-V. Ordinary text and non-image paths are left
 alone.
 
 When the prompt is submitted, each pending pill is loaded through the native
-binary at `original` detail, attached as an image, and its text becomes a
+binary at `high` detail, attached as an image, and its text becomes a
 `<file name="..."></file>` tag. If a file cannot be loaded, the pill reverts to
 the plain path and Pi shows a warning `Could not attach <path>: <message>`.
 Pending pills are cleared on session start and shutdown.
@@ -111,6 +110,15 @@ followed by the rest of the user's text. Tags are only rewritten when the count
 of image tags equals the count of image blocks; otherwise the message is left
 unchanged. This applies to Pi's own `@image` attachments and to pastes handled
 by this package, and is provider-neutral.
+
+The same hook then clamps every image block in the outgoing context, in user
+and tool-result messages alike, to 2000 pixels on either axis using Pi's
+`resizeImage`. Anthropic rejects larger images once a request carries more
+than 20 of them, and attach-time resizing cannot fix images already in the
+session history. Each distinct image is decoded once per session.
+Shrinking an image that Anthropic has already seen changes the request prefix,
+so the next response reports dropped thinking blocks once; pi-thinking-binding
+then strips those blocks for the rest of the session.
 
 ## Configuration
 

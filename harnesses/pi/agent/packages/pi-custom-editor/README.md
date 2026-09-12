@@ -1,6 +1,4 @@
-# @luan.sh/pi-custom-editor
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-custom-editor)
+# @luan.sh/pi-custom-editor&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-custom-editor)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-custom-editor)
 
 A Pi extension that replaces the built-in input editor chrome and footer with a
 configurable composition: semantic surfaces, top and bottom rules, left and

@@ -1,6 +1,4 @@
-# @luan.sh/pi-libactions
-
-[Pi gallery](https://pi.dev/packages/@luan.sh/pi-libactions)
+# @luan.sh/pi-libactions&nbsp;[<img src="https://pi.luan.sh/icons/pi.svg" width="14" alt="Pi gallery">](https://pi.dev/packages/@luan.sh/pi-libactions)&nbsp;[<img src="https://pi.luan.sh/icons/npm.svg" width="14" alt="npm">](https://www.npmjs.com/package/@luan.sh/pi-libactions)
 
 `@luan.sh/pi-libactions` is a UI-free action registry and keybinding loader
 for Pi extensions. It is a library, not a Pi extension: importing it registers

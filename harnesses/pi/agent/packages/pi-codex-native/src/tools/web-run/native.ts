@@ -4,7 +4,7 @@ import type { WebRunParameters } from "./schema.ts";
 
 const MAX_DIAGNOSTIC_CHARS = 8_192;
 const MAX_STDOUT_BYTES = 8 * 1024 * 1024;
-const WEB_RUN: NativeBinary = { crate: "web-run", binaryName: "web_run", env: "PI_CODEX_WEB_RUN_BIN" };
+const WEB_RUN: NativeBinary = { crate: "web-run", binaryName: "web-run", env: "PI_CODEX_WEB_RUN_BIN" };
 
 export function resolveWebRunBinary(hooks?: EnsureNativeBinaryHooks): Promise<string> {
 	return ensureNativeBinary(WEB_RUN, hooks);
