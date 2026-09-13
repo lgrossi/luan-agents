@@ -1,54 +1,6 @@
-import { mkdir, readFile, realpath, rename, stat, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { type SettingDefinition, type SettingOption, type SettingValue, settingPath } from "../protocol/settings.ts";
 import { getPath, type SettingsRecord } from "./store.ts";
-
-type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
-type JsonObject = { [key: string]: JsonValue };
-
-function getJsonPath(document: JsonObject, path: readonly string[]): JsonValue | undefined {
-	let current: JsonValue = document;
-	for (const segment of path) {
-		if (!isJsonObject(current)) return undefined;
-		current = current[segment];
-	}
-	return current;
-}
-
-function setJsonPath(document: JsonObject, path: readonly string[], value: SettingValue): void {
-	if (path.length === 0) return;
-	let current = document;
-	for (const segment of path.slice(0, -1)) {
-		const child = current[segment];
-		if (isJsonObject(child)) current = child;
-		else {
-			const replacement: JsonObject = {};
-			current[segment] = replacement;
-			current = replacement;
-		}
-	}
-	current[path.at(-1)!] = value;
-}
-
-function deleteJsonPath(document: JsonObject, path: readonly string[]): void {
-	if (path.length === 0) return;
-	const parents: Array<[JsonObject, string]> = [];
-	let current = document;
-	for (const segment of path.slice(0, -1)) {
-		const child = current[segment];
-		if (!isJsonObject(child)) return;
-		parents.push([current, segment]);
-		current = child;
-	}
-	delete current[path.at(-1)!];
-	for (const [parent, key] of parents.reverse()) {
-		const child = parent[key];
-		if (isJsonObject(child) && Object.keys(child).length === 0) delete parent[key];
-		else break;
-	}
-}
 
 const option = (value: string | number, label: string, description = ""): SettingOption => ({
 	value,
@@ -57,7 +9,7 @@ const option = (value: string | number, label: string, description = ""): Settin
 });
 const numbers = (...values: number[]): SettingOption[] => values.map((value) => option(value, String(value)));
 
-const TEMPLATES = [
+export const PI_SETTINGS = [
 	{
 		key: "theme",
 		label: "Theme",
@@ -468,7 +420,7 @@ export function piSettingDefinitions(
 			.map(({ name }) => name)
 			.sort(),
 	);
-	return TEMPLATES.map((template): SettingDefinition => {
+	return PI_SETTINGS.map((template): SettingDefinition => {
 		if (template.type === "enum" && template.key === "theme") return { ...template, options: themes };
 		if (template.type === "multi-enum" && template.key === "enabledModels")
 			return { ...template, options: modelOptions };
@@ -477,58 +429,13 @@ export function piSettingDefinitions(
 	});
 }
 
-function isJsonObject(value: JsonValue): value is JsonObject {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
 export function configuredPiValues(document: SettingsRecord): Record<string, SettingValue> {
 	const result: Record<string, SettingValue> = {};
-	for (const definition of TEMPLATES) {
+	for (const definition of PI_SETTINGS) {
 		const value = getPath(document, settingPath(definition));
 		if (typeof value === "boolean" || typeof value === "number" || typeof value === "string")
 			result[definition.key] = value;
 		else if (Array.isArray(value) && value.every((item) => typeof item === "string")) result[definition.key] = value;
 	}
 	return result;
-}
-
-export async function syncPiSettingsJson(
-	values: Readonly<Record<string, SettingValue>>,
-	agentDir = getAgentDir(),
-): Promise<boolean> {
-	const path = join(agentDir, "settings.json");
-	let target = path;
-	let source = "{}";
-	try {
-		target = await realpath(path);
-		source = await readFile(path, "utf8");
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-	}
-	const parsed = JSON.parse(source) as JsonValue;
-	if (!isJsonObject(parsed)) throw new Error(`${path} must contain a JSON object`);
-	let changed = false;
-	for (const definition of TEMPLATES) {
-		if (definition.key in values || getJsonPath(parsed, definition.key.split(".")) === undefined) continue;
-		deleteJsonPath(parsed, definition.key.split("."));
-		changed = true;
-	}
-	for (const [key, value] of Object.entries(values)) {
-		const segments = key.split(".");
-		if (JSON.stringify(getJsonPath(parsed, segments)) === JSON.stringify(value)) continue;
-		setJsonPath(parsed, segments, value);
-		changed = true;
-	}
-	if (!changed) return false;
-	await mkdir(dirname(target), { recursive: true });
-	let mode = 0o600;
-	try {
-		mode = (await stat(target)).mode & 0o777;
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-	}
-	const temporary = `${target}.tmp-${process.pid}-${Date.now()}`;
-	await writeFile(temporary, `${JSON.stringify(parsed, null, 2)}\n`, { mode });
-	await rename(temporary, target);
-	return true;
 }

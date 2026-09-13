@@ -9,7 +9,7 @@ import {
 	registerSidePanelProvider,
 	type SidePanelSession,
 } from "@luan.sh/pi-libtui";
-import { configuredPiValues, syncPiSettingsJson } from "./config/pi-settings.ts";
+import { PiSettingsSync, type SettingsEdit, type SettingsSyncResult } from "./config/pi-settings-sync.ts";
 import {
 	DEFAULT_XSETTINGS_PRESENTATION_SETTINGS,
 	registerXSettingsPresentationSettings,
@@ -20,6 +20,7 @@ import { ensureXSettingsRegistry } from "./protocol/settings.ts";
 import { attachActionShortcuts } from "./runtime/actions.ts";
 import { registerEffortActions } from "./runtime/effort.ts";
 import { publishAllSettings, resolveRegistrationValues } from "./runtime/settings.ts";
+import { watchSettings } from "./runtime/settings-watch.ts";
 import { XSettingsEditorSession } from "./ui/editor-session.ts";
 import type { XSettingsScreen } from "./ui/xsettings-screen.ts";
 
@@ -27,6 +28,11 @@ const SETTINGS_TAB_ID = "pi-xsettings.settings";
 
 export default function xsettingsExtension(pi: ExtensionAPI): void {
 	const store = new XSettingsStore();
+	const sync = new PiSettingsSync(store.path);
+	let stopWatching: (() => void) | undefined;
+	let syncContext: ExtensionContext | undefined;
+	let syncNotice: string | undefined;
+	let lastNotified: string | undefined;
 	const registry = ensureXSettingsRegistry();
 	const unregisterTuiSettings = registerTuiSettings();
 	let presentation = DEFAULT_XSETTINGS_PRESENTATION_SETTINGS.presentation;
@@ -50,12 +56,43 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 	delete shortcutBindings["xsettings.cursor.toggle"];
 	const detachShortcuts = attachActionShortcuts(pi, shortcutBindings);
 	const initialization = initialize();
+	void initialization.catch((error: Error) => reportSync(`Could not initialize xsettings: ${error.message}`));
 	const pendingRegistrations = new Set<Promise<void>>();
 
+	function reportSync(message: string | undefined): void {
+		syncNotice = message;
+		if (message && message !== lastNotified && syncContext?.hasUI) {
+			syncContext.ui.notify(message, "warning");
+			lastNotified = message;
+		}
+		if (!message) lastNotified = undefined;
+	}
+
+	async function reconcile(edit?: SettingsEdit): Promise<SettingsSyncResult> {
+		const result = await sync.reconcile(edit);
+		await publishAllSettings(registry, result.document);
+		reportSync(
+			result.conflicts.length > 0
+				? `Settings conflict: ${result.conflicts.join(", ")}. Both files were preserved for these settings. Choose a value in /xsettings or make both files agree.`
+				: undefined,
+		);
+		return result;
+	}
+
 	async function initialize(): Promise<void> {
-		const document = await store.load();
-		await publishAllSettings(registry, document);
-		await syncPiSettingsJson(configuredPiValues(document));
+		await store.load();
+		stopWatching = watchSettings(
+			[store.path, sync.jsonPath],
+			async () => {
+				await reconcile();
+			},
+			(error) => reportSync(`Could not synchronize settings: ${error.message}`),
+		);
+		try {
+			await reconcile();
+		} catch (error) {
+			reportSync(`Could not synchronize settings: ${error instanceof Error ? error.message : String(error)}`);
+		}
 	}
 
 	const detachRegistration = registry.onRegister((registration) => {
@@ -91,7 +128,7 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 				panel.show({ focus: true });
 				return;
 			}
-			panelEditor = await XSettingsEditorSession.create(pi, ctx, store, registry);
+			panelEditor = await XSettingsEditorSession.create(pi, ctx, reconcile, registry);
 			panelTabOpen = true;
 			panel.addTab(
 				{
@@ -112,7 +149,7 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 			);
 			return;
 		}
-		const editor = await XSettingsEditorSession.create(pi, ctx, store, registry);
+		const editor = await XSettingsEditorSession.create(pi, ctx, reconcile, registry);
 		await ctx.ui.custom<void>(
 			(tui, theme, _keybindings, done) => {
 				const dialogs = new DialogOverlayHost(tui, theme);
@@ -167,6 +204,8 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 		handler: async (_args, ctx) => open(ctx),
 	});
 	pi.on("session_start", async (_event, ctx) => {
+		syncContext = ctx;
+		reportSync(syncNotice);
 		if (ctx.mode !== "tui" || !ctx.hasUI) return;
 		panelContext = ctx;
 		activeSession = ctx.sessionManager;
@@ -217,7 +256,21 @@ export default function xsettingsExtension(pi: ExtensionAPI): void {
 			);
 		}
 	});
-	pi.on("session_shutdown", (event, context) => {
+	pi.on("session_shutdown", async (event, context) => {
+		if (
+			syncContext?.sessionManager === context.sessionManager &&
+			(event.reason === "reload" || event.reason === "quit")
+		) {
+			await initialization;
+			stopWatching?.();
+			stopWatching = undefined;
+			try {
+				await reconcile();
+			} catch (error) {
+				reportSync(`Could not synchronize settings: ${error instanceof Error ? error.message : String(error)}`);
+			}
+			syncContext = undefined;
+		}
 		if (context.mode !== "tui" || !context.hasUI || activeSession !== context.sessionManager) return;
 		if (event.reason !== "reload" && event.reason !== "quit") return;
 		unregisterSidePanelProvider?.();

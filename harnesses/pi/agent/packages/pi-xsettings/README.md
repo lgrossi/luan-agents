@@ -73,9 +73,28 @@ omitted `pi.defaultTools` means "use Pi's default tools"; `pi.defaultTools =
 
 Recognized Pi settings (theme, compaction, retry, transport, message delivery,
 enabled models, default tools, and the other `pi.*` keys shown in the editor)
-are mirrored into `settings.json` in the same directory, because Pi reads that
-file before extensions load. Keep bootstrap values such as packages, trust,
-telemetry, provider, and model configuration in `settings.json` directly.
+are synchronized with `settings.json`, which Pi reads before extensions load.
+Edits through Pi's `/settings`, model controls, or the JSON file are imported
+into TOML; edits through `/xsettings` or TOML are exported to JSON. Bootstrap
+values such as packages, trust, telemetry, provider, and model configuration
+stay in `settings.json` directly. Project-local settings retain Pi's normal
+override behavior and are not imported into global TOML.
+
+Reconciliation runs at startup, before editor saves, on file changes, and at
+shutdown. A per-setting baseline lives under `~/.cache/pi-xsettings/`, keyed by
+the resolved TOML and JSON paths, outside the managed configuration tree. Deleting that
+state starts reconciliation without history. With no baseline, values present
+in only one file are copied to the other; differing values present in both
+files are left untouched. Later, edits to different settings merge, including
+removals. When both sides change the same setting differently, xsettings keeps
+both values and reports a conflict. Select the desired value in `/xsettings`
+or make both files agree to resolve it. Unrelated settings continue to sync.
+
+Sync uses the same settings-file lock as Pi, rereads both files under that lock,
+and preserves managed symlinks. It watches parent directories so atomic file
+replacement stays visible. Saved Pi settings still require `/reload` where Pi
+does not support live changes; synchronization does not force running sessions
+to reload. Invalid files are reported and left untouched until repaired.
 
 ## Settings owned by this package
 
@@ -188,8 +207,9 @@ create a separate settings file or settings screen.
 | UI-free SDK | `src/sdk.ts` |
 | Cross-extension registry protocol | `src/protocol/settings.ts` |
 | `xsettings.toml` load, set, unset, atomic write | `src/config/store.ts` |
-| Pi setting definitions and `settings.json` mirror | `src/config/pi-settings.ts` |
+| Pi setting definitions | `src/config/pi-settings.ts` |
 | `@luan.sh/pi-libtui` and `@luan.sh/pi-xsettings` definitions | `src/config/tui-settings.ts`, `src/config/presentation.ts` |
+| Pi settings reconciliation and file watching | `src/config/pi-settings-sync.ts`, `src/runtime/settings-watch.ts` |
 | Value resolution, publication, reload decision | `src/runtime/settings.ts`, `src/runtime/apply.ts` |
 | Keybinding bridge and effort actions | `src/runtime/actions.ts`, `src/runtime/effort.ts` |
 | Editor session, fields, list editors, screen | `src/ui/` |

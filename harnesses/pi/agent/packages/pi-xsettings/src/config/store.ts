@@ -14,6 +14,10 @@ const { parse, stringify } = createRequire(realpathSync(fileURLToPath(import.met
 ) as typeof SmolToml;
 
 export type SettingsRecord = SmolToml.TomlTableWithoutBigInt;
+export function parseXSettings(source: string): SettingsRecord {
+	return parse(source, { integersAsBigInt: false }) as SettingsRecord;
+}
+
 export type StoredSettingValue = SmolToml.TomlValueWithoutBigInt;
 
 const CATEGORIES = ["appearance", "behavior", "interaction", "tools"] as const;
@@ -104,7 +108,7 @@ export class XSettingsStore {
 
 	async load(): Promise<SettingsRecord> {
 		try {
-			return parse(await readFile(this.path, "utf8"), { integersAsBigInt: false }) as SmolToml.TomlTableWithoutBigInt;
+			return parseXSettings(await readFile(this.path, "utf8"));
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 			await mkdir(dirname(this.path), { recursive: true });

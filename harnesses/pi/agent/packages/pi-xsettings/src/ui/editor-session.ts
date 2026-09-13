@@ -1,11 +1,12 @@
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import type { KeyId, TUI } from "@earendil-works/pi-tui";
 import type { DialogHost } from "@luan.sh/pi-libtui";
-import { configuredPiValues, piSettingDefinitions, syncPiSettingsJson } from "../config/pi-settings.ts";
-import { setPath, type SettingsRecord, type XSettingsStore } from "../config/store.ts";
+import type { SettingsEdit, SettingsSyncResult } from "../config/pi-settings-sync.ts";
+import { piSettingDefinitions } from "../config/pi-settings.ts";
+import { setPath, type SettingsRecord } from "../config/store.ts";
 import type { SettingRegistration, SettingValue, XSettingsRegistry } from "../protocol/settings.ts";
 import { applyLiveTheme, applySavedSettings } from "../runtime/apply.ts";
-import { publishAllSettings, resolveRegistrationValues } from "../runtime/settings.ts";
+import { resolveRegistrationValues } from "../runtime/settings.ts";
 import { storedEnumValue, toUiField } from "./fields.ts";
 import { type SettingsScreenField, XSettingsScreen } from "./xsettings-screen.ts";
 
@@ -17,7 +18,7 @@ export class XSettingsEditorSession {
 
 	private constructor(
 		private readonly context: ExtensionContext,
-		private readonly store: XSettingsStore,
+		private readonly reconcile: (edit?: SettingsEdit) => Promise<SettingsSyncResult>,
 		private readonly registry: XSettingsRegistry,
 		private document: SettingsRecord,
 		private readonly fields: readonly SettingsScreenField[],
@@ -27,10 +28,10 @@ export class XSettingsEditorSession {
 	static async create(
 		pi: ExtensionAPI,
 		context: ExtensionContext,
-		store: XSettingsStore,
+		reconcile: (edit?: SettingsEdit) => Promise<SettingsSyncResult>,
 		registry: XSettingsRegistry,
 	): Promise<XSettingsEditorSession> {
-		const document = await store.load();
+		const { document } = await reconcile();
 		const piDefinitions = piSettingDefinitions(pi, context);
 		const registrations = Object.values(registry.registrations).filter(
 			(value): value is SettingRegistration => value !== undefined,
@@ -49,7 +50,7 @@ export class XSettingsEditorSession {
 		const enabledModels = piDefinitions.find((definition) => definition.key === "enabledModels");
 		return new XSettingsEditorSession(
 			context,
-			store,
+			reconcile,
 			registry,
 			document,
 			fields,
@@ -80,7 +81,7 @@ export class XSettingsEditorSession {
 					!applyLiveTheme(this.context, storedValue)
 				)
 					return;
-				this.persist(definition, () => this.store.set(definition.storagePath, storedValue));
+				this.persist(definition, storedValue);
 			},
 			(id) => {
 				const definition = this.fields.find((field) => field.id === id);
@@ -91,7 +92,7 @@ export class XSettingsEditorSession {
 					!applyLiveTheme(this.context, definition.defaultValue)
 				)
 					return;
-				this.persist(definition, () => this.store.unset(definition.storagePath));
+				this.persist(definition, undefined);
 			},
 			onClose,
 			() => Math.max(6, tui.terminal.rows - options.heightOffset),
@@ -109,14 +110,17 @@ export class XSettingsEditorSession {
 		await applySavedSettings(this.context, this.settingsChanged, this.reloadRequired);
 	}
 
-	private persist(definition: SettingsScreenField, write: () => Promise<SettingsRecord>): void {
-		this.settingsChanged = true;
-		this.reloadRequired ||= definition.apply !== "live";
-		this.pendingWrite = this.pendingWrite.then(async () => {
-			this.document = await write();
-			await publishAllSettings(this.registry, this.document);
-			await syncPiSettingsJson(configuredPiValues(this.document));
-		});
+	private persist(definition: SettingsScreenField, value: SettingValue | undefined): void {
+		this.pendingWrite = this.pendingWrite
+			.then(async () => {
+				const result = await this.reconcile({ path: definition.storagePath, value });
+				this.document = result.document;
+				this.settingsChanged = true;
+				this.reloadRequired ||= definition.apply !== "live";
+			})
+			.catch((error: Error) => {
+				this.context.ui.notify(`Could not save settings: ${error.message}`, "error");
+			});
 	}
 
 	private preview(id: string, value: SettingValue): void {
