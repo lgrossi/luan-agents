@@ -439,11 +439,12 @@ fn reconcile_tree_visit(
     expected: &BTreeSet<&PathBuf>,
     exclude_package_development: bool,
 ) -> Result<()> {
-    for entry in fs::read_dir(target_root.join(relative))
+    let mut entries = fs::read_dir(target_root.join(relative))
         .with_context(|| format!("read managed tree {}", target_root.display()))?
-    {
-        let entry = entry
-            .with_context(|| format!("read entry in {}", target_root.join(relative).display()))?;
+        .collect::<std::result::Result<Vec<_>, _>>()
+        .with_context(|| format!("read entries in {}", target_root.join(relative).display()))?;
+    entries.sort_by_key(std::fs::DirEntry::file_name);
+    for entry in entries {
         if entry.file_name() == "node_modules" {
             continue;
         }
@@ -557,10 +558,12 @@ fn reconcile_owned_links(
     target_root: &Path,
     relative: &Path,
 ) -> Result<()> {
-    for entry in fs::read_dir(target_root.join(relative))
+    let mut entries = fs::read_dir(target_root.join(relative))
         .with_context(|| format!("read managed package {}", target_root.display()))?
-    {
-        let entry = entry.with_context(|| format!("read entry in {}", target_root.display()))?;
+        .collect::<std::result::Result<Vec<_>, _>>()
+        .with_context(|| format!("read entries in {}", target_root.join(relative).display()))?;
+    entries.sort_by_key(std::fs::DirEntry::file_name);
+    for entry in entries {
         let child = relative.join(entry.file_name());
         let file_type = entry
             .file_type()

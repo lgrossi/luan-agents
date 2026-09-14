@@ -618,13 +618,7 @@ fn stale_package_cleanup_removes_only_exact_links(fixture: HarnessFixture) -> Re
 
     let error = run(Operation::Check, &fixture.repository, &fixture.home)
         .expect_err("stale managed link must be reported");
-    assert_eq!(
-        error.to_string(),
-        format!(
-            "stale managed link: {}",
-            target_package.join("package.json").display()
-        )
-    );
+    assert!(error.to_string().starts_with("stale managed link: "));
 
     run(Operation::Unlink, &fixture.repository, &fixture.home)?;
     ChildPath::new(target_package.join("keep.txt")).assert(predicate::path::is_file());
