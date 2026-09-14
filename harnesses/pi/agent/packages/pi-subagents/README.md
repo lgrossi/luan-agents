@@ -59,7 +59,8 @@ explicit `MESSAGE` path, and `wait_agent` never carries either payload.
 - `fork_turns`: `all` (default), `none`, or a positive integer of recent parent
   turns to copy. Historical tool calls, tool results, and collaboration
   messages are never copied into the child context.
-- `model`: exact `provider/model-id`; omit to inherit the parent model.
+- `model`: a model id, unique alias, or exact `provider/model-id`; omit to inherit
+  the parent model.
 - `thinking_level`: `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, or
   `max`; omit to inherit. Unsupported explicit levels are rejected; inherited
   effort is clamped to the chosen model's supported levels. Resolved choices
@@ -166,8 +167,8 @@ extensions after editing. `/subagents` always works without a binding.
   a shallower ancestor.
 - **The bound key does nothing:** check `subagents.open` in
   `keybindings.json`, confirm `@luan.sh/pi-xsettings` is installed, and reload.
-- **A requested model is unavailable:** use the exact `provider/model-id` and
-  confirm the provider is configured in Pi.
+- **A requested model is unavailable:** use a unique model id or alias, or the
+  exact `provider/model-id`, and confirm the provider is configured in Pi.
 - **A collaboration tool is missing inside `exec`:** call it directly; the
   package does not lift session-tree coordination into Code Mode.
 

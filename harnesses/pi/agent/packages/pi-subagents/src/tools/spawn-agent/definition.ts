@@ -1,9 +1,8 @@
-import type { Api, Model } from "@earendil-works/pi-ai";
-import type { ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import type { ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { parseForkTurns } from "../../core/fork-history.ts";
 import type { AgentConfig } from "../../core/types.ts";
-import { resolveThinkingLevel } from "../../runtime/agent-runner.ts";
+import { parseModelSelector, resolveModel, resolveThinkingLevel } from "../../runtime/agent-runner.ts";
 import { MAX_AGENT_MESSAGE_LENGTH, MAX_TASK_NAME_LENGTH } from "../limits.ts";
 import { AGENT_TOOLS } from "../names.ts";
 import type { CollaborationToolScope } from "../scope.ts";
@@ -29,7 +28,7 @@ const PARAMETERS = Type.Object(
 		model: Type.Optional(
 			Type.String({
 				maxLength: 512,
-				description: "Optional model override in provider/model-id format. Omit to inherit the parent model.",
+				description: "Optional model id, alias, or provider/model-id override. Omit to inherit the parent model.",
 			}),
 		),
 		thinking_level: Type.Optional(
@@ -52,19 +51,6 @@ export function normalizeTaskName(value: string): string {
 		throw new Error("task_name must use lowercase letters, digits, and single dashes between words");
 	}
 	return name;
-}
-
-function resolveModelOverride(value: string, registry: Pick<ExtensionContext["modelRegistry"], "find">): Model<Api> {
-	const reference = value.trim();
-	const separator = reference.indexOf("/");
-	if (separator <= 0 || separator === reference.length - 1 || /\s/u.test(reference)) {
-		throw new Error("model must use provider/model-id format");
-	}
-	const provider = reference.slice(0, separator);
-	const id = reference.slice(separator + 1);
-	const model = registry.find(provider, id);
-	if (!model) throw new Error(`Unknown model: ${reference}`);
-	return model;
 }
 
 export function createSpawnAgentTool(
@@ -98,9 +84,7 @@ export function createSpawnAgentTool(
 			const taskName = normalizeTaskName(parameters.task_name);
 			const message = parameters.message.trim();
 			if (!message) throw new Error("spawn_agent requires message");
-			const model = parameters.model?.trim()
-				? resolveModelOverride(parameters.model, context.modelRegistry)
-				: context.model;
+			const model = resolveModel(context, parameters.model?.trim() ? parseModelSelector(parameters.model) : undefined);
 			const thinkingLevel = resolveThinkingLevel(
 				model,
 				parameters.thinking_level,

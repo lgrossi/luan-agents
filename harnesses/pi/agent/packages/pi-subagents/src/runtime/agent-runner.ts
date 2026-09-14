@@ -188,6 +188,14 @@ export interface PreparedAgentRun {
 	loader: DefaultResourceLoader;
 }
 
+export function parseModelSelector(value: string): string {
+	const selector = value.trim();
+	if (!selector || /\s/u.test(selector)) {
+		throw new Error("model must use a model id, alias, or provider/model-id");
+	}
+	return selector;
+}
+
 export function resolveChildToolNames(active: readonly string[], lifted: readonly string[]): string[] {
 	return [...new Set([...active, ...lifted])];
 }
@@ -227,14 +235,39 @@ export async function prepareAgentRun(
 	return { effectiveCwd, agentDir, systemPrompt, toolNames, model, thinkingLevel, loader };
 }
 
-function resolveModel(
-	ctx: Pick<ExtensionContext, "model" | "modelRegistry">,
-	reference: AgentModelReference | undefined,
+export function resolveModel(
+	ctx: Pick<ExtensionContext, "model" | "modelRegistry" | "scopedModels">,
+	reference: AgentModelReference | string | undefined,
 ): Model<Api> | undefined {
 	if (!reference) return ctx.model;
-	const model = ctx.modelRegistry.find(reference.provider, reference.id);
-	if (!model) throw new Error(`Unknown model: ${reference.provider}/${reference.id}`);
-	return model;
+	const models =
+		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
+	const selector =
+		typeof reference === "string" ? parseModelSelector(reference) : `${reference.provider}/${reference.id}`;
+	const normalizedSelector = selector.toLowerCase();
+	const exactMatches = models.filter(
+		(candidate) =>
+			`${candidate.provider}/${candidate.id}`.toLowerCase() === normalizedSelector ||
+			candidate.id.toLowerCase() === normalizedSelector,
+	);
+	if (exactMatches.length === 1) return exactMatches[0];
+	if (exactMatches.length > 1) {
+		throw new Error(`Model "${selector}" is ambiguous; use provider/model-id`);
+	}
+
+	if (typeof reference === "string" && !selector.includes("/")) {
+		const partialMatches = models.filter(
+			(candidate) =>
+				candidate.id.toLowerCase().includes(normalizedSelector) ||
+				candidate.name.toLowerCase().includes(normalizedSelector),
+		);
+		if (partialMatches.length === 1) return partialMatches[0];
+		if (partialMatches.length > 1) {
+			throw new Error(`Model "${selector}" is ambiguous; use provider/model-id`);
+		}
+	}
+
+	throw new Error(`Unknown model: ${selector}`);
 }
 
 export function resolveThinkingLevel(

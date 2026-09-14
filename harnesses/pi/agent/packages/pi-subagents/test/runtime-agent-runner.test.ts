@@ -10,6 +10,7 @@ import {
 	findRetryableError,
 	prepareAgentRun,
 	resolveChildToolNames,
+	resolveModel,
 	resumeAgent,
 	runAgent,
 	sendAgentTask,
@@ -112,6 +113,34 @@ test("resolves direct model and thinking-level overrides through Pi APIs", async
 
 	expect(prepared.model).toBe(luna);
 	expect(prepared.thinkingLevel).toBe("high");
+});
+
+test("resolves a unique bare model alias inside the active model scope", () => {
+	const luna = model("gpt-5.6-luna");
+	const sol = model("gpt-5.6-sol");
+
+	expect(resolveModel(context({ available: [sol, luna], scoped: [luna], parentModel: sol }), "luna")).toBe(luna);
+});
+
+test("rejects ambiguous bare model aliases", () => {
+	const luna = model("gpt-5.6-luna");
+	const lunaPreview = model("gpt-5.6-luna-preview");
+
+	expect(() => resolveModel(context({ available: [luna, lunaPreview] }), "luna")).toThrow(
+		'Model "luna" is ambiguous; use provider/model-id',
+	);
+});
+
+test("keeps direct model overrides inside the active model scope", async () => {
+	const scoped = model("scoped-model");
+	const outside = model("outside-model");
+	await expect(
+		prepareAgentRun(
+			context({ available: [scoped, outside], scoped: [scoped], parentModel: scoped }),
+			{ pi: pi(), agentConfig: { model: { provider: outside.provider, id: outside.id } } },
+			false,
+		),
+	).rejects.toThrow("Unknown model: openai-codex/outside-model");
 });
 
 test("rejects unknown model overrides", async () => {
