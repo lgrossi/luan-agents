@@ -185,8 +185,6 @@ const VARIATION_FOREGROUND_TOKENS = [
 
 const VARIATION_BACKGROUND_TOKENS = [
 	"selectedBg",
-	"scrollbarThumb",
-	"searchMatchBg",
 	"userMessageBg",
 	"customMessageBg",
 	"toolPendingBg",
@@ -203,6 +201,7 @@ export function createTuiThemeVariation(theme: Theme, name: string): TuiThemeVar
 	const selected = colors.selectedBg ?? "";
 	const inset = colors.toolPendingBg ?? selected;
 	colors.selectedBg = inset;
+	// Derive these optional tokens without requiring the host to support their lookup.
 	colors.scrollbarThumb = inset;
 	colors.searchMatchBg = inset;
 	colors.userMessageBg = inset;

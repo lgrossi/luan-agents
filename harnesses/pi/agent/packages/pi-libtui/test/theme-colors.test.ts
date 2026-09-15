@@ -1,27 +1,36 @@
-import { afterEach, describe, expect, test } from "bun:test";
-import type { Theme } from "@earendil-works/pi-coding-agent";
+import { afterEach, describe, expect, spyOn, test } from "bun:test";
+import { Theme } from "@earendil-works/pi-coding-agent";
 import { rgb } from "../src/color/palette.ts";
 import { createTuiThemeVariation, parseBackgroundAnsi, tuiTheme, tuiThemeAppearance } from "../src/color/theme.ts";
 import { terminalColorsRegistry } from "../src/terminal-colors.ts";
+import harmonious from "../themes/harmonious.json";
 
 afterEach(() => terminalColorsRegistry().publish(undefined));
 
 describe("TUI theme colors", () => {
-	test("derives an adjacent TUI theme by shifting surfaces and accent", () => {
-		const theme = {
-			name: "parent",
-			getFgAnsi: (token: string) => (token === "mdHeading" ? "\x1b[38;2;220;120;40m" : "\x1b[38;2;120;160;220m"),
-			getBgAnsi: (token: string) => (token === "toolPendingBg" ? "\x1b[48;2;10;20;30m" : "\x1b[48;2;40;50;60m"),
-		} as never as Theme;
-		const variation = createTuiThemeVariation(theme, "side");
+	test.each([undefined, "scrollbarThumb", "searchMatchBg"])(
+		"derives an adjacent theme with %s unavailable",
+		(missing) => {
+			const theme = new Theme(harmonious.colors, harmonious.colors, "truecolor");
+			spyOn(theme, "getFgAnsi").mockImplementation((token) =>
+				token === "mdHeading" ? "\x1b[38;2;220;120;40m" : "\x1b[38;2;120;160;220m",
+			);
+			spyOn(theme, "getBgAnsi").mockImplementation((token) => {
+				if (token === missing) throw new Error(`Unknown theme background color: ${token}`);
+				return token === "toolPendingBg" ? "\x1b[48;2;10;20;30m" : "\x1b[48;2;40;50;60m";
+			});
+			const variation = createTuiThemeVariation(theme, "side");
 
-		expect(variation.name).toBe("side");
-		expect(variation.colors.accent).toBe("#dc7828");
-		expect(variation.colors.borderAccent).toBe("#dc7828");
-		expect(variation.colors.userMessageBg).toBe("#0a141e");
-		expect(variation.colors.toolPendingBg).toBe("#28323c");
-		expect(variation.colors.syntaxString).toBe("#78a0dc");
-	});
+			expect(variation.name).toBe("side");
+			expect(variation.colors.accent).toBe("#dc7828");
+			expect(variation.colors.borderAccent).toBe("#dc7828");
+			expect(variation.colors.userMessageBg).toBe("#0a141e");
+			expect(variation.colors.scrollbarThumb).toBe("#0a141e");
+			expect(variation.colors.searchMatchBg).toBe("#0a141e");
+			expect(variation.colors.toolPendingBg).toBe("#28323c");
+			expect(variation.colors.syntaxString).toBe("#78a0dc");
+		},
+	);
 
 	test("derives adjacent application appearance from the active Pi surface", () => {
 		const themed = (background: string) =>
