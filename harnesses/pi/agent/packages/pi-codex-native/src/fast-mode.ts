@@ -1,8 +1,9 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "@luan.sh/pi-libactions/sdk";
+import { registerAction } from "pi-libactions/sdk";
+import { codexCompatibility } from "./compatibility.ts";
 import {
-	DEFAULT_CODEX_NATIVE_SETTINGS,
 	type CodexNativeSettings,
+	DEFAULT_CODEX_NATIVE_SETTINGS,
 	getCodexNativeSettings,
 } from "./contributions/xsettings.ts";
 
@@ -22,7 +23,7 @@ function isRecord(value: UntrustedProviderValue): value is Payload {
 }
 
 function eligible(ctx: ExtensionContext): boolean {
-	return ctx.model?.provider === "openai-codex" && ctx.model.api === "openai-codex-responses";
+	return codexCompatibility(ctx.model)?.fastMode === true;
 }
 
 function fastModeEnabled(ctx: ExtensionContext, state: State): boolean {
@@ -57,6 +58,10 @@ export default function registerFastMode(
 	}
 
 	function toggle(ctx: ExtensionContext): void {
+		if (!eligible(ctx)) {
+			ctx.ui.notify("Fast mode is not supported by the active model", "warning");
+			return;
+		}
 		const state = stateFor(ctx);
 		state.enabled = !state.enabled;
 		const enabled = fastModeEnabled(ctx, state);
@@ -90,14 +95,13 @@ export default function registerFastMode(
 		return { ...event.payload, service_tier: FAST_SERVICE_TIER };
 	});
 	pi.on("before_provider_headers", (event, ctx) => {
-		if (!eligible(ctx) || !ctx.model) return;
 		const state = stateFor(ctx);
-		if (!fastModeEnabled(ctx, state)) {
-			event.headers[ROUTING_HINT] = null;
-			return;
-		}
+		const model = ctx.model;
+		const compatibility = model ? codexCompatibility(model) : undefined;
+		const enabled = fastModeEnabled(ctx, state);
+		if (!enabled || compatibility?.fastMode !== true || !model) return;
 		event.headers.originator = FAST_ORIGINATOR;
-		event.headers[ROUTING_HINT] = `model=${ctx.model.id};tier=${FAST_SERVICE_TIER}`;
+		event.headers[ROUTING_HINT] = `model=${model.id};tier=${FAST_SERVICE_TIER}`;
 	});
 	pi.on("session_shutdown", (_event, ctx) => {
 		if (currentContext?.sessionManager === ctx.sessionManager) currentContext = undefined;

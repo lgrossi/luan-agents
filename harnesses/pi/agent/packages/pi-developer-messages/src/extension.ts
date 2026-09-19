@@ -6,16 +6,16 @@ import {
 	removePromptAuditMessages,
 } from "./audit-entries.ts";
 import { AGENTS_CONTEXT_MESSAGE_ID, injectAgentsContext, renderAgentsContext } from "./context-messages.ts";
+import { getDeveloperPromptSettings, registerDeveloperPromptXSettings } from "./contributions/xsettings.ts";
 import { composeDeveloperMessages, type DeveloperMessage } from "./developer-messages.ts";
-import { getSystemPromptPayloadAdapterRegistry } from "./provider-payload.ts";
 import {
-	promptEnvelopeRequests,
-	registerPromptEnvelopeService,
 	type PromptEnvelopeRequest,
 	type PromptEnvelopeService,
+	promptEnvelopeRequests,
+	registerPromptEnvelopeService,
 } from "./prompt-envelope.ts";
 import { buildProviderInstructions } from "./provider-instructions.ts";
-import { getDeveloperPromptSettings, registerDeveloperPromptXSettings } from "./contributions/xsettings.ts";
+import { findSystemPromptPayloadAdapter } from "./provider-payload.ts";
 
 interface SessionPromptState {
 	base?: string;
@@ -143,7 +143,7 @@ export function registerDeveloperPromptExtension(pi: ExtensionAPI): void {
 		const provider = ctx.model?.provider;
 		if (state.base === undefined || state.lastGood === undefined || !provider || state.lastGoodProvider !== provider)
 			return;
-		const adapter = getSystemPromptPayloadAdapterRegistry().get(provider);
+		const adapter = findSystemPromptPayloadAdapter(provider, ctx.model?.api);
 		if (!adapter) return;
 		let payload = event.payload;
 		let changed = false;

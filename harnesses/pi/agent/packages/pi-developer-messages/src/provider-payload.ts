@@ -8,6 +8,7 @@ export interface ProviderDeveloperMessage {
 
 export interface SystemPromptPayloadAdapter {
 	provider: string;
+	api?: string | string[];
 	readSystemPrompt(payload: unknown): string | undefined;
 	replaceSystemPrompt(payload: unknown, systemPrompt: string): unknown;
 	replaceDeveloperMessages?(payload: unknown, messages: readonly ProviderDeveloperMessage[]): unknown;
@@ -56,4 +57,18 @@ export function registerSystemPromptPayloadAdapter(adapter: SystemPromptPayloadA
 	return () => {
 		if (registry.get(adapter.provider) === adapter) registry.delete(adapter.provider);
 	};
+}
+
+export function findSystemPromptPayloadAdapter(
+	provider: string | undefined,
+	api: string | undefined,
+): SystemPromptPayloadAdapter | undefined {
+	if (!provider) return undefined;
+	return [...getSystemPromptPayloadAdapterRegistry().values()]
+		.reverse()
+		.find(
+			(adapter) =>
+				adapter.provider === provider &&
+				(!adapter.api || !api || (Array.isArray(adapter.api) ? adapter.api.includes(api) : adapter.api === api)),
+		);
 }

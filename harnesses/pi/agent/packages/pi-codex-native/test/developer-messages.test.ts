@@ -125,7 +125,7 @@ test("the Codex adapter replaces its tagged messages and preserves equal provide
 			replaceDeveloperMessages(payload: unknown, messages: readonly { id: string; content: string }[]): unknown;
 		}
 	>;
-	const adapter = registry.get("openai-codex");
+	const adapter = registry.get("openai-codex:openai-codex-responses");
 	if (!adapter) throw new Error("The Codex prompt payload adapter was not registered");
 	const payload = {
 		model: "gpt-5.6-sol",

@@ -8,6 +8,7 @@ const PAYLOAD_ADAPTER_PROTOCOL = "pi-developer-messages/provider-payload-adapter
 
 interface SystemPromptPayloadAdapter {
 	provider: string;
+	api?: string | string[];
 	readSystemPrompt(payload: unknown): string | undefined;
 	replaceSystemPrompt(payload: unknown, systemPrompt: string): unknown;
 	replaceDeveloperMessages(payload: unknown, messages: readonly DeveloperMessage[]): unknown;
@@ -61,6 +62,7 @@ export function registerCodexPromptPayloadAdapter(
 ): () => void {
 	const adapter: SystemPromptPayloadAdapter = {
 		provider: CODEX_PROVIDER,
+		api: "openai-codex-responses",
 		readSystemPrompt(payload) {
 			const instructions = payloadRecord(payload)?.instructions;
 			return typeof instructions === "string" ? instructions : undefined;
@@ -89,9 +91,10 @@ export function registerCodexPromptPayloadAdapter(
 			};
 		},
 	};
-	registry.set(CODEX_PROVIDER, adapter);
+	registry.set(`${CODEX_PROVIDER}:openai-codex-responses`, adapter);
 	return () => {
-		if (registry.get(CODEX_PROVIDER) === adapter) registry.delete(CODEX_PROVIDER);
+		if (registry.get(`${CODEX_PROVIDER}:openai-codex-responses`) === adapter)
+			registry.delete(`${CODEX_PROVIDER}:openai-codex-responses`);
 	};
 }
 
@@ -107,5 +110,5 @@ function isManagedDeveloperMessage(content: string): boolean {
 }
 
 function escapeXmlAttribute(value: string): string {
-	return value.replace(/&/g, "&amp;").replace(/\"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
