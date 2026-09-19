@@ -1,5 +1,6 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { type CodexNativeSettings, getCodexNativeSettings } from "../contributions/xsettings.ts";
+import { codexFeature, codexTextVerbosityFormat } from "../compatibility.ts";
 
 // type-boundary: Pi exposes provider payloads without a type; isRecord narrows the payload before mutation.
 type UntrustedProviderValue = unknown;
@@ -10,7 +11,7 @@ function isRecord(value: UntrustedProviderValue): value is Payload {
 }
 
 function eligible(ctx: ExtensionContext): boolean {
-	return ctx.model?.provider === "openai-codex" && ctx.model.api === "openai-codex-responses";
+	return codexFeature(ctx.model, "textVerbosity");
 }
 
 export function registerTextVerbosity(
@@ -19,6 +20,9 @@ export function registerTextVerbosity(
 ): void {
 	pi.on("before_provider_request", (event, ctx) => {
 		if (!eligible(ctx) || !isRecord(event.payload)) return undefined;
+		if (codexTextVerbosityFormat(ctx.model) === "chat-completions") {
+			return { ...event.payload, verbosity: getSettings().textVerbosity };
+		}
 		const text = isRecord(event.payload.text) ? event.payload.text : {};
 		return { ...event.payload, text: { ...text, verbosity: getSettings().textVerbosity } };
 	});

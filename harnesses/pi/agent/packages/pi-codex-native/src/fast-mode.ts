@@ -1,4 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { codexCompatibility, codexFeature } from "./compatibility.ts";
 import { registerAction } from "pi-libactions/sdk";
 import {
 	DEFAULT_CODEX_NATIVE_SETTINGS,
@@ -22,7 +23,7 @@ function isRecord(value: UntrustedProviderValue): value is Payload {
 }
 
 function eligible(ctx: ExtensionContext): boolean {
-	return ctx.model?.provider === "openai-codex" && ctx.model.api === "openai-codex-responses";
+	return codexFeature(ctx.model, "fastMode");
 }
 
 function fastModeEnabled(ctx: ExtensionContext, state: State): boolean {
@@ -57,6 +58,10 @@ export default function registerFastMode(
 	}
 
 	function toggle(ctx: ExtensionContext): void {
+		if (!eligible(ctx)) {
+			ctx.ui.notify("Fast mode is not supported by the active model", "warning");
+			return;
+		}
 		const state = stateFor(ctx);
 		state.enabled = !state.enabled;
 		const enabled = fastModeEnabled(ctx, state);
@@ -90,14 +95,22 @@ export default function registerFastMode(
 		return { ...event.payload, service_tier: FAST_SERVICE_TIER };
 	});
 	pi.on("before_provider_headers", (event, ctx) => {
-		if (!eligible(ctx) || !ctx.model) return;
 		const state = stateFor(ctx);
-		if (!fastModeEnabled(ctx, state)) {
+		const model = ctx.model;
+		const compatibility = model ? codexCompatibility(model) : undefined;
+		const enabled = fastModeEnabled(ctx, state);
+		if (!enabled || !compatibility?.features?.fastMode) {
+			event.headers.originator = null;
 			event.headers[ROUTING_HINT] = null;
 			return;
 		}
-		event.headers.originator = FAST_ORIGINATOR;
-		event.headers[ROUTING_HINT] = `model=${ctx.model.id};tier=${FAST_SERVICE_TIER}`;
+		if (compatibility.routingHeaders && model) {
+			event.headers.originator = FAST_ORIGINATOR;
+			event.headers[ROUTING_HINT] = `model=${model.id};tier=${FAST_SERVICE_TIER}`;
+		} else {
+			event.headers.originator = null;
+			event.headers[ROUTING_HINT] = null;
+		}
 	});
 	pi.on("session_shutdown", (_event, ctx) => {
 		if (currentContext?.sessionManager === ctx.sessionManager) currentContext = undefined;
