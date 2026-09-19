@@ -14,6 +14,7 @@ import {
 	codexContextWindowLabel,
 	getCodexNativeSettings,
 } from "./contributions/xsettings.ts";
+import { codexFeature } from "./compatibility.ts";
 
 // Pi does not expose the effective compaction threshold. Match its compiled
 // default until a public API exposes the configured reserve.
@@ -22,11 +23,8 @@ const DEFAULT_COMPACTION_RESERVE = 16_384;
 type State = { preset: ContextWindowPreset; upgradedPreset?: ContextWindowPreset };
 
 function eligible(model: Model<Api> | undefined): model is Model<Api> {
-	return (
-		model?.provider === "openai-codex" &&
-		model.api === "openai-codex-responses" &&
-		(model.id.startsWith("gpt-5.6-") || model.id === "gpt-6-astra")
-	);
+	if (!model) return false;
+	return codexFeature(model, "contextWindow");
 }
 
 export default function registerContextWindow(
