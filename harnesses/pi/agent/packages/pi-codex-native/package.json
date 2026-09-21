@@ -1,6 +1,6 @@
 {
   "name": "@luan.sh/pi-codex-native",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -45,7 +45,8 @@
     "@luan.sh/pi-libactions",
     "@luan.sh/pi-libtui",
     "@luan.sh/pi-code-mode",
-    "@luan.sh/pi-xsettings"
+    "@luan.sh/pi-xsettings",
+    "@luan.sh/pi-developer-messages"
   ],
   "devDependencies": {
     "@earendil-works/pi-agent-core": "0.84.2",

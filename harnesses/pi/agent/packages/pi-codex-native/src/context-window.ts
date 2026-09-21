@@ -1,7 +1,7 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext, SessionBeforeCompactEvent } from "@earendil-works/pi-coding-agent";
-import { registerAction } from "pi-libactions/sdk";
-import { tuiTheme } from "pi-libtui";
+import { registerAction } from "@luan.sh/pi-libactions/sdk";
+import { tuiTheme } from "@luan.sh/pi-libtui";
 import { codexCompatibility } from "./compatibility.ts";
 import {
 	CODEX_CONTEXT_COLORS,
