@@ -11,11 +11,23 @@ export interface UsageRecord {
 	label: string;
 	kind: "assistant" | "nested tool" | "compaction" | "branch summary";
 	usage: TokenEstimate | null;
+	/** Provider context seen for this record (input plus cached input). */
+	promptTokens?: number | null;
+	/** Change in provider context since the previous recorded record. */
+	growth?: number | null;
+	/** 1-based position among records with usage. */
+	turn?: number | null;
 }
 export interface UsageSummary {
 	records: UsageRecord[];
 	totals: TokenEstimate | null;
 	missing: number;
+	missingByKind: Record<UsageRecord["kind"], number>;
+	/** First and last provider context sizes, when usage was reported. */
+	floorTokens: number | null;
+	lastContextTokens: number | null;
+	/** cacheRead / (input + cacheRead + cacheWrite). */
+	cachedShare: number | null;
 }
 export interface PromptSection {
 	label: string;

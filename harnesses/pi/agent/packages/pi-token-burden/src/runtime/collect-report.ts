@@ -7,7 +7,7 @@ import {
 import type { TokenBurdenReport, TokenEstimate, UsageRecord } from "../core/report.ts";
 import { promptSections } from "../core/prompt-sections.ts";
 import { estimateTokens } from "../core/token-estimates.ts";
-import { summarizeUsage } from "../core/attribution.ts";
+import { summarizeUsage } from "../core/usage.ts";
 
 export type ReportAPI = Pick<ExtensionAPI, "getAllTools" | "getActiveTools" | "getCommands">;
 export type ReportContext = Pick<
@@ -44,6 +44,9 @@ export function usageRecords(entries: readonly SessionEntry[]): UsageRecord[] {
 					label: `${message.provider}/${message.model} · ${message.stopReason}`,
 					kind: "assistant",
 					usage: normalizeUsage(message.usage),
+					promptTokens: null,
+					growth: null,
+					turn: null,
 				});
 			else if (message.role === "toolResult" && message.usage)
 				records.push({
@@ -51,6 +54,9 @@ export function usageRecords(entries: readonly SessionEntry[]): UsageRecord[] {
 					label: message.toolName,
 					kind: "nested tool",
 					usage: normalizeUsage(message.usage),
+					promptTokens: null,
+					growth: null,
+					turn: null,
 				});
 		} else if (entry.type === "compaction" || entry.type === "branch_summary") {
 			records.push({
@@ -58,6 +64,9 @@ export function usageRecords(entries: readonly SessionEntry[]): UsageRecord[] {
 				label: entry.type === "compaction" ? "Compaction" : "Branch summary",
 				kind: entry.type === "compaction" ? "compaction" : "branch summary",
 				usage: normalizeUsage(entry.usage),
+				promptTokens: null,
+				growth: null,
+				turn: null,
 			});
 		}
 	}

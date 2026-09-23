@@ -1,8 +1,10 @@
 # pi-token-burden
 
-Standalone, read-only token/context report for Pi. `/token-burden` opens a snapshot
-in TUI mode; it never changes settings, active tools, skills, prompts, or session
-history, and never makes a model request. Reopen it to refresh the snapshot.
+Standalone token/context report for Pi. `/token-burden` opens a snapshot in TUI
+mode; it never changes settings, skills, prompts, or session history, and never
+makes a model request. On the Tools tab, Space safely enables/disables the
+selected tool for future turns through Pi's public API; this is not persisted and
+does not rewrite historical usage. Reopen it to refresh the snapshot.
 
 ## Report
 
@@ -22,13 +24,19 @@ history, and never makes a model request. Reopen it to refresh the snapshot.
   model invocation is enabled. Skill bodies are not read or executed; there are
   deliberately no enable/disable actions.
 
-Use left/right (or the shared tab control's h/l) to switch tabs. The injected Pi
+Use left/right (or the shared tab control's h/l) to switch tabs. On Tools, Space
+toggles the selected tool after Pi is idle; the status line reports whether the
+change was applied. The injected Pi
 selection bindings control rows, pages, confirmation, and cancellation (normally
 up/down, Page Up/Down, Enter, Escape/Ctrl+C). Cancel returns from detail to the
-selected row before closing the report. Home/End jump within detail text. The
-shared controls support pointer tab selection and list activation in a compatible
-Pi fullscreen host; detail scrolling uses the keyboard. Long details are wrapped
-and scrollable, and all output is bounded to terminal width and height.
+selected row before closing the report. Enter opens a shared, framed detail
+dialog with a Close button; Escape closes the dialog first, then the report.
+Home/End jump within detail text. The shared controls support pointer tab
+selection, list activation, and dialog buttons in a compatible Pi fullscreen
+host. Wide terminals show a master list beside a persistent selected-item
+inspector; narrow terminals collapse to the same keyboard-friendly list. Long
+details are wrapped and scrollable, and all output is bounded to terminal width
+and height.
 
 ## Measurement limits
 
